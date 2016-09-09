@@ -7,3 +7,6 @@ topology file
 
 md1.mdp 
 hold param of Nguyen 2013
+
+mini2.mdp 
+hold param from M1TP -> to be used for minimisation before starting ST
