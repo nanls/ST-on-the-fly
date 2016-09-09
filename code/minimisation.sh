@@ -20,4 +20,8 @@ gmx grompp -f ../data/mini2.mdp -c ../data/ala10_md000.pdb -p ../data/ala10.top 
 #read new .tpr file : 
 #gmx dump -s topol.tpr | more
 
+#----------------
+#Run minimi : 
+gmx mdrun -v -s ../data/minimi.tpr -o $res_dir/traj_minimi.trr -c ../data/ala10_minimized.gro -e $res_dir/energy_minimi.edr -g $res_dir/minimi.log
+
 
