@@ -17,4 +17,7 @@ mkdir $res_dir
 #XXX TODO : should be ignored?
 gmx grompp -f ../data/mini2.mdp -c ../data/ala10_md000.pdb -p ../data/ala10.top -po ../data/grompp_mdout.mdp -o ../data/minimi.tpr -maxwarn 1
 
+#read new .tpr file : 
+#gmx dump -s topol.tpr | more
+
 
