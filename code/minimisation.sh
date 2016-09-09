@@ -24,4 +24,10 @@ gmx grompp -f ../data/mini2.mdp -c ../data/ala10_md000.pdb -p ../data/ala10.top 
 #Run minimi : 
 gmx mdrun -v -s ../data/minimi.tpr -o $res_dir/traj_minimi.trr -c ../data/ala10_minimized.gro -e $res_dir/energy_minimi.edr -g $res_dir/minimi.log
 
+#----------------
+#Check energy diminution on the plot: 
 
+echo "10" | gmx energy -f $res_dir/energy_minimi.edr -o $res_dir/energy_minimi.xvg
+#(choose Potential)
+
+xmgrace $res_dir/energy_minimi.xvg
