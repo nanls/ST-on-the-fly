@@ -13,6 +13,7 @@ import shlex
 import errno
 import os
 
+import time
 
 def create_dir_if_not_exists(dir_path): 
     """ Create a dir named <dir_path> if it does not already exists. 
@@ -32,6 +33,16 @@ def create_dir_if_not_exists(dir_path):
             print ("The dir already exists.")
         if e.errno == errno.EACCES :
             print ("Permission denied ! ")
+
+def get_formated_now() : 
+    """Get formated date + time
+    Return
+    ------
+    now : str
+        <currentYear>-<currentMonth>.-<currentDayNum>-<currentHour>h<currentMin>min
+    """
+    return time.strftime("%Y-%h.-%d-%Hh%Mmin")
+
 
 if __name__ == "__main__":
 
