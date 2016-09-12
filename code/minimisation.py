@@ -58,6 +58,12 @@ def get_res_dirname(working_path):
 
 if __name__ == "__main__":
 
+    working_path = ".."
+    data_path = "../data"
+    res_path = get_res_dirname(working_path)
+    create_dir_if_not_exists(res_path)
+
+    
     #------
     # run script : 
     cmd = 'bash ./minimisation.sh'
