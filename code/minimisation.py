@@ -43,6 +43,18 @@ def get_formated_now() :
     """
     return time.strftime("%Y-%h.-%d-%Hh%Mmin")
 
+def get_res_dirname(working_path):
+    """Get formated results dirname
+    Parameter
+    ---------
+    working_path : str 
+        Path to the working dir 
+    Return 
+    ------
+    result dirname : str 
+        <working_path>/results/minimization-<get_formated_now()>
+    """
+    return working_path+"/results/minimization-"+get_formated_now()
 
 if __name__ == "__main__":
 
