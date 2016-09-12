@@ -66,7 +66,7 @@ if __name__ == "__main__":
     
     #------
     # run script : 
-    cmd = 'bash ./minimisation.sh'
+    cmd = 'bash ./minimisation.sh %s' % res_path
     p = subprocess.Popen(shlex.split(cmd))
     output = p.communicate()
     print (output)
