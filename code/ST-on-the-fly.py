@@ -17,6 +17,16 @@ class MolecularDynamics(object):
         self.T_current
 
 
+class Simulation(object):
+    """docstring for Simulation"""
+    def __init__(self):
+        super(Simulation,self).__init__()
+
+    def run():
+        return compute_E_average()
+
+    def compute_E_average():
+        pass
 
 class SimulatedTempering(object):
     """docstring for ST"""
