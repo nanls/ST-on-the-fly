@@ -69,7 +69,7 @@ def log_decorator(func):
     
     @functools.wraps(func) # reports attributs of the original function on the wrapper (including docstrings)
     def wrapped(*args, **kwargs):
-        msg = "Module={} Function={}".format(module_name, func_name)       
+        msg = "Module={} Function={} Args={} Kwargs={}".format(module_name, func_name, args, kwargs)       
         __logger.debug("BEGIN " + msg)
         
         t = time.clock()
