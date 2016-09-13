@@ -117,6 +117,12 @@ if __name__ == "__main__":
 
     logger.__logger.info('get args')
 
+    num_step = 100
+    dt_pas = 1
+    dt_attempt = 10 
+    Tmin = 1 
+    Tmax = 10 
+    Tstep = 1 
 
     logger.__logger.info('new ST')
 
