@@ -42,9 +42,9 @@ class MonteCarlo(Simulation):
 class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     """docstring for MolecularDynamicProduction"""
     @logger.log_decorator
-    def __init__(self, function_arg2):
-        super(MolecularDynamicsProduction, self).__init__()
-        self.arg = function_arg2
+    def __init__(self, T_current, mdp_filename):
+        super(MolecularDynamicsProduction, self).__init__(T_current=T_current, mdp_filename=T_current)
+
     @logger.log_decorator
     def run():
            pass   
