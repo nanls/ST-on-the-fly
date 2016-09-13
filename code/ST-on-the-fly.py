@@ -77,16 +77,19 @@ class SimulatedTempering(object):
     @logger.log_decorator
     def choose_T_attempt():
         if toss_coin() == 'up' and T_current != Tmax: 
+            print ('up')
         elif toss_coin() == 'down' and T_current != Tmin : 
+            print ('down')
             # down 
         else : 
+            print ('T does not change')
             #do not change T_current
     @logger.log_decorator
     def compute_metropolis_criterion(T_attempt) : 
         f_attempt = f_attempt_estimate(T_attempt)
 
-
-        return min (1, ... self.f_current ...  . )
+        #min (1, ... self.f_current ...  . )
+        return 0
     @logger.log_decorator
     def attempt_OK():
         mc =  compute_metropolis_criterion() 
@@ -107,7 +110,7 @@ class SimulatedTempering(object):
                 self.simulation.T_current = T_next #if MD : change velocity --> Overriding
 
 if __name__ == "__main__":
-	print ('go')
+    print ('go')
     logger.set_functional_logger()
 
     logger.__logger.info('logger OK')
