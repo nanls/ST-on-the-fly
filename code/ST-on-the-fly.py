@@ -28,6 +28,16 @@ class Simulation(object):
     def compute_E_average():
         pass
 
+class MonteCarlo(Simulation):
+    """docstring for MonteCarlo"""
+    def __init__(self, arg):
+        super(MonteCarlo, self).__init__()
+        self.arg = arg
+
+    def run(): 
+        pass
+
+
 class SimulatedTempering(object):
     """docstring for ST"""
 
