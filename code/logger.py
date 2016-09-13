@@ -59,3 +59,16 @@ def set_functional_logger(logging_level = logging.DEBUG ):
 
 
 
+def log_decorator(func):
+    if not __DECO_ACTIVATED:
+        return func
+ 
+    @functools.wraps(func) # reports attributs of the original function on the wrapper (including docstrings)
+    def wrapped(*args, **kwargs):
+        __logger.debug("BEGIN")
+        data = func(*args, **kwargs)
+        __logger.debug("END")
+        return data
+    return wrapped
+
+
