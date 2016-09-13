@@ -37,6 +37,13 @@ class MonteCarlo(Simulation):
     def run(): 
         pass
 
+class MolecularDynamicsProduction(Simulation,MolecularDynamics):
+    """docstring for MolecularDynamicProduction"""
+    def __init__(self, function_arg2):
+        super(MolecularDynamicsProduction, self).__init__()
+        self.arg = arg
+    def run():
+           pass   
 
 class SimulatedTempering(object):
     """docstring for ST"""
