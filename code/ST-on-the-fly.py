@@ -108,3 +108,16 @@ class SimulatedTempering(object):
 
 if __name__ == "__main__":
 	print ('go')
+    logger.set_functional_logger()
+
+    logger.__logger.info('logger OK')
+
+    logger.__logger.info('get args')
+
+
+    logger.__logger.info('new ST')
+
+    logger.__logger.info('ST.run')
+
+
+    logger.__logger.info('the end')
