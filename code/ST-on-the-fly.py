@@ -124,6 +124,8 @@ if __name__ == "__main__":
     Tmax = 10 
     Tstep = 1 
 
+    logger.__logger.info('run minimi')
+    
     logger.__logger.info('new ST')
 
     logger.__logger.info('ST.run')
