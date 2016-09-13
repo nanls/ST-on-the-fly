@@ -21,8 +21,10 @@ class MolecularDynamics(object):
 class Simulation(object):
     """docstring for Simulation"""
     @logger.log_decorator
-    def __init__(self, **kwargs):
+    def __init__(self, T_current, **kwargs):
         super(Simulation,self).__init__()
+        self._T_current == T_current
+
     @logger.log_decorator
     def run():
         return compute_E_average()
