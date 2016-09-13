@@ -8,7 +8,13 @@
 from __future__ import print_function
 
 
-
+class MolecularDynamics(object):
+    """docstring for MolecularDynamics"""
+    def __init__(self, ):
+        super(MolecularDynamics, self).__init__()
+        step_duration
+        md_duration
+        self.T_current
 
 
 
