@@ -34,10 +34,7 @@ class Simulation(object):
 
 class MonteCarlo(Simulation):
     """docstring for MonteCarlo"""
-    @logger.log_decorator
-    def __init__(self, arg):
-        super(MonteCarlo, self).__init__()
-        self.arg = arg
+    
     @logger.log_decorator
     def run(): 
         pass
