@@ -51,9 +51,9 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
 
 @logger.log_decorator
-def create_simulation(simu_type, T_current): 
+def create_simulation(simu_type, T_current, mdp_filename): 
     if simu_type == 'md' : 
-        return MolecularDynamicsProduction(T_current)
+        return MolecularDynamicsProduction(T_current, mdp_filename)
     elif simu_type == 'mc':
         return MonteCarlo(T_current)
     else : 
@@ -64,11 +64,11 @@ def create_simulation(simu_type, T_current):
 class SimulatedTempering(object):
     """docstring for ST"""
     @logger.log_decorator
-    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', **kwargs):
+    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', mdp_filename=None, **kwargs):
         super(SimulatedTempering,self).__init__()
         self._NUM_STEP = num_step
         self._T_RANGE=range(Tmin, Tmax, Tstep)
-        self._SIMULATION=create_simulation(simu_type, Tmin) #pattern strategy
+        self._SIMULATION=create_simulation(simu_type, Tmin, mdp_filename) #pattern strategy
         self.f_current=0
         self._step_idx=0
         
