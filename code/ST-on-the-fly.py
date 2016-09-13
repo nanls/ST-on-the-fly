@@ -54,13 +54,13 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 class SimulatedTempering(object):
     """docstring for ST"""
     @logger.log_decorator
-    def __init__(self, ):
+    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md'):
         super(SimulatedTempering,self).__init__()
-        self._MAX_NUM_STEP
+        self._NUM_STEP = num_step
         self._T_RANGE=range(Tmin, Tmax, Tstep)
-        self.simulation #pattern strategy
-        self.f_current
-        self._step_idx
+        self._SIMULATION='True' #pattern strategy
+        self.f_current=0
+        self._step_idx=0
         
         
     @logger.log_decorator
@@ -125,9 +125,9 @@ if __name__ == "__main__":
     Tstep = 1 
 
     logger.__logger.info('run minimi')
-    
-    logger.__logger.info('new ST')
 
+    logger.__logger.info('new ST')
+    ST = SimulatedTempering(num_step, Tmin, Tmax, Tstep)
     logger.__logger.info('ST.run')
 
 
