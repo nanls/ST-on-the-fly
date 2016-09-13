@@ -5,6 +5,7 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
+import time 
 
 import functools 
 
@@ -70,8 +71,11 @@ def log_decorator(func):
     def wrapped(*args, **kwargs):
         msg = "Module={} Function={}".format(module_name, func_name)       
         __logger.debug("BEGIN " + msg)
+        
+        t = time.clock()
         data = func(*args, **kwargs)
-        __logger.debug("END " + msg)
+        
+        __logger.debug("END " + msg  + ' Timing : ' + str( time.clock()-t ) )
         return data
     return wrapped
 
