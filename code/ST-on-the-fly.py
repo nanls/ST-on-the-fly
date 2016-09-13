@@ -13,11 +13,11 @@ import logger
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
     @logger.log_decorator
-    def __init__(self, ):
+    def __init__(self):
         super(MolecularDynamics, self).__init__()
-        step_duration
-        md_duration
-        self.T_current
+        step_duration = 0 
+        md_duration =0 
+        self.T_current=0
 
 
 class Simulation(object):
@@ -47,7 +47,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     @logger.log_decorator
     def __init__(self, function_arg2):
         super(MolecularDynamicsProduction, self).__init__()
-        self.arg = arg
+        self.arg = function_arg2
     @logger.log_decorator
     def run():
            pass   
