@@ -13,7 +13,7 @@ import logger
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
     @logger.log_decorator
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(MolecularDynamics, self).__init__()
         step_duration = 0 
         md_duration =0 
@@ -23,7 +23,7 @@ class MolecularDynamics(object):
 class Simulation(object):
     """docstring for Simulation"""
     @logger.log_decorator
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(Simulation,self).__init__()
     @logger.log_decorator
     def run():
@@ -67,7 +67,7 @@ def create_simulation(simu_type, T_current):
 class SimulatedTempering(object):
     """docstring for ST"""
     @logger.log_decorator
-    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md'):
+    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', **kwargs):
         super(SimulatedTempering,self).__init__()
         self._NUM_STEP = num_step
         self._T_RANGE=range(Tmin, Tmax, Tstep)
