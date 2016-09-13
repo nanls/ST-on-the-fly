@@ -9,6 +9,7 @@ from __future__ import print_function
 
 import logger
 
+
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
     @logger.log_decorator
@@ -51,6 +52,18 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     def run():
            pass   
 
+
+@logger.log_decorator
+def create_simulation(simu_type, T_current): 
+    if simu_type == 'md' : 
+        return MolecularDynamicsProduction(T_current)
+    elif simu_type == 'mc':
+        return MonteCarlo(T_current)
+    else : 
+        logger.__logger.error('Wrong choice of simulation')
+        return None
+
+
 class SimulatedTempering(object):
     """docstring for ST"""
     @logger.log_decorator
@@ -58,11 +71,12 @@ class SimulatedTempering(object):
         super(SimulatedTempering,self).__init__()
         self._NUM_STEP = num_step
         self._T_RANGE=range(Tmin, Tmax, Tstep)
-        self._SIMULATION='True' #pattern strategy
+        self._SIMULATION=create_simulation(simu_type, Tmin) #pattern strategy
         self.f_current=0
         self._step_idx=0
         
-        
+
+
     @logger.log_decorator
     def f_attempt_estimate(self, T_attempt):
         # self.simulation.T_current
