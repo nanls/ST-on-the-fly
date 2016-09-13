@@ -7,9 +7,11 @@
 
 from __future__ import print_function
 
+import logger
 
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
+    @logger.log_decorator
     def __init__(self, ):
         super(MolecularDynamics, self).__init__()
         step_duration
@@ -19,35 +21,39 @@ class MolecularDynamics(object):
 
 class Simulation(object):
     """docstring for Simulation"""
+    @logger.log_decorator
     def __init__(self):
         super(Simulation,self).__init__()
-
+    @logger.log_decorator
     def run():
         return compute_E_average()
-
+    @logger.log_decorator
     def compute_E_average():
         pass
 
 class MonteCarlo(Simulation):
     """docstring for MonteCarlo"""
+    @logger.log_decorator
     def __init__(self, arg):
         super(MonteCarlo, self).__init__()
         self.arg = arg
-
+    @logger.log_decorator
     def run(): 
         pass
 
 class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     """docstring for MolecularDynamicProduction"""
+    @logger.log_decorator
     def __init__(self, function_arg2):
         super(MolecularDynamicsProduction, self).__init__()
         self.arg = arg
+    @logger.log_decorator
     def run():
            pass   
 
 class SimulatedTempering(object):
     """docstring for ST"""
-
+    @logger.log_decorator
     def __init__(self, ):
         super(SimulatedTempering,self).__init__()
         self._MAX_NUM_STEP
@@ -57,31 +63,31 @@ class SimulatedTempering(object):
         self._step_idx
         
         
-
+    @logger.log_decorator
     def f_attempt_estimate(self, T_attempt):
         # self.simulation.T_current
         # self.simulation.E_average
         pass
-
+    @logger.log_decorator
     def toss_coin(self):
         pass
-
+    @logger.log_decorator
     def run_simulation(): #pattern strategy
         self.simulation.run()
-
+    @logger.log_decorator
     def choose_T_attempt():
         if toss_coin() == 'up' and T_current != Tmax: 
         elif toss_coin() == 'down' and T_current != Tmin : 
             # down 
         else : 
             #do not change T_current
-
+    @logger.log_decorator
     def compute_metropolis_criterion(T_attempt) : 
         f_attempt = f_attempt_estimate(T_attempt)
 
 
         return min (1, ... self.f_current ...  . )
-
+    @logger.log_decorator
     def attempt_OK():
         mc =  compute_metropolis_criterion() 
         if mc == 1 : 
@@ -89,7 +95,7 @@ class SimulatedTempering(object):
         else : 
             return False
 
-
+    @logger.log_decorator
     def run(self):
         while self.step_idx < self.MAX_NUM_STEP : 
 
