@@ -13,11 +13,9 @@ import logger
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
     @logger.log_decorator
-    def __init__(self, **kwargs):
+    def __init__(self, mdp_filename, **kwargs):
         super(MolecularDynamics, self).__init__()
-        step_duration = 0 
-        md_duration =0 
-        self.T_current=0
+        self._mdp_filename = mdp_filename
 
 
 class Simulation(object):
