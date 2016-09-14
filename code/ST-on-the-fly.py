@@ -175,9 +175,6 @@ class SimulatedTempering(object):
     def toss_coin():
         return random.choice ( [-1, 1] )
 
-    @logger.log_decorator
-    def run_simulation(self): #pattern strategy
-        self.simulation.run()
 
     @logger.log_decorator
     def choose_T_attempt(self):
@@ -206,7 +203,7 @@ class SimulatedTempering(object):
     def run(self):
         while self.step_idx < self.MAX_NUM_STEP : 
 
-            run_simulation()
+            self.simulation.run()
 
             T_attempt = chose_T_attempt()
         
