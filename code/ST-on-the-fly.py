@@ -125,6 +125,14 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     @logger.log_decorator
     def compute_E_average(self):
+        output = self.gmx_energy('Potential')
+        for line in output : 
+            splitted_line = line.split()
+            print splitted_line
+            if splitted_line and splitted_line[0] == 'Potential' : 
+                E_average = splitted_line[1]
+                return E_average
+        logger.__logger.error('E_average could not be found') 
         return 0
 
 
