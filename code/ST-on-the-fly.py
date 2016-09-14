@@ -124,7 +124,7 @@ class SimulatedTempering(object):
     """docstring for ST"""
     @logger.log_decorator
     def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', **kwargs):
-        print (num_step, Tmin, Tmax, Tstep, simu_type, mdp_filename)
+        
         super(SimulatedTempering,self).__init__()
         self._NUM_STEP = num_step
         self._T_RANGE=range(Tmin, Tmax, Tstep)
