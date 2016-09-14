@@ -49,7 +49,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         super(MolecularDynamicsProduction, self).__init__(**kwargs)
 
     @logger.log_decorator
-    def run():
+    def run(self):
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
         return compute_E_average()
     @logger.log_decorator
