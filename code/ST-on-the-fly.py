@@ -214,7 +214,7 @@ if __name__ == "__main__":
         num_step, 
         Tmin, Tmax, Tstep, 
         'md',  
-        mdp_filename = '../data/mini2.mdp', 
+        mdp_filename = '../data/md1.mdp', 
         gro_filename = '../data/ala10_md000.pdb', 
         top_filename = '../data/ala10.top', 
         out_path = './', 
