@@ -13,6 +13,8 @@ import logger
 import subprocess
 import shlex
 
+import random
+
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
     @logger.log_decorator
@@ -167,9 +169,12 @@ class SimulatedTempering(object):
         # self.simulation.T_current
         # self.simulation.E_average
         pass
+
     @logger.log_decorator
+    @staticmethod
     def toss_coin():
-        pass
+        return random.choice ( [-1, 1] )
+
     @logger.log_decorator
     def run_simulation(self): #pattern strategy
         self.simulation.run()
