@@ -15,7 +15,7 @@ class MolecularDynamics(object):
     @logger.log_decorator
     def __init__(self, mdp_filename, **kwargs):
         print ('je suis dans le constructor de MolecularDynamics')
-        super(MolecularDynamics, self).__init__()
+        super(MolecularDynamics, self).__init__(**kwargs)
         self._mdp_filename = mdp_filename
       
 class Simulation(object):
@@ -24,9 +24,9 @@ class Simulation(object):
     def __init__(self, T_current, **kwargs):
         print ('je suis dans le constructor de Simulation')
 
-        super(Simulation,self).__init__()
+        super(Simulation,self).__init__(**kwargs)
         print ('je suis revenu de super')
-        self._T_current == T_current
+        self.T_current = T_current
 
     @logger.log_decorator
     def run():
@@ -45,9 +45,9 @@ class MonteCarlo(Simulation):
 class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     """docstring for MolecularDynamicProduction"""
     @logger.log_decorator
-    def __init__(self, T_current, mdp_filename):
+    def __init__(self, **kwargs):
         print ('je suis dans le constructor de Prod') 
-        super(MolecularDynamicsProduction, self).__init__(T_current=T_current, mdp_filename=T_current)
+        super(MolecularDynamicsProduction, self).__init__(**kwargs)
 
     @logger.log_decorator
     def run():
@@ -57,7 +57,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 @logger.log_decorator
 def create_simulation(simu_type, T_current, mdp_filename): 
     if simu_type == 'md' : 
-        return MolecularDynamicsProduction(T_current, mdp_filename)
+        return MolecularDynamicsProduction(T_current=T_current, mdp_filename=mdp_filename)
     elif simu_type == 'mc':
         return MonteCarlo(T_current)
     else : 
