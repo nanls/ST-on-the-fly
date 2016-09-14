@@ -61,6 +61,11 @@ class MolecularDynamics(object):
         print (cmd)
         p = subprocess.Popen(shlex.split(cmd))
 
+    @logger.log_decorator
+    def gmx_mdrun(self):
+        cmd = "gmx mdrun -v -s {0}.tpr -o {0}.trr -e {0}.edr -g {0}.log -c {0}.gro".format(self.out_path + self.out_name)
+        print (cmd)
+        p = subprocess.Popen(shlex.split(cmd))    
 
 class Simulation(object):
     """docstring for Simulation"""
