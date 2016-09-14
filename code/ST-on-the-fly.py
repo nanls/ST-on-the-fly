@@ -17,6 +17,12 @@ class MolecularDynamics(object):
         print ('je suis dans le constructor de MolecularDynamics')
         super(MolecularDynamics, self).__init__(**kwargs)
         self._mdp_filename = mdp_filename
+
+    @property 
+    def mdp_filename(self):
+        """Get the current voltage."""
+        return self._mdp_filename
+
     @logger.log_decorator
     def run(self):
         print ('MD.run()=========')
