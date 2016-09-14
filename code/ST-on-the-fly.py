@@ -10,6 +10,9 @@ from __future__ import print_function
 import logger
 
 
+import subprocess
+import shlex
+
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
     @logger.log_decorator
@@ -45,6 +48,20 @@ class MolecularDynamics(object):
     @logger.log_decorator
     def run(self):
         print ('MD.run()=========')
+
+    @logger.log_decorator
+    def gmx_grompp(self) : 
+        cmd = "gmx grompp -f {0} -c {1} -p {2} -o {3}.tpr -po {3}.mdp -maxwarn {4}".format(   \
+            self.mdp_filename, \
+            self.gro_filename, \
+            self.top_filename, \
+            self.out_path + self.out_name , \
+            self.maxwarn \
+        )
+        print (cmd)
+        p = subprocess.Popen(shlex.split(cmd))
+
+
 class Simulation(object):
     """docstring for Simulation"""
     @logger.log_decorator
