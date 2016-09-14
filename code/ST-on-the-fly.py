@@ -18,7 +18,7 @@ class MolecularDynamics(object):
         super(MolecularDynamics, self).__init__(**kwargs)
         self._mdp_filename = mdp_filename
     @logger.log_decorator
-    def run():
+    def run(self):
         print ('MD.run()=========')
 class Simulation(object):
     """docstring for Simulation"""
