@@ -16,7 +16,7 @@ import shlex
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
     @logger.log_decorator
-    def __init__(self, mdp_filename, gro_filename, top_filename, out_path, out_name, maxwarn **kwargs):
+    def __init__(self, mdp_filename, gro_filename, top_filename, out_path, out_name, maxwarn, **kwargs):
         print ('je suis dans le constructor de MolecularDynamics')
         super(MolecularDynamics, self).__init__(**kwargs)
         self._mdp_filename = mdp_filename
@@ -66,6 +66,11 @@ class MolecularDynamics(object):
         cmd = "gmx mdrun -v -s {0}.tpr -o {0}.trr -e {0}.edr -g {0}.log -c {0}.gro".format(self.out_path + self.out_name)
         print (cmd)
         p = subprocess.Popen(shlex.split(cmd))    
+
+    @logger.log_decorator
+    def run(self): 
+        gmx_grompp()
+        gmx_mdrun()
 
 class Simulation(object):
     """docstring for Simulation"""
