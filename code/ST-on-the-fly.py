@@ -205,7 +205,7 @@ class SimulatedTempering(object):
 
             self.simulation.run()
 
-            T_attempt = chose_T_attempt()
+            T_attempt = self.choose_T_attempt()
         
             if attempt_OK(T_attempt) : 
                 self.simulation.T_current = T_next #if MD : change velocity --> Overriding
