@@ -110,11 +110,11 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
 
 @logger.log_decorator
-def create_simulation(simu_type, T_current, mdp_filename): 
+def create_simulation(simu_type, **kwargs): 
     if simu_type == 'md' : 
-        return MolecularDynamicsProduction(T_current=T_current, mdp_filename=mdp_filename)
+        return MolecularDynamicsProduction(**kwargs)
     elif simu_type == 'mc':
-        return MonteCarlo(T_current)
+        return MonteCarlo(**kwargs)
     else : 
         logger.__logger.error('Wrong choice of simulation')
         return None
@@ -123,12 +123,13 @@ def create_simulation(simu_type, T_current, mdp_filename):
 class SimulatedTempering(object):
     """docstring for ST"""
     @logger.log_decorator
-    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', mdp_filename=None, **kwargs):
+    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', **kwargs):
         print (num_step, Tmin, Tmax, Tstep, simu_type, mdp_filename)
         super(SimulatedTempering,self).__init__()
         self._NUM_STEP = num_step
         self._T_RANGE=range(Tmin, Tmax, Tstep)
-        self._SIMULATION=create_simulation(simu_type, Tmin, mdp_filename) #pattern strategy
+        kwargs['T_current'] = Tmin
+        self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
         self.f_current=0
         self._step_idx=0
         
@@ -198,7 +199,18 @@ if __name__ == "__main__":
     logger.__logger.info('run minimi')
 
     logger.__logger.info('new ST')
-    ST = SimulatedTempering(num_step, Tmin, Tmax, Tstep, 'md', 'mdp_file')
+    ST = SimulatedTempering(
+        num_step, 
+        Tmin, Tmax, Tstep, 
+        'md',  
+        mdp_filename = '../data/mini2.mdp', 
+        gro_filename = '../data/ala10_md000.pdb', 
+        top_filename = '../data/ala10.top', 
+        out_path = './', 
+        out_name = 'minimisation', 
+        maxwarn = 13
+    )
+    
     logger.__logger.info('ST.run')
 
 
