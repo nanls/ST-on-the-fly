@@ -106,6 +106,21 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     def run(self):
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
         return self.compute_E_average()
+
+    @logger.log_decorator
+    def gmx_energy(self, arg = 'Potential') : 
+
+    cmd = "echo {0} | gmx energy -f {1}.edr -o {1}_Potential.xvg' ".format(
+        arg,
+        self.out_path + self.out_name
+    )
+        
+    p = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    p_com = p.communicate() 
+    p_out = p_com[0].split('\n') 
+    return p_out
+
     @logger.log_decorator
     def compute_E_average(self):
         return 0
