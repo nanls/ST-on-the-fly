@@ -14,15 +14,18 @@ class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
     @logger.log_decorator
     def __init__(self, mdp_filename, **kwargs):
+        print ('je suis dans le constructor de MolecularDynamics')
         super(MolecularDynamics, self).__init__()
         self._mdp_filename = mdp_filename
-
-
+      
 class Simulation(object):
     """docstring for Simulation"""
     @logger.log_decorator
     def __init__(self, T_current, **kwargs):
+        print ('je suis dans le constructor de Simulation')
+
         super(Simulation,self).__init__()
+        print ('je suis revenu de super')
         self._T_current == T_current
 
     @logger.log_decorator
@@ -43,6 +46,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     """docstring for MolecularDynamicProduction"""
     @logger.log_decorator
     def __init__(self, T_current, mdp_filename):
+        print ('je suis dans le constructor de Prod') 
         super(MolecularDynamicsProduction, self).__init__(T_current=T_current, mdp_filename=T_current)
 
     @logger.log_decorator
@@ -65,6 +69,7 @@ class SimulatedTempering(object):
     """docstring for ST"""
     @logger.log_decorator
     def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', mdp_filename=None, **kwargs):
+        print (num_step, Tmin, Tmax, Tstep, simu_type, mdp_filename)
         super(SimulatedTempering,self).__init__()
         self._NUM_STEP = num_step
         self._T_RANGE=range(Tmin, Tmax, Tstep)
