@@ -51,7 +51,10 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     @logger.log_decorator
     def run():
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
-
+        return compute_E_average()
+    @logger.log_decorator
+    def compute_E_average():
+        return 0
 
 
 @logger.log_decorator
