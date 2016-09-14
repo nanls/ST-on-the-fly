@@ -35,7 +35,7 @@ class MonteCarlo(Simulation):
     """docstring for MonteCarlo"""
     
     @logger.log_decorator
-    def run():
+    def run(self):
         return compute_E_average()
     @logger.log_decorator
     def compute_E_average():
