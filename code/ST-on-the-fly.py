@@ -69,8 +69,8 @@ class MolecularDynamics(object):
 
     @logger.log_decorator
     def run(self): 
-        gmx_grompp()
-        gmx_mdrun()
+        self.gmx_grompp()
+        self.gmx_mdrun()
 
 class Simulation(object):
     """docstring for Simulation"""
