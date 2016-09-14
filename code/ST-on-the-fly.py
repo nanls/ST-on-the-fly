@@ -110,16 +110,18 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     @logger.log_decorator
     def gmx_energy(self, arg = 'Potential') : 
 
-    cmd = "echo {0} | gmx energy -f {1}.edr -o {1}_Potential.xvg' ".format(
-        arg,
-        self.out_path + self.out_name
-    )
-        
-    p = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p1 = subprocess.Popen( shlex.split("echo {0}".format(arg)), stdout=subprocess.PIPE ) 
 
-    p_com = p.communicate() 
-    p_out = p_com[0].split('\n') 
-    return p_out
+        cmd = "gmx energy -f {0}.edr -o {0}_Potential.xvg ".format(
+                    self.out_path + self.out_name
+                )
+               
+        p2 = subprocess.Popen(shlex.split(cmd), stdin=p1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        p2_com = p2.communicate() 
+        p2_out = p2_com[0].split('\n') 
+
+        return p2_out
 
     @logger.log_decorator
     def compute_E_average(self):
