@@ -38,7 +38,7 @@ class MonteCarlo(Simulation):
     def run(self):
         return compute_E_average()
     @logger.log_decorator
-    def compute_E_average():
+    def compute_E_average(self):
         return 0
 
 class MolecularDynamicsProduction(Simulation,MolecularDynamics):
@@ -53,7 +53,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
         return compute_E_average()
     @logger.log_decorator
-    def compute_E_average():
+    def compute_E_average(self):
         return 0
 
 
@@ -88,13 +88,13 @@ class SimulatedTempering(object):
         # self.simulation.E_average
         pass
     @logger.log_decorator
-    def toss_coin(self):
+    def toss_coin():
         pass
     @logger.log_decorator
-    def run_simulation(): #pattern strategy
+    def run_simulation(self): #pattern strategy
         self.simulation.run()
     @logger.log_decorator
-    def choose_T_attempt():
+    def choose_T_attempt(self):
         if toss_coin() == 'up' and T_current != Tmax: 
             print ('up')
         elif toss_coin() == 'down' and T_current != Tmin : 
@@ -104,13 +104,13 @@ class SimulatedTempering(object):
             print ('T does not change')
             #do not change T_current
     @logger.log_decorator
-    def compute_metropolis_criterion(T_attempt) : 
+    def compute_metropolis_criterion(self, T_attempt) : 
         f_attempt = f_attempt_estimate(T_attempt)
 
         #min (1, ... self.f_current ...  . )
         return 0
     @logger.log_decorator
-    def attempt_OK():
+    def attempt_OK(self):
         mc =  compute_metropolis_criterion() 
         if mc == 1 : 
             return True
