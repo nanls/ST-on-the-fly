@@ -218,7 +218,7 @@ if __name__ == "__main__":
         gro_filename = './minimisation_before_ST.gro', 
         top_filename = '../data/ala10.top', 
         out_path = './', 
-        out_name = 'minimisation', 
+        out_name = 'ST-simu', 
         maxwarn = 13
     )
     
