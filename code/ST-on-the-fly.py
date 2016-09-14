@@ -199,6 +199,15 @@ if __name__ == "__main__":
     Tstep = 1 
 
     logger.__logger.info('run minimi')
+    MD_minimi = MolecularDynamics(        
+        mdp_filename = '../data/mini2.mdp', 
+        gro_filename = '../data/ala10_md000.pdb', 
+        top_filename = '../data/ala10.top', 
+        out_path = './', 
+        out_name = 'minimisation_before_ST', 
+        maxwarn = 13)
+    MD_minimi.run()
+    logger.__logger.info('minimi OK')
 
     logger.__logger.info('new ST')
     ST = SimulatedTempering(
