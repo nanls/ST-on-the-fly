@@ -143,7 +143,7 @@ if __name__ == "__main__":
     logger.__logger.info('run minimi')
 
     logger.__logger.info('new ST')
-    ST = SimulatedTempering(num_step, Tmin, Tmax, Tstep)
+    ST = SimulatedTempering(num_step, Tmin, Tmax, Tstep, 'md', 'mdp_file')
     logger.__logger.info('ST.run')
 
 
