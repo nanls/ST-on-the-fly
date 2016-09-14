@@ -28,12 +28,6 @@ class Simulation(object):
         print ('je suis revenu de super')
         self.T_current = T_current
 
-    @logger.log_decorator
-    def run():
-        return compute_E_average()
-    @logger.log_decorator
-    def compute_E_average():
-        pass
 
 class MonteCarlo(Simulation):
     """docstring for MonteCarlo"""
