@@ -215,7 +215,7 @@ if __name__ == "__main__":
         Tmin, Tmax, Tstep, 
         'md',  
         mdp_filename = '../data/md1.mdp', 
-        gro_filename = '../data/ala10_md000.pdb', 
+        gro_filename = './minimisation_before_ST.gro', 
         top_filename = '../data/ala10.top', 
         out_path = './', 
         out_name = 'minimisation', 
