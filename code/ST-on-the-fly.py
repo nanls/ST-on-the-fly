@@ -178,16 +178,16 @@ class SimulatedTempering(object):
     @logger.log_decorator
     def run_simulation(self): #pattern strategy
         self.simulation.run()
+
     @logger.log_decorator
     def choose_T_attempt(self):
-        if toss_coin() == 'up' and T_current != Tmax: 
-            print ('up')
-        elif toss_coin() == 'down' and T_current != Tmin : 
-            print ('down')
-            # down 
-        else : 
-            print ('T does not change')
-            #do not change T_current
+        i_current = self._T_RANGE.index(self._SIMULATION.T_current)
+        try:
+            T_next = self._T_RANGE[i_current + cls.toss_coin() ]
+        except IndexError:
+            T_next = self._SIMULATION.T_current
+        return T_next
+
     @logger.log_decorator
     def compute_metropolis_criterion(self, T_attempt) : 
         f_attempt = f_attempt_estimate(T_attempt)
