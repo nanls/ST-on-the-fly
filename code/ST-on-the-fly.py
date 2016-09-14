@@ -13,15 +13,34 @@ import logger
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
     @logger.log_decorator
-    def __init__(self, mdp_filename, **kwargs):
+    def __init__(self, mdp_filename, gro_filename, top_filename, out_path, out_name, maxwarn **kwargs):
         print ('je suis dans le constructor de MolecularDynamics')
         super(MolecularDynamics, self).__init__(**kwargs)
         self._mdp_filename = mdp_filename
+        self._gro_filename = gro_filename
+        self._top_filename = top_filename
+        self._out_path = out_path
+        self._out_name = out_name
+        self._maxwarn = maxwarn
 
     @property 
     def mdp_filename(self):
-        """Get the current voltage."""
         return self._mdp_filename
+    @property 
+    def gro_filename(self):
+        return self._gro_filename
+    @property 
+    def top_filename(self):
+        return self._top_filename
+    @property 
+    def out_path(self):
+        return self._out_path
+    @property 
+    def out_name(self):
+        return self._out_name
+    @property 
+    def maxwarn(self):
+        return self._maxwarn
 
     @logger.log_decorator
     def run(self):
