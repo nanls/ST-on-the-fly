@@ -33,8 +33,11 @@ class MonteCarlo(Simulation):
     """docstring for MonteCarlo"""
     
     @logger.log_decorator
-    def run(): 
-        pass
+    def run():
+        return compute_E_average()
+    @logger.log_decorator
+    def compute_E_average():
+        return 0
 
 class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     """docstring for MolecularDynamicProduction"""
