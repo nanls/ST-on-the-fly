@@ -216,7 +216,7 @@ class SimulatedTempering(object):
     @logger.log_decorator
     def attempt_OK(self, T_attempt):
         if not T_attempt : return False
-        mc =  compute_metropolis_criterion(T_attempt) 
+        mc =  self.compute_metropolis_criterion(T_attempt) 
         if mc == 1 : 
             return True
         else : 
