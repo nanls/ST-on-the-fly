@@ -199,11 +199,9 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def f_attempt_estimate(self, T_attempt):
-        
+        # (beta_attempt - beta_current) E_current_average / 2
+        return (self._BETA[T_attempt] - self._BETA[self.simulation.T_current] ) * self.simulation.E_average / 2
 
-        # self.simulation.T_current
-        # self.simulation.E_average
-        pass
 
     # @staticmethod returns descriptor objects, not functions. 
     # problem : most decorators are not designed to accept descriptors.
