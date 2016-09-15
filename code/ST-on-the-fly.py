@@ -15,6 +15,22 @@ import shlex
 
 import random
 
+
+
+class ListWithoutNegIdx(list):
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            if key < 0:
+                raise IndexError("negative index not allowed")
+            else :  
+                return super(ListWithoutNegIdx, self).__getitem__(key)
+        else : 
+            raise TypeError ("ListWithoutNegIdx indices must be integers, not "+ str(type (key) ) )  
+
+
+
+
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
     @logger.log_decorator
