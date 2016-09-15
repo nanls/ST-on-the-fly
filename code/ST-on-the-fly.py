@@ -172,7 +172,7 @@ class SimulatedTempering(object):
         
         super(SimulatedTempering,self).__init__()
         self._NUM_STEP = num_step
-        self._T_RANGE=range(Tmin, Tmax, Tstep)
+        self._T_RANGE=ListWithoutNegIdx( range(Tmin, Tmax, Tstep) ) 
         kwargs['T_current'] = Tmin
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
         self.f_current=0
