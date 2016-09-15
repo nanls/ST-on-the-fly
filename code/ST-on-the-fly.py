@@ -200,6 +200,18 @@ class SimulatedTempering(object):
         # __future__ division -> floting point division
 
     @logger.log_decorator
+    def update_f(self, T):
+        try : 
+            T_previous = self._measure_sequence[-2][0]
+            E_previous = self._measure_sequence[-2][1] 
+            E_current = self._measure_sequence[-1][1]
+            self._f[T] = self._f[T_previous] + (self._BETA[T] - self._BETA[T_previous]) *(E_current + E_previous) / 2
+
+        except IndexError : #no previous step because ST just initialized
+            self._f[T] = 0        
+
+
+    @logger.log_decorator
     def f_attempt_estimate(self, T_attempt):
         # (beta_attempt - beta_current) E_current_average / 2
         return (self._BETA[T_attempt] - self._BETA[self.simulation.T_current] ) * self.simulation.E_average / 2
@@ -263,6 +275,8 @@ class SimulatedTempering(object):
         while self.step_idx < self.MAX_NUM_STEP : 
 
             E_current_average = self.simulation.run()
+
+            self.update_f(self.simulation.T_current)
 
             self._measure_sequence.append( (self.simulation.T_current, E_current_average) )
 
