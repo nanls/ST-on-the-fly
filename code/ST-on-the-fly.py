@@ -185,7 +185,7 @@ class SimulatedTempering(object):
         self._BETA = {T : SimulatedTempering.compute_beta(T) for T in self._T_RANGE }
         kwargs['T_current'] = Tmin
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
-        self.f_current=0
+        self._f = {Tmin : 0}
         self._step_idx=0
         self._measure_sequence=[]
 
