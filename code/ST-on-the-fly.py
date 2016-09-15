@@ -225,7 +225,7 @@ class SimulatedTempering(object):
     @logger.log_decorator
     def compute_metropolis_criterion(self, T_attempt) : 
         f_attempt = f_attempt_estimate(T_attempt)
-
+        # mc = min (1 , exp (-   [  (beta_attempt - beta_current) * E_current_average  -   (f_attempt_estimate - f_current_compute)  ]   ) )
         #min (1, ... self.f_current ...  . )
         return 0
     @logger.log_decorator
