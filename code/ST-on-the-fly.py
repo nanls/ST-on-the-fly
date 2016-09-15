@@ -19,6 +19,7 @@ import random
 
 import scipy
 
+import math
 
 class ListWithoutNegIdx(list):
 
@@ -226,9 +227,23 @@ class SimulatedTempering(object):
     @logger.log_decorator
     def compute_metropolis_criterion(self, T_attempt) : 
         f_attempt = f_attempt_estimate(T_attempt)
+        mc = min 
+            (
+                1, 
+                math.exp(
+                            - (
+                                  (
+                                      self._BETA[T_attempt] - self._BETA[self.simulation.T_current]
+                                  ) * self.simulation.E_average #self._measure_sequence[-1][1]
+                                - (
+                                    self.f[T_attempt] - self.f[self.simulation.T_current]
+                                  )
+                              )
+                        )
+            )
+        return mc
         # mc = min (1 , exp (-   [  (beta_attempt - beta_current) * E_current_average  -   (f_attempt_estimate - f_current_compute)  ]   ) )
-        #min (1, ... self.f_current ...  . )
-        return 0
+
     @logger.log_decorator
     def attempt_OK(self, T_attempt):
         if not T_attempt : return False
