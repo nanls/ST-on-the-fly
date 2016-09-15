@@ -226,7 +226,12 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def compute_metropolis_criterion(self, T_attempt) : 
-        f_attempt = f_attempt_estimate(T_attempt)
+
+        try:
+            f_attempt = self.f[T_attempt]
+        except KeyError:
+            f_attempt = self.f_attempt_estimate(T_attempt)
+
         mc = min 
             (
                 1, 
@@ -236,7 +241,7 @@ class SimulatedTempering(object):
                                       self._BETA[T_attempt] - self._BETA[self.simulation.T_current]
                                   ) * self.simulation.E_average #self._measure_sequence[-1][1]
                                 - (
-                                    self.f[T_attempt] - self.f[self.simulation.T_current]
+                                    f_attempt - self.f[self.simulation.T_current]
                                   )
                               )
                         )
