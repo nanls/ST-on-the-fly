@@ -16,6 +16,8 @@ import shlex
 import random
 
 
+import scipy
+
 
 class ListWithoutNegIdx(list):
 
@@ -167,6 +169,9 @@ def create_simulation(simu_type, **kwargs):
 
 class SimulatedTempering(object):
     """docstring for ST"""
+
+    k_Boltzmann = scipy.constants.value(u'Boltzmann') # ??? k
+    
     @logger.log_decorator
     def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', **kwargs):
         
@@ -184,6 +189,8 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def f_attempt_estimate(self, T_attempt):
+        
+
         # self.simulation.T_current
         # self.simulation.E_average
         pass
