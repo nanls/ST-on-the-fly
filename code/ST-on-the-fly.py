@@ -186,8 +186,12 @@ class SimulatedTempering(object):
         # self.simulation.E_average
         pass
 
-    @logger.log_decorator
+    # @staticmethod returns descriptor objects, not functions. 
+    # problem : most decorators are not designed to accept descriptors.
+    # solution : @staticmethod must be the top-most decorator 
+    # for another decorator to decorate it.
     @staticmethod
+    @logger.log_decorator
     def toss_coin():
         return random.choice ( [-1, 1] )
 
