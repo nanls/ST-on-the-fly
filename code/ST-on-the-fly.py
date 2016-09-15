@@ -6,6 +6,7 @@
 
 
 from __future__ import print_function
+from __future__ import division 
 
 import logger
 
@@ -180,12 +181,21 @@ class SimulatedTempering(object):
         self._T_RANGE=ListWithoutNegIdx( range(Tmin, Tmax+1, Tstep) ) 
         #range (a, b) = [a, b[
         #range (a, b+1) = [a, b+1[ = [a, b]
+        self._BETA = {T : SimulatedTempering.compute_beta(T) for T in self._T_RANGE }
         kwargs['T_current'] = Tmin
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
         self.f_current=0
         self._step_idx=0
-        
-
+    
+    # @classmethod returns descriptor objects, not functions. 
+    # problem : most decorators are not designed to accept descriptors.
+    # solution : @classmethod must be the top-most decorator 
+    # for another decorator to decorate it.
+    @classmethod
+    @logger.log_decorator
+    def compute_beta(cls, T):
+        return 1/cls.k_Boltzmann * T
+        # __future__ division -> floting point division
 
     @logger.log_decorator
     def f_attempt_estimate(self, T_attempt):
