@@ -186,7 +186,8 @@ class SimulatedTempering(object):
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
         self.f_current=0
         self._step_idx=0
-    
+        self._measure_sequence=[]
+
     # @classmethod returns descriptor objects, not functions. 
     # problem : most decorators are not designed to accept descriptors.
     # solution : @classmethod must be the top-most decorator 
@@ -241,7 +242,9 @@ class SimulatedTempering(object):
     def run(self):
         while self.step_idx < self.MAX_NUM_STEP : 
 
-            self.simulation.run()
+            E_current_average = self.simulation.run()
+
+            self._measure_sequence.append( (self.simulation.T_current, E_current_average) )
 
             T_attempt = self.choose_T_attempt()
         
