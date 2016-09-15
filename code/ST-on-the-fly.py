@@ -146,7 +146,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         output = self.gmx_energy('Potential')
         for line in output : 
             splitted_line = line.split()
-            print splitted_line
+            print (splitted_line)
             if splitted_line and splitted_line[0] == 'Potential' : 
                 E_average = splitted_line[1]
                 return E_average
