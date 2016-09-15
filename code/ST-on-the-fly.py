@@ -204,7 +204,7 @@ class SimulatedTempering(object):
         try:
             T_attempt = self._T_RANGE[i_current + SimulatedTempering.toss_coin() ]
         except IndexError:
-            T_attempt = self._SIMULATION.T_current
+            T_attempt = None
         return T_attempt
 
     @logger.log_decorator
@@ -214,7 +214,8 @@ class SimulatedTempering(object):
         #min (1, ... self.f_current ...  . )
         return 0
     @logger.log_decorator
-    def attempt_OK(self):
+    def attempt_OK(self, T_attempt):
+        if not T_attempt : return False
         mc =  compute_metropolis_criterion() 
         if mc == 1 : 
             return True
