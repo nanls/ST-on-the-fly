@@ -218,6 +218,23 @@ class SimulatedTempering(object):
         # If an exeption occurs during execution of the try clause,
         # the rest of the clause is skipped.    
 
+    @logger.log_decorator
+    def update_f_next(self, T_current):
+        i_current = self._T_RANGE.index(self._SIMULATION.T_current)
+        try : 
+            T_next = self._T_RANGE[i_current + 1 ]
+            try:
+                self.compute_f(self, T_next)
+            except NoECurrent:
+                self.estimate_f(self, T_next)
+        except IndexError : #no next T because Tcurrent = Tmax 
+            pass
+        
+        # Remember : 
+        # If an exeption occurs during execution of the try clause,
+        # the rest of the clause is skipped.    
+
+
 
     @logger.log_decorator
     def f_attempt_estimate(self, T_attempt):
