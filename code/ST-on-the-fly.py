@@ -244,6 +244,13 @@ class SimulatedTempering(object):
         self._f[T] = (self._BETA[T] - self._BETA[T_previous] ) * self._energies[T_previous] / 2
 
 
+    @logger.log_decorator
+    def compute_f(self, T):
+        # f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
+        T_idx = self._T_RANGE.index(T)
+        T_previous = self._T_RANGE[T_idx - 1 ]
+        self._f[T] =  self._f[T_previous] + (self._BETA[T] - self._BETA[T_previous] ) * ( self._energies[T] + self._energies[T_previous] )  / 2
+
 
     # @staticmethod returns descriptor objects, not functions. 
     # problem : most decorators are not designed to accept descriptors.
