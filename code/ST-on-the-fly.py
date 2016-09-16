@@ -216,6 +216,13 @@ class Temperature(object):
         self._f =  Tprev._f + (self._BETA - T_previous._BETA ) * ( self._E + T_previous._E )  / 2
 
 
+    @logger.log_decorator
+    def update_E(self, E_new):
+
+        self._E =  self._E  + ( (E_new - self._E ) / self._number_of_passes)
+        
+
+
 class SimulatedTempering(object):
     """docstring for ST"""
 
@@ -322,12 +329,6 @@ class SimulatedTempering(object):
             return True
         else : 
             return False
-    @logger.log_decorator
-    def update_E(self, E_current_average):
-        i_current = self.T_current_idx()
-        energies_of_T_current = [self._energies[i_current], E_current_average]
-        new_E_average_of_T_current = np.mean(energies_of_T_current)
-        self._energies[i_current] = new_E_average_of_T_current
 
     @logger.log_decorator
     def run(self):
@@ -335,7 +336,7 @@ class SimulatedTempering(object):
 
             E_current_average = self.simulation.run()
 
-            self.update_E(E_current_average) 
+            self.T_current.update_E(E_current_average) 
 
             self.update_f_current()
             self.update_f_next ()
