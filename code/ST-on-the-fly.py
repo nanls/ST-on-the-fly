@@ -169,6 +169,33 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         self._mdp_filename = self._mdp_template % self.T_current
         
         self.update_velocities()
+
+    def update_velocities(self, T_new):
+
+        with (open(self.gro_filename, 'r') as infile, \
+            open(self.gro_filename+'.tmp', 'w') as outfile
+        ):
+            for line_idx, line in enumerate (infile) : 
+                line = line.split()  # rm \n too
+
+                # nb of atom on seconde line -> 2-1
+                if line_idx == 1 : 
+                    nb_of_atom = int(line )
+
+                # from third line to x = 3 + nb_of_atom th line : 
+                if line_idx in xrange(2, 2 + nb_of_atom + 1) : 
+                    #Remember [a, b] = xrange (a, b + 1 )
+                    velocities = line[-3:]
+                    new_velocities = list[]
+                    for velocity in velocities : 
+                        new_velocity = velocity * math.sqrt(T_new / self.T_current)
+                        new_velocities.append(new_velocity)
+
+                    line [-3:] = new_velocities
+
+                outfile.write(line)
+
+
     
 @logger.log_decorator
 def create_simulation(simu_type, **kwargs): 
