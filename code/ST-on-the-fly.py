@@ -21,6 +21,8 @@ import scipy
 
 import math
 
+import numpy as np
+
 class ListWithoutNegIdx(list):
 
     def __getitem__(self, key):
@@ -270,12 +272,20 @@ class SimulatedTempering(object):
             return True
         else : 
             return False
+    @logger.log_decorator
+    def update_E(self, E_current_average):
+        i_current = self._T_RANGE.index(self._SIMULATION.T_current)
+        energies_of_T_current = [self._energies[i_current], E_current_average]
+        new_E_average_of_T_current = np.mean(energies_of_T_current)
+        self._energies[i_current] = new_E_average_of_T_current
 
     @logger.log_decorator
     def run(self):
         while self.step_idx < self.MAX_NUM_STEP : 
 
             E_current_average = self.simulation.run()
+
+            self.update_E(E_current_average) 
 
             self.update_f(self.simulation.T_current)
 
