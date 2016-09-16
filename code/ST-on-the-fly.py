@@ -196,6 +196,26 @@ class Temperature(object):
         # __future__ division -> floting point division
 
 
+    @logger.log_decorator
+    def update_f(self, Tprev) : 
+        try:
+            self.compute_f(Tprev)
+        except NoECurrent:
+            self.estimate_f(Tprev)
+
+
+    @logger.log_decorator
+    def estimate_f(self, Tprev):
+        # (beta_next - beta_previous) E_previous / 2
+        self._f = (self._BETA - Tprev._BETA ) * Tprev._E / 2
+
+
+    @logger.log_decorator
+    def compute_f(self, Tprev):
+        # f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
+        self._f =  Tprev._f + (self._BETA - T_previous._BETA ) * ( self._E + T_previous._E )  / 2
+
+
 class SimulatedTempering(object):
     """docstring for ST"""
 
@@ -227,7 +247,7 @@ class SimulatedTempering(object):
         i_current = self.T_current_idx()
         try : 
             T_previous = self._T_RANGE[i_current-1]
-            self.update_f(T_current)
+            T_current.update_f(T_previous)
         except IndexError : #no previous T because Tcurrent = Tmin 
             self._f[T] = 0 #f_Tmin is always equal to 0.
 
@@ -240,7 +260,7 @@ class SimulatedTempering(object):
         i_current = self.T_current_idx()
         try : 
             T_next = self._T_RANGE[i_current + 1 ]
-            self.update_f(T_next)
+            T_next.update_f(T_current)
         except IndexError : #no next T because Tcurrent = Tmax 
             pass
 
@@ -248,28 +268,6 @@ class SimulatedTempering(object):
         # If an exeption occurs during execution of the try clause,
         # the rest of the clause is skipped.    
 
-    @logger.log_decorator
-    def update_f(self, T) : 
-        try:
-            self.compute_f(T)
-        except NoECurrent:
-            self.estimate_f( T)
-
-
-    @logger.log_decorator
-    def estimate_f(self, T):
-        # (beta_next - beta_previous) E_previous / 2
-        T_idx = self._T_RANGE.index(T)
-        T_previous = self._T_RANGE[T_idx - 1 ]
-        self._f[T] = (self._BETA[T] - self._BETA[T_previous] ) * self._energies[T_previous] / 2
-
-
-    @logger.log_decorator
-    def compute_f(self, T):
-        # f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
-        T_idx = self._T_RANGE.index(T)
-        T_previous = self._T_RANGE[T_idx - 1 ]
-        self._f[T] =  self._f[T_previous] + (self._BETA[T] - self._BETA[T_previous] ) * ( self._energies[T] + self._energies[T_previous] )  / 2
 
 
     # @staticmethod returns descriptor objects, not functions. 
