@@ -243,11 +243,11 @@ class SimulatedTempering(object):
         return [T._VALUE for T in self._T_RANGE].index(T_wanted)
         
     @logger.log_decorator
-    def update_f_current(self, T_current):
+    def update_f_current(self):
         i_current = self.T_current_idx()
         try : 
             T_previous = self._T_RANGE[i_current-1]
-            T_current.update_f(T_previous)
+            self._SIMULATION.T_current.update_f(T_previous)
         except IndexError : #no previous T because Tcurrent = Tmin 
             self._f[T] = 0 #f_Tmin is always equal to 0.
 
@@ -256,11 +256,11 @@ class SimulatedTempering(object):
         # the rest of the clause is skipped.    
 
     @logger.log_decorator
-    def update_f_next(self, T_current):
+    def update_f_next(self):
         i_current = self.T_current_idx()
         try : 
             T_next = self._T_RANGE[i_current + 1 ]
-            T_next.update_f(T_current)
+            T_next.update_f( self._SIMULATION.T_current )
         except IndexError : #no next T because Tcurrent = Tmax 
             pass
 
