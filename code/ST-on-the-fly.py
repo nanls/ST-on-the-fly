@@ -166,11 +166,13 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     @property.setter
     def T_current(self, T_new):
+        self.update_velocities(T_new)
+
         self._T_current = T_new
         
         self._mdp_filename = self._mdp_template % self.T_current
         
-        self.update_velocities()
+        
 
     def update_velocities(self, T_new):
 
