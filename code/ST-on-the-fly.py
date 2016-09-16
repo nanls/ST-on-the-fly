@@ -171,36 +171,50 @@ def create_simulation(simu_type, **kwargs):
         return None
 
 
-class SimulatedTempering(object):
-    """docstring for ST"""
+class Temperature(object):
+    """docstring for Temperature"""
 
     k_Boltzmann = scipy.constants.value(u'Boltzmann') # ??? k
-    
-    @logger.log_decorator
-    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', **kwargs):
-        
-        super(SimulatedTempering,self).__init__()
-        self._NUM_STEP = num_step
-        self._T_RANGE=ListWithoutNegIdx( range(Tmin, Tmax+1, Tstep) ) 
-        #range (a, b) = [a, b[
-        #range (a, b+1) = [a, b+1[ = [a, b]
-        self._BETA = {T : SimulatedTempering.compute_beta(T) for T in self._T_RANGE }
-        kwargs['T_current'] = Tmin
-        self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
-        self._f = {Tmin : 0}
-        self._energies = []
-        self._step_idx=0
-        self._measure_sequence=[]
 
+    def __init__(self, value):
+        super(Temperature, self).__init__()
+        self._VALUE = value
+        self._number_of_passes = 0 
+        self._f = 0
+        self._E = None
+        self._BETA  = self.compute_beta()
+
+    
     # @classmethod returns descriptor objects, not functions. 
     # problem : most decorators are not designed to accept descriptors.
     # solution : @classmethod must be the top-most decorator 
     # for another decorator to decorate it.
     @classmethod
     @logger.log_decorator
-    def compute_beta(cls, T):
-        return 1/cls.k_Boltzmann * T
+    def compute_beta(self):
+        return 1/cls.k_Boltzmann * self._VALUE
         # __future__ division -> floting point division
+
+
+class SimulatedTempering(object):
+    """docstring for ST"""
+
+    @logger.log_decorator
+    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', **kwargs):
+        
+        super(SimulatedTempering,self).__init__()
+        self._NUM_STEP = num_step
+        self._T_RANGE=ListWithoutNegIdx() 
+        for T in  xrange(Tmin, Tmax+1, Tstep) : 
+            self._T_RANGE.append(Temperature(T))
+        #range (a, b) = [a, b[
+        #range (a, b+1) = [a, b+1[ = [a, b]
+        kwargs['T_current'] = Tmin
+        self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
+
+        self._step_idx=0
+        self._measure_sequence=[]
+
 
     @logger.log_decorator
     def update_f_current(self, T_current):
