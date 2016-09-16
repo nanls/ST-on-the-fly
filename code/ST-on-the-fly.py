@@ -242,6 +242,10 @@ class SimulatedTempering(object):
         self._step_idx=0
         self._measure_sequence=[]
 
+    @property
+    def T_current(self):
+        return self._T_RANGE[self.T_current_idx]
+    
     @property    
     def T_current_idx():
         return self.get_T_idx(self._SIMULATION.T_current)
