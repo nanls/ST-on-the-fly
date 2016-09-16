@@ -23,6 +23,8 @@ import math
 
 import numpy as np
 
+import os
+
 class ListWithoutNegIdx(list):
 
     def __getitem__(self, key):
@@ -172,6 +174,8 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     def update_velocities(self, T_new):
 
+        #Can't change a file, so create a new temp one...
+
         with (open(self.gro_filename, 'r') as infile, \
             open(self.gro_filename+'.tmp', 'w') as outfile
         ):
@@ -194,6 +198,10 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
                     line [-3:] = new_velocities
 
                 outfile.write(line)
+
+        # ... and rename it (the old one is erase)
+        os.rename(self.gro_filename+'.tmp', self.gro_filename)
+
 
 
     
