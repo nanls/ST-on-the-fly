@@ -320,6 +320,7 @@ class SimulatedTempering(object):
             self.update_E(E_current_average) 
 
             self.update_f_current(self.simulation.T_current)
+            self.update_f_next (self.simulation.T_current)
 
             self._measure_sequence.append( (self.simulation.T_current, E_current_average) )
 
