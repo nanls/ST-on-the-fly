@@ -159,7 +159,11 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         logger.__logger.error('E_average could not be found') 
         return 0
 
+    @property.setter
+    def T_current(self, T_new):
+        self._T_current = T_new
 
+    
 @logger.log_decorator
 def create_simulation(simu_type, **kwargs): 
     if simu_type == 'md' : 
