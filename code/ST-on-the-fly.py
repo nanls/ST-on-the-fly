@@ -237,9 +237,12 @@ class SimulatedTempering(object):
 
 
     @logger.log_decorator
-    def f_attempt_estimate(self, T_attempt):
-        # (beta_attempt - beta_current) E_current_average / 2
-        return (self._BETA[T_attempt] - self._BETA[self.simulation.T_current] ) * self.simulation.E_average / 2
+    def estimate_f(self, T):
+        # (beta_next - beta_previous) E_previous / 2
+        T_idx = self._T_RANGE.index(T)
+        T_previous = self._T_RANGE[T_idx - 1 ]
+        self._f[T] = (self._BETA[T] - self._BETA[T_previous] ) * self._energies[T_previous] / 2
+
 
 
     # @staticmethod returns descriptor objects, not functions. 
