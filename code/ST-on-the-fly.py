@@ -21,6 +21,8 @@ import scipy
 
 import math
 
+import numpy as np
+
 class ListWithoutNegIdx(list):
 
     def __getitem__(self, key):
@@ -169,52 +171,110 @@ def create_simulation(simu_type, **kwargs):
         return None
 
 
-class SimulatedTempering(object):
-    """docstring for ST"""
+class Temperature(object):
+    """docstring for Temperature"""
 
     k_Boltzmann = scipy.constants.value(u'Boltzmann') # ??? k
-    
-    @logger.log_decorator
-    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', **kwargs):
-        
-        super(SimulatedTempering,self).__init__()
-        self._NUM_STEP = num_step
-        self._T_RANGE=ListWithoutNegIdx( range(Tmin, Tmax+1, Tstep) ) 
-        #range (a, b) = [a, b[
-        #range (a, b+1) = [a, b+1[ = [a, b]
-        self._BETA = {T : SimulatedTempering.compute_beta(T) for T in self._T_RANGE }
-        kwargs['T_current'] = Tmin
-        self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
-        self._f = {Tmin : 0}
-        self._step_idx=0
-        self._measure_sequence=[]
 
+    def __init__(self, value):
+        super(Temperature, self).__init__()
+        self._VALUE = value
+        self._number_of_passes = 0 
+        self._f = 0
+        self._E = None
+        self._BETA  = self.compute_beta()
+
+    
     # @classmethod returns descriptor objects, not functions. 
     # problem : most decorators are not designed to accept descriptors.
     # solution : @classmethod must be the top-most decorator 
     # for another decorator to decorate it.
     @classmethod
     @logger.log_decorator
-    def compute_beta(cls, T):
-        return 1/cls.k_Boltzmann * T
+    def compute_beta(self):
+        return 1/cls.k_Boltzmann * self._VALUE
         # __future__ division -> floting point division
 
+
     @logger.log_decorator
-    def update_f(self, T):
+    def update_f(self, Tprev) : 
+        try:
+            self.compute_f(Tprev)
+        except NoECurrent:
+            self.estimate_f(Tprev)
+
+
+    @logger.log_decorator
+    def estimate_f(self, Tprev):
+        # (beta_next - beta_previous) E_previous / 2
+        self._f = (self._BETA - Tprev._BETA ) * Tprev._E / 2
+
+
+    @logger.log_decorator
+    def compute_f(self, Tprev):
+        # f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
+        self._f =  Tprev._f + (self._BETA - T_previous._BETA ) * ( self._E + T_previous._E )  / 2
+
+
+    @logger.log_decorator
+    def update_E(self, E_new):
+
+        self._E =  self._E  + ( (E_new - self._E ) / self._number_of_passes)
+        
+
+
+class SimulatedTempering(object):
+    """docstring for ST"""
+
+    @logger.log_decorator
+    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', **kwargs):
+        
+        super(SimulatedTempering,self).__init__()
+        self._NUM_STEP = num_step
+        self._T_RANGE=ListWithoutNegIdx() 
+        for T in  xrange(Tmin, Tmax+1, Tstep) : 
+            self._T_RANGE.append(Temperature(T))
+        #range (a, b) = [a, b[
+        #range (a, b+1) = [a, b+1[ = [a, b]
+        kwargs['T_current'] = Tmin
+        self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
+
+        self._step_idx=0
+        self._measure_sequence=[]
+
+    @property    
+    def T_current_idx():
+        return self.get_T_idx(self._SIMULATION.T_current)
+
+    def get_T_idx(self, T_wanted) : 
+        return [T._VALUE for T in self._T_RANGE].index(T_wanted)
+        
+    @logger.log_decorator
+    def update_f_current(self):
+        i_current = self.T_current_idx()
         try : 
-            T_previous = self._measure_sequence[-2][0]
-            E_previous = self._measure_sequence[-2][1] 
-            E_current = self._measure_sequence[-1][1]
-            self._f[T] = self._f[T_previous] + (self._BETA[T] - self._BETA[T_previous]) *(E_current + E_previous) / 2
+            T_previous = self._T_RANGE[i_current-1]
+            self._SIMULATION.T_current.update_f(T_previous)
+        except IndexError : #no previous T because Tcurrent = Tmin 
+            self._f[T] = 0 #f_Tmin is always equal to 0.
 
-        except IndexError : #no previous step because ST just initialized
-            self._f[T] = 0        
-
+        # Remember : 
+        # If an exeption occurs during execution of the try clause,
+        # the rest of the clause is skipped.    
 
     @logger.log_decorator
-    def f_attempt_estimate(self, T_attempt):
-        # (beta_attempt - beta_current) E_current_average / 2
-        return (self._BETA[T_attempt] - self._BETA[self.simulation.T_current] ) * self.simulation.E_average / 2
+    def update_f_next(self):
+        i_current = self.T_current_idx()
+        try : 
+            T_next = self._T_RANGE[i_current + 1 ]
+            T_next.update_f( self._SIMULATION.T_current )
+        except IndexError : #no next T because Tcurrent = Tmax 
+            pass
+
+        # Remember : 
+        # If an exeption occurs during execution of the try clause,
+        # the rest of the clause is skipped.    
+
 
 
     # @staticmethod returns descriptor objects, not functions. 
@@ -229,7 +289,7 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def choose_T_attempt(self):
-        i_current = self._T_RANGE.index(self._SIMULATION.T_current)
+        i_current =self.T_current_idx()
         try:
             T_attempt = self._T_RANGE[i_current + SimulatedTempering.toss_coin() ]
         except IndexError:
@@ -276,7 +336,10 @@ class SimulatedTempering(object):
 
             E_current_average = self.simulation.run()
 
-            self.update_f(self.simulation.T_current)
+            self.T_current.update_E(E_current_average) 
+
+            self.update_f_current()
+            self.update_f_next ()
 
             self._measure_sequence.append( (self.simulation.T_current, E_current_average) )
 
