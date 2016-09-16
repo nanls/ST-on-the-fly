@@ -215,10 +215,16 @@ class SimulatedTempering(object):
         self._step_idx=0
         self._measure_sequence=[]
 
+    @property    
+    def T_current_idx():
+        return self.get_T_idx(self._SIMULATION.T_current)
 
+    def get_T_idx(self, T_wanted) : 
+        return [T._VALUE for T in self._T_RANGE].index(T_wanted)
+        
     @logger.log_decorator
     def update_f_current(self, T_current):
-        i_current = self._T_RANGE.index(self._SIMULATION.T_current)
+        i_current = self.T_current_idx()
         try : 
             T_previous = self._T_RANGE[i_current-1]
             self.update_f(T_current)
@@ -231,7 +237,7 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def update_f_next(self, T_current):
-        i_current = self._T_RANGE.index(self._SIMULATION.T_current)
+        i_current = self.T_current_idx()
         try : 
             T_next = self._T_RANGE[i_current + 1 ]
             self.update_f(T_next)
@@ -278,7 +284,7 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def choose_T_attempt(self):
-        i_current = self._T_RANGE.index(self._SIMULATION.T_current)
+        i_current =self.T_current_idx()
         try:
             T_attempt = self._T_RANGE[i_current + SimulatedTempering.toss_coin() ]
         except IndexError:
@@ -320,7 +326,7 @@ class SimulatedTempering(object):
             return False
     @logger.log_decorator
     def update_E(self, E_current_average):
-        i_current = self._T_RANGE.index(self._SIMULATION.T_current)
+        i_current = self.T_current_idx()
         energies_of_T_current = [self._energies[i_current], E_current_average]
         new_E_average_of_T_current = np.mean(energies_of_T_current)
         self._energies[i_current] = new_E_average_of_T_current
