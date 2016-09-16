@@ -186,6 +186,7 @@ class SimulatedTempering(object):
         kwargs['T_current'] = Tmin
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
         self._f = {Tmin : 0}
+        self._energies = []
         self._step_idx=0
         self._measure_sequence=[]
 
