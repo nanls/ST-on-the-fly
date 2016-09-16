@@ -168,7 +168,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         
         self._mdp_filename = self._mdp_template % self.T_current
         
-
+        self.update_velocities()
     
 @logger.log_decorator
 def create_simulation(simu_type, **kwargs): 
