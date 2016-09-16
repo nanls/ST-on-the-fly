@@ -207,10 +207,7 @@ class SimulatedTempering(object):
         i_current = self._T_RANGE.index(self._SIMULATION.T_current)
         try : 
             T_previous = self._T_RANGE[i_current-1]
-            try:
-                self.compute_f(self, T_current)
-            except NoECurrent:
-                self.estimate_f(self, T_current)
+            self.update_f(T_current)
         except IndexError : #no previous T because Tcurrent = Tmin 
             self._f[T] = 0 #f_Tmin is always equal to 0.
 
@@ -223,17 +220,20 @@ class SimulatedTempering(object):
         i_current = self._T_RANGE.index(self._SIMULATION.T_current)
         try : 
             T_next = self._T_RANGE[i_current + 1 ]
-            try:
-                self.compute_f(self, T_next)
-            except NoECurrent:
-                self.estimate_f(self, T_next)
+            self.update_f(T_next)
         except IndexError : #no next T because Tcurrent = Tmax 
             pass
-        
+
         # Remember : 
         # If an exeption occurs during execution of the try clause,
         # the rest of the clause is skipped.    
 
+    @logger.log_decorator
+    def update_f(self, T) : 
+        try:
+            self.compute_f(T)
+        except NoECurrent:
+            self.estimate_f( T)
 
 
     @logger.log_decorator
