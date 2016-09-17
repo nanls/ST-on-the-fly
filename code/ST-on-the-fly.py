@@ -638,13 +638,16 @@ if __name__ == "__main__":
         MD_minimi.run()
         logger.__logger.info('minimi OK')
 
+        st_gro_filename = args.out_path + args.minimisation_outname
+    else : 
+        st_gro_filename = args.gro_filename
     logger.__logger.info('new ST')
     ST = SimulatedTempering(
         args.nb_md, 
         args.Tmin, args.Tmax, args.Tstep, 
         'md',  
         st_mdp_template_filename = args.st_mdp_template_filename, 
-        gro_filename = './minimisation_before_ST.gro', 
+        gro_filename = st_gro_filename, 
         top_filename = args.top_filename, 
         out_path = args.out_path, 
         out_name = args.st_outname, 
