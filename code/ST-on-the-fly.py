@@ -625,18 +625,18 @@ if __name__ == "__main__":
     logger.__logger.setLevel(level)
 
 
+    if args.minimisation : 
 
-
-    logger.__logger.info('run minimi')
-    MD_minimi = MolecularDynamics(        
-        mdp_filename = args.minimisation_mdp_filename, 
-        gro_filename = args.gro_filename, 
-        top_filename = args.top_filename, 
-        out_path = args.out_path, 
-        out_name = args.minimisation_outname, 
-        maxwarn = args.maxwarn)
-    MD_minimi.run()
-    logger.__logger.info('minimi OK')
+        logger.__logger.info('run minimi')
+        MD_minimi = MolecularDynamics(        
+            mdp_filename = args.minimisation_mdp_filename, 
+            gro_filename = args.gro_filename, 
+            top_filename = args.top_filename, 
+            out_path = args.out_path, 
+            out_name = args.minimisation_outname, 
+            maxwarn = args.maxwarn)
+        MD_minimi.run()
+        logger.__logger.info('minimi OK')
 
     logger.__logger.info('new ST')
     ST = SimulatedTempering(
