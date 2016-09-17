@@ -416,7 +416,7 @@ class Temperature(object):
     @classmethod
     @logger.log_decorator
     def compute_beta(self):
-        return 1/cls.k_Boltzmann * self._VALUE
+        return 1/Temperature.k_Boltzmann * self._VALUE
         # __future__ division -> floting point division
 
 
