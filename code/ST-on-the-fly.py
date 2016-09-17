@@ -177,7 +177,7 @@ def check_arguments_integrity(args):
         sys.exit(-1)
 
 
-    files = [args.st_gro_filename, args.st_top_filename, args.st_mdp_template_filename]
+    files = [args.gro_filename, args.top_filename, args.st_mdp_template_filename]
     if args.minimisation : 
         files.append (args.minimisation_mdp_filename)
 
