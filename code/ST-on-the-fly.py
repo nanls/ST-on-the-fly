@@ -602,8 +602,8 @@ if __name__ == "__main__":
     --minimisation \
     --minimisation-mdp-filename ../data/mini2.mdp  \
     --minimisation-outname miniout \
-    --maxwarn 1
-    --out-path ./
+    --maxwarn 1 \
+    --out-path ./ \
     -vvv
     """
     print ('go')
