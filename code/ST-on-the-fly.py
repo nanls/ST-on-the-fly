@@ -573,6 +573,18 @@ class SimulatedTempering(object):
                 self.simulation.T_current = T_attempt #if MD : change velocity --> Overriding
 
 if __name__ == "__main__":
+    """
+    python ST-on-the-fly.py --Tmin 1 --Tmax 5 --Tstep 1 \
+    --nb-md 3 \
+    --st-gro-filename ../data/ala10_md000.pdb \
+    --st-top-filename ../data/ala10.top \
+    --st-mdp-filename ../data/md1.mdp \
+    --st-outname outst \
+    --minimisation \
+    --minimisation-mdp-filename ../data/mini2.mdp  \
+    --minimisation-outname miniout \
+    --maxwarn 1
+    """
     print ('go')
     logger.set_functional_logger()
 
