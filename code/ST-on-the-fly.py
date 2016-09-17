@@ -62,14 +62,17 @@ def get_arguments_values():
         help="The step of the range of temperature ", type=int)
 
 
+    # About struct : 
+
+    parser.add_argument("--gro-filename", required=True,
+        help="gro / pdb file to use for the ST experiment", type=str)
+    parser.add_argument("--top-filename", required=True,
+        help="topology file to use for the ST experiment ", type=str)
+    
     # About ST : 
     parser.add_argument("--nb-md",required=True,
         help="The number of molecular dynamics during the experiment : t_one-md * num-md = t_ST", type=int)
 
-    parser.add_argument("--st-gro-filename", required=True,
-        help="gro / pdb file to use for the ST experiment", type=str)
-    parser.add_argument("--st-top-filename", required=True,
-        help="topology file to use for the ST experiment ", type=str)
     parser.add_argument("--st-mdp-template-filename", required=True,
         help="mdp file to use for the ST experiment", type=str)
 
