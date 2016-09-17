@@ -306,7 +306,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         print ('je suis dans le constructor de Prod') 
         super(MolecularDynamicsProduction, self).__init__(**kwargs)
         self._mdp_template = kwargs['mdp_filename']
-        self._mdp_filename = self._mdp_template % self.T_current
+        self._mdp_filename = '{0}_{1}'.format(self._mdp_template , self.T_current)
 
 
     @logger.log_decorator
