@@ -517,20 +517,16 @@ class SimulatedTempering(object):
         except KeyError:
             f_attempt = self.f_attempt_estimate(T_attempt)
 
-        mc = min 
-            (
-                1, 
-                math.exp(
-                            - (
-                                  (
-                                      self._BETA[T_attempt] - self._BETA[self.simulation.T_current]
-                                  ) * self.simulation.E_average #self._measure_sequence[-1][1]
-                                - (
-                                    f_attempt - self.f[self.simulation.T_current]
-                                  )
-                              )
-                        )
-            )
+        mc = min (                                                                   \
+            1,                                                                       \
+            math.exp( -                                                              \
+                (                                                                    \
+                    ( self._BETA[T_attempt] - self._BETA[self.simulation.T_current] )\
+                    * self.simulation.E_average #self._measure_sequence[-1][1]       \
+                    - ( f_attempt - self.f[self.simulation.T_current] )              \
+                )                                                                    \
+            )                                                                        \
+        )
         return mc
         # mc = min (1 , exp (-   [  (beta_attempt - beta_current) * E_current_average  -   (f_attempt_estimate - f_current_compute)  ]   ) )
 
