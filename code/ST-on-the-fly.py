@@ -507,8 +507,8 @@ class SimulatedTempering(object):
             T_previous = self._T_RANGE[self.T_current_idx-1]
             self._SIMULATION.T_current.update_f(T_previous)
         except IndexError : #no previous T because Tcurrent = Tmin 
-            self._f[T] = 0 #f_Tmin is always equal to 0.
-        
+            self.T_current._f = 0 #f_Tmin is always equal to 0.
+
         # Remember : 
         # If an exeption occurs during execution of the try clause,
         # the rest of the clause is skipped.    
