@@ -547,9 +547,8 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def choose_T_attempt(self):
-        i_current =self.T_current_idx()
         try:
-            T_attempt = self._T_RANGE[i_current + SimulatedTempering.toss_coin() ]
+            T_attempt = self._T_RANGE[self.T_current_idx + SimulatedTempering.toss_coin() ]
         except IndexError:
             T_attempt = None
         return T_attempt
