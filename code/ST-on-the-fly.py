@@ -160,7 +160,7 @@ def check_arguments_integrity(args):
 
 
     try:
-        assert_strictly_inferior (args.Tmin + args.Tmax  ,  args.Tstep, 'Tmin + Tstep', 'Tmax') 
+        assert_strictly_inferior (args.Tmin + args.Tstep,  args.Tmax, 'Tmin + Tstep', 'Tmax') 
     except AssertionError:
         print_use_help_message()
         sys.exit(-1)
