@@ -555,16 +555,22 @@ class SimulatedTempering(object):
     @logger.log_decorator
     def compute_metropolis_criterion(self, T_attempt) : 
 
-
-        mc = min (                                                                   \
-            1,                                                                       \
-            math.exp( -                                                              \
-                (                                                                    \
-                    ( T_attempt._BETA- self.T_current._BETA )  * self.T_current._E   \
-                    - ( T_attempt._f - self.T_current._f )                           \
-                )                                                                    \
-            )                                                                        \
-        )
+        try:
+            insider = - (                                                        \
+                ( T_attempt._BETA- self.T_current._BETA )  * self.T_current._E   \
+                - ( T_attempt._f - self.T_current._f )                           \
+            )           
+            res = math.exp ( insider  ) 
+        except OverflowError: 
+            if insider < 0 : 
+                res = 0
+            elif insider > 0 : 
+                res = float('inf')
+            else : 
+                print ('case not handled !! ')
+                import pdb ; pdb.set_trace()
+        
+        mc = min (1, res)
         return mc
         # mc = min (1 , exp (-   [  (beta_attempt - beta_current) * E_current_average  -   (f_attempt_estimate - f_current_compute)  ]   ) )
 
