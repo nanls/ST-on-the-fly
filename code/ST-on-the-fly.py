@@ -25,6 +25,169 @@ import numpy as np
 
 import os
 
+import argparse
+
+import sys
+
+def get_arguments_values(): 
+    """ Use argparse module to get arguments values.
+    Return
+    ------
+    args : Namespace object
+        Namespace object populated with arguments converted from strings to objects 
+        and assigned as attributes of the namespace object.
+        They store arguments values (str or int or whatever, according to the specifications in
+        the code)
+    """
+    help_str = "ST-on-the-fly experiment"
+
+    parser = argparse.ArgumentParser(description=help_str,add_help=True)
+
+    # About T_RANGE : 
+    parser.add_argument("--Tmin", 
+        help="At which temperature (in Kelvin) begins the experiment", type=float)
+    parser.add_argument("--Tmax", 
+        help="The maximal temperature (in Kelvin) during the experiment", type=float)
+    parser.add_argument("--Tstep", 
+        help="The step of the range of temperature ", type=int)
+
+
+    # About ST : 
+    parser.add_argument("--nb-md", dest='nb_md',
+        help="The number of molecular dynamics during the experiment : t_one-md * num-md = t_ST", type=int)
+
+    parser.add_argument("--st-gro-filename", 
+        help="gro / pdb file to use for the ST experiment", type=str)
+    parser.add_argument("--st-top-filename", 
+        help="topology file to use for the ST experiment ", type=str)
+    parser.add_argument("--st-mdp-filename", 
+        help="mdp file to use for the ST experiment", type=str)
+
+    parser.add_argument("--st-outname", 
+        help="template name for output of the ST experiment ", type=str)
+
+
+    # About minimisation : 
+    minimisation_parser = parser.add_mutually_exclusive_group(required=False)
+    minimisation_parser.add_argument('--minimisation', 
+        dest='minimisation', action='store_true', 
+        help="Run a minimisation before ST experiment")
+    minimisation_parser.add_argument('--no-minimisation', 
+        dest='minimisation', action='store_false', 
+        help="Do run a minimisation before ST experiment")
+    parser.set_defaults(minimisation=False)
+
+    parser.add_argument("--minimisation-mdp-filename", 
+        help="mdp file to use for minimisation", type=str, required=False)
+    parser.add_argument("--minimisation-outname", 
+        help="template name for output of minimisation ", type=str, required=False)
+
+
+    # Other :
+
+    parser.add_argument("--maxwarn", 
+        help="The max number of warnigs allowed when running MD", type=int, default = '0')
+
+    parser.add_argument("--clean-all", 
+        help="Clean gromacs outputs unecessary to plot the figure in N'Guyen 2013 /!\ Be carefull", 
+        action='store_true')
+
+    parser.add_argument("-v", "--verbose", 
+        help="Turn on detailed info log",
+        action='store_true')
+
+    return parser.parse_args()
+
+
+def print_use_help_message() : 
+    logger.__logger.error("Use --help for help.\n")
+
+
+def assert_strictly_positive(value, name_var): 
+    try:
+        assert (value > 0 )
+    except AssertionError, e:
+        logger.__logger.error(name_var + 'must be strictly positive.')
+        raise e 
+
+def assert_strictly_inferior(value1, value2, name_var1, name_var2): 
+    try:
+        assert (value1 < value2 )
+    except AssertionError, e:
+        logger.__logger.error(name_var1 + 'must be strictly inferior to' + name_var2+'.')
+        raise e 
+
+
+def check_arguments_integrity(args): 
+    """ Check integrity of arguments pass through the command line. 
+    Parameter
+    ---------
+    args : namespace object
+        Its attributes are arguments names 
+        and contain arguments values. 
+    Side effect
+    -----------
+    If one arg is not integrous, exit the script printing why. 
+    """
+    try:
+        assert_strictly_positive(args.Tmin, 'Tmin')
+    except AssertionError:
+        print_use_help_message()
+        sys.exit(-1)
+    
+    try:
+        assert_strictly_positive(args.Tmax, 'Tmax')
+    except AssertionError:
+        print_use_help_message()
+        sys.exit(-1)
+
+
+    try:
+        assert_strictly_inferior(args.Tmin, args.Tmax, 'Tmin', 'Tmax')
+    except AssertionError:
+        print_use_help_message()
+        sys.exit(-1)
+
+
+    try:
+        assert_strictly_inferior (args.Tmin + args.Tmax  ,  args.Tstep, 'Tmin + Tstep', 'Tmax') 
+    except AssertionError:
+        print_use_help_message()
+        sys.exit(-1)
+
+
+    try:
+        assert_strictly_positive(args.nb_md, 'nb-md')
+    except AssertionError:
+        print_use_help_message()
+        sys.exit(-1)
+
+
+    files = list(args.st_gro_filename, args.st_top_filename, args.st_mdp_filename)
+    if args.minimisation : 
+        file_list.extend (args.minimisation_mdp_filename)
+
+    for file in files : 
+        try:
+            with open(file):
+                pass
+        except IOError as e:
+            logger.__logger.error ("Unable to open file "+ file +". (Does not exist or no read permissions)" ) 
+
+
+def get_integrous_arguments_values(): 
+    """ Get arguments passed through command line and check their integrity.
+    Return
+    ------
+    args : namespace object
+        Its attributes are arguments names 
+        and contain arguments values (str or int or whatever according to code specifications). 
+    """
+    args = get_arguments_values()
+    check_arguments_integrity(args)
+    return args
+
+
 class ListWithoutNegIdx(list):
 
     def __getitem__(self, key):
@@ -406,7 +569,8 @@ if __name__ == "__main__":
     logger.__logger.info('logger OK')
 
     logger.__logger.info('get args')
-
+    args = get_integrous_arguments_values()
+    
     num_step = 100
     dt_pas = 1
     dt_attempt = 10 
