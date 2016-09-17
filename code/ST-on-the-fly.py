@@ -341,9 +341,8 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
         #Can't change a file, so create a new temp one...
 
-        with (open(self.gro_filename, 'r') as infile, \
-            open(self.gro_filename+'.tmp', 'w') as outfile
-        ):
+        with open(self.gro_filename, 'r') as infile, \
+            open(self.gro_filename+'.tmp', 'w') as outfile    :
             for line_idx, line in enumerate (infile) : 
                 line = line.split()  # rm \n too
 
