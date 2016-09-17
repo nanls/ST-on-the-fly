@@ -271,7 +271,12 @@ class Simulation(object):
 
         super(Simulation,self).__init__(**kwargs)
         print ('je suis revenu de super')
-        self.T_current = T_current
+        self._T_current = T_current
+
+    @property
+    def T_current(self):
+        return self._T_current
+    
 
 
 class MonteCarlo(Simulation):
@@ -327,11 +332,11 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         logger.__logger.error('E_average could not be found') 
         return 0
 
-    @property.setter
+    @Simulation.T_current.setter
     def T_current(self, T_new):
         self.update_velocities(T_new)
 
-        self._T_current = T_new
+        self.T_current = T_new
         
         self._mdp_filename = self._mdp_template % self.T_current
         
