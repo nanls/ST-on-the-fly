@@ -360,11 +360,15 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
         #Can't change a file, so create a new temp one...
         nb_of_atom = 0 
-        
+
         with open(self.gro_filename, 'r') as infile, \
             open(self.gro_filename+'.tmp', 'w') as outfile    :
             for line_idx, line in enumerate (infile) : 
-                line = line.split()  # rm \n too
+
+                # gro file line : 
+                #"%5d%-5s%5s%5d%8.3f%8.3f%8.3f%8.4f%8.4f%8.4f" + \n
+                # |___________44_____________|              |
+                # |____________________68___________________|
 
                 # nb of atom on seconde line -> 2-1
                 if line_idx == 1 : 
@@ -373,14 +377,19 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
                 # from third line to x = 3 + nb_of_atom th line : 
                 if line_idx in xrange(2, 2 + nb_of_atom + 1) : 
                     #Remember [a, b] = xrange (a, b + 1 )
-                    velocities = line[-3:]
+
+                    if len(line) < 69: # 68 + \n 
+                        log.error('There is no velocities in the {0} file'.format(infile))
+                        exit(-1)
+
+                    velocities = [ float(line[44:52]), float(line[52:60]), float(line[60 :68 ]) ]
                     new_velocities = list()
                     for velocity in velocities : 
                         new_velocity = velocity * math.sqrt(T_new / self.T_current)
                         new_velocities.append(new_velocity)
 
-                    line [-3:] = new_velocities
-
+                    line = "%s%8.4f%8.4f%8.4f\n" % ( line [:44], tuple(new_velocities) ) 
+                
                 outfile.write(line)
 
         # ... and rename it (the old one is erase)
