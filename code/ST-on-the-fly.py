@@ -526,7 +526,7 @@ class SimulatedTempering(object):
     def update_f_next(self):
         try : 
             T_next = self._T_RANGE[self.T_current_idx + 1 ]
-            T_next.update_f( self._SIMULATION.T_current )
+            T_next.update_f( self.T_current)
         except IndexError : #no next T because Tcurrent = Tmax 
             pass
 
