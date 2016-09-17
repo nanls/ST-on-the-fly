@@ -618,35 +618,30 @@ if __name__ == "__main__":
     logger.__logger.setLevel(level)
 
 
-    num_step = 100
-    dt_pas = 1
-    dt_attempt = 10 
-    Tmin = 1 
-    Tmax = 10 
-    Tstep = 1 
+
 
     logger.__logger.info('run minimi')
     MD_minimi = MolecularDynamics(        
-        mdp_filename = '../data/mini2.mdp', 
-        gro_filename = '../data/ala10_md000.pdb', 
-        top_filename = '../data/ala10.top', 
+        mdp_filename = args.minimisation_mdp_filename, 
+        gro_filename = args.gro_filename, 
+        top_filename = args.top_filename, 
         out_path = './', 
-        out_name = 'minimisation_before_ST', 
-        maxwarn = 13)
+        out_name = args.minimisation_outname, 
+        maxwarn = args.maxwarn)
     MD_minimi.run()
     logger.__logger.info('minimi OK')
 
     logger.__logger.info('new ST')
     ST = SimulatedTempering(
-        num_step, 
-        Tmin, Tmax, Tstep, 
+        args.nb_md, 
+        args.Tmin, args.Tmax, args.Tstep, 
         'md',  
-        st_mdp_template_filename = '../data/md1.mdp', 
+        st_mdp_template_filename = args.st_mdp_template_filename, 
         gro_filename = './minimisation_before_ST.gro', 
-        top_filename = '../data/ala10.top', 
+        top_filename = args.top_filename, 
         out_path = './', 
-        out_name = 'ST-simu', 
-        maxwarn = 13
+        out_name = args.st_outname, 
+        maxwarn = args.maxwarn
     )
     
     logger.__logger.info('ST.run')
