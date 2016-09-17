@@ -359,7 +359,8 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     def update_velocities(self, T_new):
 
         #Can't change a file, so create a new temp one...
-
+        nb_of_atom = 0 
+        
         with open(self.gro_filename, 'r') as infile, \
             open(self.gro_filename+'.tmp', 'w') as outfile    :
             for line_idx, line in enumerate (infile) : 
