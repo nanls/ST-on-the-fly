@@ -489,7 +489,7 @@ class SimulatedTempering(object):
         return self._T_RANGE[self.T_current_idx]
     
     @property    
-    def T_current_idx():
+    def T_current_idx(self):
         return self.get_T_idx(self._SIMULATION.T_current)
 
     def get_T_idx(self, T_wanted) : 
