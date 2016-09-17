@@ -117,14 +117,14 @@ def assert_strictly_positive(value, name_var):
     try:
         assert (value > 0 )
     except AssertionError, e:
-        logger.__logger.error(name_var + 'must be strictly positive.')
+        logger.__logger.error(name_var + ' must be strictly positive.')
         raise e 
 
 def assert_strictly_inferior(value1, value2, name_var1, name_var2): 
     try:
         assert (value1 < value2 )
     except AssertionError, e:
-        logger.__logger.error(name_var1 + 'must be strictly inferior to' + name_var2+'.')
+        logger.__logger.error(name_var1 + ' must be strictly inferior to ' + name_var2+'.')
         raise e 
 
 
