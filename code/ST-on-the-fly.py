@@ -409,11 +409,7 @@ class Temperature(object):
         self._BETA  = self.compute_beta()
 
     
-    # @classmethod returns descriptor objects, not functions. 
-    # problem : most decorators are not designed to accept descriptors.
-    # solution : @classmethod must be the top-most decorator 
-    # for another decorator to decorate it.
-    @classmethod
+
     @logger.log_decorator
     def compute_beta(self):
         return 1/Temperature.k_Boltzmann * self._VALUE
