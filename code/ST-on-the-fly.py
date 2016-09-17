@@ -456,8 +456,8 @@ class SimulatedTempering(object):
         self._NUM_STEP = num_step
         self._T_RANGE=ListWithoutNegIdx() 
         self._ST_MDP_TEMPLATE_FILENAME= st_mdp_template_filename
-
-        for T in  xrange(Tmin, Tmax+1, Tstep) :
+        
+        for T in np.arange(Tmin,Tmax+1,Tstep):
             if simu_type == 'md' : 
                 self.create_mdp(T)
             self._T_RANGE.append(Temperature(T))
