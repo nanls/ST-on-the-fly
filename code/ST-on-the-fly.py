@@ -441,8 +441,13 @@ class Temperature(object):
 
     @logger.log_decorator
     def update_E(self, E_new):
-
-        self._E =  self._E  + ( (E_new - self._E ) / self._number_of_passes)
+        try:
+            self._E =  self._E  + ( (E_new - self._E ) / self._number_of_passes)
+        except TypeError: 
+            #self._E = None becase no updated yet
+            #First time init : 
+            self._E =  ( E_new  / self._number_of_passes)
+        
         
 
 
