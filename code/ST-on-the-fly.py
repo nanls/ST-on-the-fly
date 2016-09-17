@@ -343,7 +343,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
             if splitted_line and splitted_line[0] == 'Potential' : 
                 E_average = splitted_line[1]
                 return E_average
-        logger.__logger.error('E_average could not be found') 
+        log.error('E_average could not be found') 
         return 0
 
     @Simulation.T_current.setter
@@ -590,6 +590,9 @@ class SimulatedTempering(object):
             if self.attempt_OK(T_attempt) : 
                 self.simulation.T_current = T_attempt #if MD : change velocity --> Overriding
 
+
+
+
 if __name__ == "__main__":
     """
     python ST-on-the-fly.py --Tmin 1 --Tmax 5 --Tstep 1 \
@@ -623,7 +626,8 @@ if __name__ == "__main__":
 
     logger.__logger.setLevel(level)
 
-
+    global log
+    log = logger.__logger
     if args.minimisation : 
 
         logger.__logger.info('run minimi')
