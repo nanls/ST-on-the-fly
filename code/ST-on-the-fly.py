@@ -388,7 +388,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
                         new_velocity = velocity * math.sqrt(T_new / self.T_current)
                         new_velocities.append(new_velocity)
 
-                    line = "%s%8.4f%8.4f%8.4f\n" % ( line [:44], tuple(new_velocities) ) 
+                    line = "{0}{1:8.4f}{2:8.4f}{3:8.4f}".format(line [:44], *new_velocities)
 
                 outfile.write(line)
 
