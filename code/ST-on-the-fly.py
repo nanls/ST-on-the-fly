@@ -576,7 +576,7 @@ class SimulatedTempering(object):
     def run(self):
         for step_idx in xrange(self._NUM_SIMU) : 
 
-            E_current_average = self.simulation.run()
+            E_current_average = self._SIMULATION.run()
 
             self.T_current.update_E(E_current_average) 
 
