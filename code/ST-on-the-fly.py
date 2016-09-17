@@ -443,7 +443,7 @@ class Temperature(object):
         # f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
         try:
             import pdb; pdb.set_trace()
-            self._f =  Tprev._f + (self._BETA - T_previous._BETA ) * ( self._E + T_previous._E )  / 2
+            self._f =  Tprev._f + (self._BETA - Tprev._BETA ) * ( self._E + Tprev._E )  / 2
         except Exception:
             raise NoECurrent
 
