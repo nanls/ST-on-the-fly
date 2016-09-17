@@ -310,7 +310,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         print ('je suis dans le constructor de Prod') 
         super(MolecularDynamicsProduction, self).__init__(**kwargs)
         self._mdp_template = kwargs['mdp_filename']
-        self._mdp_filename = '{0}_{1}'.format(self._mdp_template , self.T_current)
+        self._mdp_filename = '{0}_{1}.mdp'.format(self._mdp_template , self.T_current)
 
 
     @logger.log_decorator
@@ -486,7 +486,7 @@ class SimulatedTempering(object):
     @logger.log_decorator
     def create_mdp(self, T) : 
         
-        mdp_filename = '{0}_{1}'.format(self._ST_MDP_TEMPLATE_FILENAME, T)
+        mdp_filename = '{0}_{1}.mdp'.format(self._ST_MDP_TEMPLATE_FILENAME, T)
 
         with open(self._ST_MDP_TEMPLATE_FILENAME, 'r') as infile, \
             open(mdp_filename, 'w') as outfile    :
