@@ -460,7 +460,7 @@ class SimulatedTempering(object):
         #range (a, b) = [a, b[
         #range (a, b+1) = [a, b+1[ = [a, b]
         kwargs['T_current'] = self._T_RANGE[0]._VALUE
-        
+        kwargs['mdp_filename'] = self._ST_MDP_TEMPLATE_FILENAME
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
 
         self._step_idx=0
