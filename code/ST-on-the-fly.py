@@ -16,8 +16,14 @@ import shlex
 
 import random
 
-
-import scipy
+# scipy is a library (package) that contains modules 
+# and to import a specific module from the scipy library, 
+# it is needed to specify it and import the module itself.
+# So do not : 
+# >>> import scipy
+# >>> scipy.constants.<etc>
+# but : 
+from scipy import constants
 
 import math
 
@@ -388,7 +394,7 @@ def create_simulation(simu_type, **kwargs):
 class Temperature(object):
     """docstring for Temperature"""
 
-    k_Boltzmann = scipy.constants.value(u'Boltzmann') # ??? k
+    k_Boltzmann = constants.value(u'Boltzmann') # ??? k
 
     def __init__(self, value):
         super(Temperature, self).__init__()
