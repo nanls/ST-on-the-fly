@@ -54,26 +54,26 @@ def get_arguments_values():
     # So in this case, use dest is not necessary.
 
     # About T_RANGE : 
-    parser.add_argument("--Tmin", 
+    parser.add_argument("--Tmin", required=True,
         help="At which temperature (in Kelvin) begins the experiment", type=float)
-    parser.add_argument("--Tmax", 
+    parser.add_argument("--Tmax", required=True,
         help="The maximal temperature (in Kelvin) during the experiment", type=float)
-    parser.add_argument("--Tstep", 
+    parser.add_argument("--Tstep", required=True,
         help="The step of the range of temperature ", type=int)
 
 
     # About ST : 
-    parser.add_argument("--nb-md",
+    parser.add_argument("--nb-md",required=True,
         help="The number of molecular dynamics during the experiment : t_one-md * num-md = t_ST", type=int)
 
-    parser.add_argument("--st-gro-filename", 
+    parser.add_argument("--st-gro-filename", required=True,
         help="gro / pdb file to use for the ST experiment", type=str)
-    parser.add_argument("--st-top-filename", 
+    parser.add_argument("--st-top-filename", required=True,
         help="topology file to use for the ST experiment ", type=str)
-    parser.add_argument("--st-mdp-filename", 
+    parser.add_argument("--st-mdp-filename", required=True,
         help="mdp file to use for the ST experiment", type=str)
 
-    parser.add_argument("--st-outname", 
+    parser.add_argument("--st-outname", required=True,
         help="template name for output of the ST experiment ", type=str)
 
 
