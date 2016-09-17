@@ -342,7 +342,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
             print (splitted_line)
             if splitted_line and splitted_line[0] == 'Potential' : 
                 E_average = splitted_line[1]
-                return E_average
+                return int(E_average)
         log.error('E_average could not be found') 
         return 0
 
