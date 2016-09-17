@@ -68,7 +68,7 @@ def get_arguments_values():
         help="gro / pdb file to use for the ST experiment", type=str)
     parser.add_argument("--top-filename", required=True,
         help="topology file to use for the ST experiment ", type=str)
-    
+
     # About ST : 
     parser.add_argument("--nb-md",required=True,
         help="The number of molecular dynamics during the experiment : t_one-md * num-md = t_ST", type=int)
@@ -97,6 +97,8 @@ def get_arguments_values():
 
 
     # Other :
+    parser.add_argument("--out-path", 
+        help = "Where the outputed results files should be store", type= str, default='./')
 
     parser.add_argument("--maxwarn", 
         help="The max number of warnigs allowed when running MD", type=int, default = '0')
@@ -592,15 +594,17 @@ class SimulatedTempering(object):
 if __name__ == "__main__":
     """
     python ST-on-the-fly.py --Tmin 1 --Tmax 5 --Tstep 1 \
+    --gro-filename ../data/ala10_md000.pdb \
+    --top-filename ../data/ala10.top \
     --nb-md 3 \
-    --st-gro-filename ../data/ala10_md000.pdb \
-    --st-top-filename ../data/ala10.top \
     --st-mdp-template-filename ../data/md1.mdp \
     --st-outname outst \
     --minimisation \
     --minimisation-mdp-filename ../data/mini2.mdp  \
     --minimisation-outname miniout \
     --maxwarn 1
+    --out-path ./
+    -vvv
     """
     print ('go')
     logger.set_functional_logger()
@@ -628,7 +632,7 @@ if __name__ == "__main__":
         mdp_filename = args.minimisation_mdp_filename, 
         gro_filename = args.gro_filename, 
         top_filename = args.top_filename, 
-        out_path = './', 
+        out_path = args.out_path, 
         out_name = args.minimisation_outname, 
         maxwarn = args.maxwarn)
     MD_minimi.run()
@@ -642,7 +646,7 @@ if __name__ == "__main__":
         st_mdp_template_filename = args.st_mdp_template_filename, 
         gro_filename = './minimisation_before_ST.gro', 
         top_filename = args.top_filename, 
-        out_path = './', 
+        out_path = args.out_path, 
         out_name = args.st_outname, 
         maxwarn = args.maxwarn
     )
