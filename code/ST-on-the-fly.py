@@ -102,9 +102,8 @@ def get_arguments_values():
         help="Clean gromacs outputs unecessary to plot the figure in N'Guyen 2013 /!\ Be carefull", 
         action='store_true')
 
-    parser.add_argument("-v", "--verbose", 
-        help="Turn on detailed info log",
-        action='store_true')
+    parser.add_argument('-v', '--verbose', dest = 'verbosity',
+        help="Turn on detailed info log", action='count',  default=0)
 
     return parser.parse_args()
 
@@ -608,6 +607,17 @@ if __name__ == "__main__":
     logger.__logger.info('get args')
     args = get_integrous_arguments_values()
     
+
+
+    verbosity = [ 0, 30  ,20 ,10]
+    try:
+        level = verbosity[args.verbosity] 
+    except IndexError:
+        level = 10 
+
+    logger.__logger.setLevel(level)
+
+
     num_step = 100
     dt_pas = 1
     dt_attempt = 10 
