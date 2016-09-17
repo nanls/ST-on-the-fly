@@ -450,13 +450,13 @@ class SimulatedTempering(object):
     """docstring for ST"""
 
     @logger.log_decorator
-    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', st_mdp_template_filename = None, **kwargs):
+    def __init__(self, num_simu, Tmin, Tmax, Tstep, simu_type='md', st_mdp_template_filename = None, **kwargs):
         
         super(SimulatedTempering,self).__init__()
-        self._NUM_STEP = num_step
+        self._NUM_SIMU = num_simu
         self._T_RANGE=ListWithoutNegIdx() 
         self._ST_MDP_TEMPLATE_FILENAME= st_mdp_template_filename
-        
+
         for T in np.arange(Tmin,Tmax+1,Tstep):
             if simu_type == 'md' : 
                 self.create_mdp(T)
@@ -467,7 +467,6 @@ class SimulatedTempering(object):
         kwargs['mdp_filename'] = self._ST_MDP_TEMPLATE_FILENAME
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
 
-        self._step_idx=0
         self._measure_sequence=[]
 
 
@@ -575,7 +574,7 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def run(self):
-        while self.step_idx < self.MAX_NUM_STEP : 
+        for step_idx in xrange(self._NUM_SIMU) : 
 
             E_current_average = self.simulation.run()
 
