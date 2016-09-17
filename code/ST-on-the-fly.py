@@ -399,6 +399,11 @@ def create_simulation(simu_type, **kwargs):
         return None
 
 
+
+class NoECurrent(Exception):
+    def __init__(self):
+        super(NoECurrent, self).__init__()
+
 class Temperature(object):
     """docstring for Temperature"""
 
