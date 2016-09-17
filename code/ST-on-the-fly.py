@@ -482,7 +482,6 @@ class SimulatedTempering(object):
         kwargs['mdp_filename'] = self._ST_MDP_TEMPLATE_FILENAME
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
 
-        self._measure_sequence=[]
 
 
     @logger.log_decorator
@@ -568,7 +567,7 @@ class SimulatedTempering(object):
             math.exp( -                                                              \
                 (                                                                    \
                     ( self._BETA[T_attempt] - self._BETA[self.simulation.T_current] )\
-                    * self.simulation.E_average #self._measure_sequence[-1][1]       \
+                    * self.simulation.E_average                                      \
                     - ( f_attempt - self.f[self.simulation.T_current] )              \
                 )                                                                    \
             )                                                                        \
@@ -596,7 +595,6 @@ class SimulatedTempering(object):
             self.update_f_current()
             self.update_f_next ()
 
-            self._measure_sequence.append( (self.simulation.T_current, E_current_average) )
 
             T_attempt = self.choose_T_attempt()
         
