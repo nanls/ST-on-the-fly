@@ -655,6 +655,6 @@ if __name__ == "__main__":
     )
     
     logger.__logger.info('ST.run')
-
+    ST.run()
 
     logger.__logger.info('the end')
