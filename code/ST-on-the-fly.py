@@ -645,7 +645,7 @@ if __name__ == "__main__":
         MD_minimi.run()
         logger.__logger.info('minimi OK')
 
-        st_gro_filename = args.out_path + args.minimisation_outname
+        st_gro_filename = args.out_path + args.minimisation_outname + '.gro'
     else : 
         st_gro_filename = args.gro_filename
     logger.__logger.info('new ST')
