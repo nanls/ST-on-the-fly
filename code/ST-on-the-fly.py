@@ -49,6 +49,10 @@ def get_arguments_values():
 
     parser = argparse.ArgumentParser(description=help_str,add_help=True)
 
+    # argparse automatically convert any internal - characters to _ characters 
+    # to make sure the string is a valid attribute name.
+    # So in this case, use dest is not necessary.
+
     # About T_RANGE : 
     parser.add_argument("--Tmin", 
         help="At which temperature (in Kelvin) begins the experiment", type=float)
@@ -59,7 +63,7 @@ def get_arguments_values():
 
 
     # About ST : 
-    parser.add_argument("--nb-md", dest='nb_md',
+    parser.add_argument("--nb-md",
         help="The number of molecular dynamics during the experiment : t_one-md * num-md = t_ST", type=int)
 
     parser.add_argument("--st-gro-filename", 
@@ -76,7 +80,7 @@ def get_arguments_values():
     # About minimisation : 
     minimisation_parser = parser.add_mutually_exclusive_group(required=False)
     minimisation_parser.add_argument('--minimisation', 
-        dest='minimisation', action='store_true', 
+        action='store_true', 
         help="Run a minimisation before ST experiment")
     minimisation_parser.add_argument('--no-minimisation', 
         dest='minimisation', action='store_false', 
@@ -394,7 +398,7 @@ def create_simulation(simu_type, **kwargs):
 class Temperature(object):
     """docstring for Temperature"""
 
-    k_Boltzmann = constants.value(u'Boltzmann') # ??? k
+    k_Boltzmann = constants.value(u'Boltzmann constant') # ??? k
 
     def __init__(self, value):
         super(Temperature, self).__init__()
