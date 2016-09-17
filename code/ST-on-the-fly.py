@@ -70,7 +70,7 @@ def get_arguments_values():
         help="gro / pdb file to use for the ST experiment", type=str)
     parser.add_argument("--st-top-filename", required=True,
         help="topology file to use for the ST experiment ", type=str)
-    parser.add_argument("--st-mdp-filename", required=True,
+    parser.add_argument("--st-mdp-template-filename", required=True,
         help="mdp file to use for the ST experiment", type=str)
 
     parser.add_argument("--st-outname", required=True,
@@ -173,7 +173,7 @@ def check_arguments_integrity(args):
         sys.exit(-1)
 
 
-    files = [args.st_gro_filename, args.st_top_filename, args.st_mdp_filename]
+    files = [args.st_gro_filename, args.st_top_filename, args.st_mdp_template_filename]
     if args.minimisation : 
         files.append (args.minimisation_mdp_filename)
 
@@ -408,7 +408,6 @@ class Temperature(object):
         self._E = None
         self._BETA  = self.compute_beta()
 
-    
 
     @logger.log_decorator
     def compute_beta(self):
@@ -447,20 +446,40 @@ class SimulatedTempering(object):
     """docstring for ST"""
 
     @logger.log_decorator
-    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', **kwargs):
+    def __init__(self, num_step, Tmin, Tmax, Tstep, simu_type='md', st_mdp_template_filename = None, **kwargs):
         
         super(SimulatedTempering,self).__init__()
         self._NUM_STEP = num_step
         self._T_RANGE=ListWithoutNegIdx() 
-        for T in  xrange(Tmin, Tmax+1, Tstep) : 
+        self._ST_MDP_TEMPLATE_FILENAME= st_mdp_template_filename
+
+        for T in  xrange(Tmin, Tmax+1, Tstep) :
+            if simu_type == 'md' : 
+                self.create_mdp(T)
             self._T_RANGE.append(Temperature(T))
         #range (a, b) = [a, b[
         #range (a, b+1) = [a, b+1[ = [a, b]
-        kwargs['T_current'] = Tmin
+        kwargs['T_current'] = self._T_RANGE[0]._VALUE
+        
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
 
         self._step_idx=0
         self._measure_sequence=[]
+
+
+    @logger.log_decorator
+    def create_mdp(self, T) : 
+        
+        mdp_filename = '{0}_{1}'.format(self._ST_MDP_TEMPLATE_FILENAME, T)
+
+        with open(self._ST_MDP_TEMPLATE_FILENAME, 'r') as infile, \
+            open(mdp_filename, 'w') as outfile    :
+            for line in infile : 
+                if line.startswith('ref_t') : 
+                    line = "ref_t = {0}\n".format(T)
+
+                outfile.write(line)
+
 
     @property
     def T_current(self):
@@ -574,7 +593,7 @@ if __name__ == "__main__":
     --nb-md 3 \
     --st-gro-filename ../data/ala10_md000.pdb \
     --st-top-filename ../data/ala10.top \
-    --st-mdp-filename ../data/md1.mdp \
+    --st-mdp-template-filename ../data/md1.mdp \
     --st-outname outst \
     --minimisation \
     --minimisation-mdp-filename ../data/mini2.mdp  \
@@ -612,7 +631,7 @@ if __name__ == "__main__":
         num_step, 
         Tmin, Tmax, Tstep, 
         'md',  
-        mdp_filename = '../data/md1.mdp', 
+        st_mdp_template_filename = '../data/md1.mdp', 
         gro_filename = './minimisation_before_ST.gro', 
         top_filename = '../data/ala10.top', 
         out_path = './', 
