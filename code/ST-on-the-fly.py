@@ -354,7 +354,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
                 if line_idx in xrange(2, 2 + nb_of_atom + 1) : 
                     #Remember [a, b] = xrange (a, b + 1 )
                     velocities = line[-3:]
-                    new_velocities = list[]
+                    new_velocities = list()
                     for velocity in velocities : 
                         new_velocity = velocity * math.sqrt(T_new / self.T_current)
                         new_velocities.append(new_velocity)
