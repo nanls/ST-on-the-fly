@@ -3,21 +3,29 @@
 
 """Run ST-on-the-fly"""
 
+#------------------------------------------------------------------------------
+# PEP8 imports : 
+# on separate lines
+# at the top of the file
 
 
+# 1. standard library imports
+#---
+import argparse
 from __future__ import print_function
 from __future__ import division 
-
+import math
+import os
 import pdb
-
-import logger
-
-
-import subprocess
-import shlex
-
 import random
+import shlex
+import shutil
+import subprocess
+import sys
 
+# 2. related third party imports
+#---
+import numpy as np
 # scipy is a library (package) that contains modules 
 # and to import a specific module from the scipy library, 
 # it is needed to specify it and import the module itself.
@@ -27,17 +35,12 @@ import random
 # but : 
 from scipy import constants
 
-import math
 
-import numpy as np
+# 3. local application/library specific imports
+#---
+import logger
 
-import os
 
-import argparse
-
-import sys
-
-import shutil
 
 def get_arguments_values(): 
     """ Use argparse module to get arguments values.
