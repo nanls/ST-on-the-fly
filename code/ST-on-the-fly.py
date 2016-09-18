@@ -181,12 +181,15 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
 
 
-class NoECurrent(Exception):
-    def __init__(self):
-        super(NoECurrent, self).__init__()
+
 
 class Temperature(object):
     """docstring for Temperature"""
+
+    class NoECurrent(Exception):
+        def __init__(self):
+            super(Temperature.NoECurrent, self).__init__()
+
 
     k_Boltzmann = constants.value(u'Boltzmann constant') # ??? k
 
@@ -209,7 +212,7 @@ class Temperature(object):
     def update_f(self, Tprev) : 
         try:
             self.compute_f(Tprev)
-        except NoECurrent:
+        except Temperature.NoECurrent:
             self.estimate_f(Tprev)
 
 
@@ -225,7 +228,7 @@ class Temperature(object):
         try:
             self._f =  Tprev._f + (self._BETA - Tprev._BETA ) * ( self._E + Tprev._E )  / 2
         except Exception:
-            raise NoECurrent
+            raise Temperature.NoECurrent
 
 
     @logger.log_decorator
