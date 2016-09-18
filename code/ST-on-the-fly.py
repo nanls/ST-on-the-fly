@@ -25,6 +25,11 @@ import pdb
 # 3. local imports
 #---
 import logger
+logger.set_functional_logger()
+global log
+log = logger.__logger
+log.info('logger OK')
+    
 from md import MolecularDynamics
 from st import SimulatedTempering
 
@@ -258,11 +263,9 @@ if __name__ == "__main__":
     -vvv
     """
     print ('go')
-    logger.set_functional_logger()
 
-    logger.__logger.info('logger OK')
 
-    logger.__logger.info('get args')
+    log.info('get args')
     args = get_integrous_arguments_values()
     
 
@@ -273,10 +276,9 @@ if __name__ == "__main__":
     except IndexError:
         level = 10 
 
-    logger.__logger.setLevel(level)
+    log.setLevel(level)
 
-    global log
-    log = logger.__logger
+    
     if args.minimisation : 
 
         log.info('run minimi')
