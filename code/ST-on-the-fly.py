@@ -159,9 +159,6 @@ class MolecularDynamics(object):
         """
         return self._maxwarn
 
-    @logger.log_decorator
-    def run(self):
-        print ('MD.run()=========')
 
     @logger.log_decorator
     def gmx_grompp(self) : 
