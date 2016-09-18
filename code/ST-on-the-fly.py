@@ -48,20 +48,6 @@ import logger
 ###############################################################################
 # Classes definitions : 
 
-class ListWithoutNegIdx(list):
-    """A list without negative indiciation
-    """
-    def __getitem__(self, key):
-        """Override list getitem to disable negative indices
-        """
-        if isinstance(key, int):
-            if key < 0:
-                raise IndexError("negative index not allowed")
-            else :  
-                return super(ListWithoutNegIdx, self).__getitem__(key)
-        else : 
-            raise TypeError ("ListWithoutNegIdx indices must be integers, not "+ str(type (key) ) )  
-
 
 class MolecularDynamics(object):
     """docstring for MolecularDynamics"""
@@ -315,12 +301,27 @@ class Temperature(object):
 class SimulatedTempering(object):
     """docstring for ST"""
 
+    class TRange(list):
+        """A list without negative indiciation
+        """
+        def __getitem__(self, key):
+            """Override list getitem to disable negative indices
+            """
+            if isinstance(key, int):
+                if key < 0:
+                    raise IndexError("negative index not allowed")
+                else :  
+                    return super(SimulatedTempering.TRange, self).__getitem__(key)
+            else : 
+                raise TypeError ("TRange indices must be integers, not "+ str(type (key) ) )  
+
+
     @logger.log_decorator
     def __init__(self, num_simu, Tmin, Tmax, Tstep, simu_type='md', st_mdp_template_filename = None, **kwargs):
         
         super(SimulatedTempering,self).__init__()
         self._NUM_SIMU = num_simu
-        self._T_RANGE=ListWithoutNegIdx() 
+        self._T_RANGE=SimulatedTempering.TRange() 
         self._ST_MDP_TEMPLATE_FILENAME= st_mdp_template_filename
 
         for T in np.arange(Tmin,Tmax+1,Tstep):
