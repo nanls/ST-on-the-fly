@@ -8,7 +8,6 @@
 # on separate lines
 # at the top of the file
 
-
 # 1. standard library imports
 #---
 
@@ -18,22 +17,10 @@ from __future__ import print_function
 from __future__ import division 
 
 import argparse
-import math
-import os
 import pdb
-import random
-import shlex
-import shutil
-import subprocess
-import sys
-
-# 2. related third party imports
-#---
 
 
-
-
-# 3. local application/library specific imports
+# 3. local imports
 #---
 import logger
 from md import MolecularDynamics
