@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
+""" Log module
+"""
 import functools 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -22,15 +23,22 @@ def set_functional_logger(logging_level = logging.DEBUG ):
     -----------
     logging_level : logging level - optional
         Threshold for the logger among : 
-        logging.CRITICAL
-        logging.ERROR
-        logging.WARNING
-        logging.INFO
-        logging.DEBUG (default)
+        logging.CRITICAL -or- 50
+        logging.ERROR -or- 40
+        logging.WARNING -or- 30
+        logging.INFO -or- 20
+        logging.DEBUG (default) -or- 10
+        logging.NOTSET -or- 0 
     
     Side effect : 
     --------------
     Create a file named 'ST-on-the-fly.log' where logs are appended.
+    If this log file reaches 1mo, it gets rolled over.
+
+    Logger details : 
+    ----------------
+    The logger is formatted as the following :
+    time :: levelname :: message
 
     Example : 
     ----------
