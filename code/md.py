@@ -1,6 +1,7 @@
 """
 Run GROMACS Molecular Dynamics using a Python wrapper 
 """
+import pdb
 import shutil 
 import shlex
 import subprocess
@@ -132,6 +133,7 @@ class MolecularDynamics(object):
         print (cmd)
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
+        pdb.set_trace() 
 
     @logger.log_decorator
     def gmx_mdrun(self):
@@ -141,6 +143,7 @@ class MolecularDynamics(object):
         print (cmd)
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
+        pdb.set_trace()
 
     @logger.log_decorator
     def run(self): 
