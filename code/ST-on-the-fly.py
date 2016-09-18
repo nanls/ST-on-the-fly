@@ -390,11 +390,13 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
                     for velocity in velocities : 
                         new_velocity = velocity * math.sqrt(T_new / self.T_current)
                         new_velocities.append(new_velocity)
-
+                    print (line)
                     line = "{0}{1:8.4f}{2:8.4f}{3:8.4f}\n".format(line [:44], *new_velocities)
+                    print (line)
 
                 outfile.write(line)
-
+        import pdb; pdb.set_trace()
+        print ("làààààààààààààààààààààààààààààààààààààààà")   
         # ... and rename it (the old one is erase)
         os.rename(self.gro_filename+'.tmp', self.gro_filename)
 
