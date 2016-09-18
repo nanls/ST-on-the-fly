@@ -50,7 +50,7 @@ def get_arguments_values():
     # to make sure the string is a valid attribute name.
     # So in this case, use dest is not necessary.
 
-    # About T_RANGE : 
+    # About T_range : 
     parser.add_argument("--Tmin", required=True, type=float,
         help="At which temperature (in Kelvin) begins the experiment")
     parser.add_argument("--Tmax", required=True, type=float,
@@ -58,9 +58,7 @@ def get_arguments_values():
     parser.add_argument("--Tstep", required=True, type=int,
         help="The step of the range of temperature ")
 
-
     # About struct : 
-
     parser.add_argument("--gro-filename", required=True, type=str,
         help="gro / pdb file to use for the ST experiment")
     parser.add_argument("--top-filename", required=True, type=str,
@@ -71,13 +69,10 @@ def get_arguments_values():
         help=("The number of molecular dynamics during the experiment :"
             "t_one-md * num-md = t_ST")
     )
-
     parser.add_argument("--st-mdp-template-filename", required=True, type=str,
         help="mdp file to use for the ST experiment")
-
     parser.add_argument("--st-outname", required=True, type=str, 
         help="template name for output of the ST experiment ")
-
 
     # About minimisation : 
     minimisation_parser = parser.add_mutually_exclusive_group(required=False)
@@ -88,26 +83,21 @@ def get_arguments_values():
         dest='minimisation', action='store_false', 
         help="Do run a minimisation before ST experiment")
     parser.set_defaults(minimisation=False)
-
     parser.add_argument("--minimisation-mdp-filename", required=False,type=str,
         help="mdp file to use for minimisation")
     parser.add_argument("--minimisation-outname", required=False, type=str,
         help="template name for output of minimisation"  )
 
-
     # Other :
     parser.add_argument("--out-path",default='./',  type= str, 
         help = "Where the outputed results files should be store")
-
     parser.add_argument("--maxwarn", default = '0', type=int, 
         help="The max number of warnigs allowed when running MD" )
-
     parser.add_argument("--clean-all", 
         help=("Clean gromacs outputs unecessary to plot the figures"
         "in N'Guyen 2013 /!\ Be carefull"), 
         action='store_true'
     )
-
     parser.add_argument('-v', '--verbose', dest = 'verbosity', default=0
         help="Turn on detailed info log", action='count')
 
@@ -200,16 +190,15 @@ def check_arguments_integrity(args):
         print_use_help_message()
         sys.exit(-1)
 
-
     try:
         assert_strictly_inferior(args.Tmin, args.Tmax, 'Tmin', 'Tmax')
     except AssertionError:
         print_use_help_message()
         sys.exit(-1)
 
-
     try:
-        assert_strictly_inferior (args.Tmin + args.Tstep,  args.Tmax, 'Tmin + Tstep', 'Tmax') 
+        assert_strictly_inferior (args.Tmin + args.Tstep,  args.Tmax, 
+            'Tmin + Tstep', 'Tmax') 
     except AssertionError:
         print_use_help_message()
         sys.exit(-1)
@@ -222,7 +211,7 @@ def check_arguments_integrity(args):
         sys.exit(-1)
 
 
-    files = [args.gro_filename, args.top_filename, args.st_mdp_template_filename]
+    files=[args.gro_filename, args.top_filename, args.st_mdp_template_filename]
     if args.minimisation : 
         files.append (args.minimisation_mdp_filename)
 
@@ -231,7 +220,8 @@ def check_arguments_integrity(args):
             with open(file):
                 pass
         except IOError as e:
-            log.error ("Unable to open file "+ file +". (Does not exist or no read permissions)" ) 
+            log.error ("Unable to open file "+ file +\
+                ". (Does not exist or no read permissions)" ) 
 
 
 def get_integrous_arguments_values(): 
