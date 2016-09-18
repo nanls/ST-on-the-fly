@@ -11,9 +11,13 @@
 
 # 1. standard library imports
 #---
-import argparse
+
+# from __future__ imports must occur at the beginning of the file.
+# if not : SyntaxError 
 from __future__ import print_function
 from __future__ import division 
+
+import argparse
 import math
 import os
 import pdb
