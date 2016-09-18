@@ -1,7 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Run ST-on-the-fly"""
+"""Run ST-on-the-fly
+
+Example : 
+
+# With previous minimisation : 
+python ST-on-the-fly.py \
+--Tmin 1 --Tmax 5 --Tstep 1 \
+--gro-filename ../data/ala10_md000.pdb \
+--top-filename ../data/ala10.top \
+--nb-md 3   --st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
+--minimisation \
+--minimisation-mdp-filename ../data/mini2.mdp  --minimisation-outname miniout \ 
+--maxwarn 1     --out-path ./     -vvv
+
+#Without previous minimisation : 
+python ST-on-the-fly.py \
+--Tmin 1 --Tmax 5 --Tstep 1  \
+--gro-filename ../data/test.gro \
+--top-filename ../data/ala10.top  \
+--nb-md 3  --st-mdp-template-filename ../data/md1.mdp  --st-outname outst \
+--maxwarn 1     --out-path ./     -v
+
+"""
 
 #------------------------------------------------------------------------------
 # PEP8 imports : 
@@ -249,20 +271,7 @@ def get_integrous_arguments_values():
 
 ################################################################################
 if __name__ == "__main__":
-    """
-    python ST-on-the-fly.py --Tmin 1 --Tmax 5 --Tstep 1 \
-    --gro-filename ../data/ala10_md000.pdb \
-    --top-filename ../data/ala10.top \
-    --nb-md 3 \
-    --st-mdp-template-filename ../data/md1.mdp \
-    --st-outname outst \
-    --minimisation \
-    --minimisation-mdp-filename ../data/mini2.mdp  \
-    --minimisation-outname miniout \
-    --maxwarn 1 \
-    --out-path ./ \
-    -vvv
-    """
+
     print ('go')
 
     #-----------------
