@@ -357,7 +357,10 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         print ("setter de Tcurrent ============")
         self.update_velocities(T_new)
 
-        self.T_current = T_new
+        self._T_current = T_new 
+        # not self.T_current = T_new
+        # otherwise it calls the setter that calls the setter, that c... 
+        # do not use setter in setter ! 
         
         self._mdp_filename = self._mdp_template % self.T_current
 
