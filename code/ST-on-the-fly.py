@@ -45,6 +45,8 @@ from scipy import constants
 import logger
 
 
+################################################################################
+# Arguments getter functions : 
 
 def get_arguments_values(): 
     """ Use argparse module to get arguments values.
@@ -257,7 +259,7 @@ def get_integrous_arguments_values():
     check_arguments_integrity(args)
     return args
 
-
+################################################################################
 class ListWithoutNegIdx(list):
     """A list without negative indiciation
     """
