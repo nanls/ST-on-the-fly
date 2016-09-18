@@ -49,30 +49,32 @@ def get_arguments_values():
     # So in this case, use dest is not necessary.
 
     # About T_RANGE : 
-    parser.add_argument("--Tmin", required=True,
-        help="At which temperature (in Kelvin) begins the experiment", type=float)
-    parser.add_argument("--Tmax", required=True,
-        help="The maximal temperature (in Kelvin) during the experiment", type=float)
-    parser.add_argument("--Tstep", required=True,
-        help="The step of the range of temperature ", type=int)
+    parser.add_argument("--Tmin", required=True, type=float,
+        help="At which temperature (in Kelvin) begins the experiment")
+    parser.add_argument("--Tmax", required=True, type=float,
+        help="The maximal temperature (in Kelvin) during the experiment")
+    parser.add_argument("--Tstep", required=True, type=int,
+        help="The step of the range of temperature ")
 
 
     # About struct : 
 
-    parser.add_argument("--gro-filename", required=True,
-        help="gro / pdb file to use for the ST experiment", type=str)
-    parser.add_argument("--top-filename", required=True,
-        help="topology file to use for the ST experiment ", type=str)
+    parser.add_argument("--gro-filename", required=True, type=str,
+        help="gro / pdb file to use for the ST experiment")
+    parser.add_argument("--top-filename", required=True, type=str,
+        help="topology file to use for the ST experiment " )
 
     # About ST : 
-    parser.add_argument("--nb-md",required=True,
-        help="The number of molecular dynamics during the experiment : t_one-md * num-md = t_ST", type=int)
+    parser.add_argument("--nb-md",required=True, type=int,
+        help=("The number of molecular dynamics during the experiment :"
+            "t_one-md * num-md = t_ST")
+    )
 
-    parser.add_argument("--st-mdp-template-filename", required=True,
-        help="mdp file to use for the ST experiment", type=str)
+    parser.add_argument("--st-mdp-template-filename", required=True, type=str,
+        help="mdp file to use for the ST experiment")
 
-    parser.add_argument("--st-outname", required=True,
-        help="template name for output of the ST experiment ", type=str)
+    parser.add_argument("--st-outname", required=True, type=str, 
+        help="template name for output of the ST experiment ")
 
 
     # About minimisation : 
@@ -85,25 +87,27 @@ def get_arguments_values():
         help="Do run a minimisation before ST experiment")
     parser.set_defaults(minimisation=False)
 
-    parser.add_argument("--minimisation-mdp-filename", 
-        help="mdp file to use for minimisation", type=str, required=False)
-    parser.add_argument("--minimisation-outname", 
-        help="template name for output of minimisation ", type=str, required=False)
+    parser.add_argument("--minimisation-mdp-filename", required=False,type=str,
+        help="mdp file to use for minimisation")
+    parser.add_argument("--minimisation-outname", required=False, type=str,
+        help="template name for output of minimisation"  )
 
 
     # Other :
-    parser.add_argument("--out-path", 
-        help = "Where the outputed results files should be store", type= str, default='./')
+    parser.add_argument("--out-path",default='./',  type= str, 
+        help = "Where the outputed results files should be store")
 
-    parser.add_argument("--maxwarn", 
-        help="The max number of warnigs allowed when running MD", type=int, default = '0')
+    parser.add_argument("--maxwarn", default = '0', type=int, 
+        help="The max number of warnigs allowed when running MD" )
 
     parser.add_argument("--clean-all", 
-        help="Clean gromacs outputs unecessary to plot the figure in N'Guyen 2013 /!\ Be carefull", 
-        action='store_true')
+        help=("Clean gromacs outputs unecessary to plot the figures"
+        "in N'Guyen 2013 /!\ Be carefull"), 
+        action='store_true'
+    )
 
-    parser.add_argument('-v', '--verbose', dest = 'verbosity',
-        help="Turn on detailed info log", action='count',  default=0)
+    parser.add_argument('-v', '--verbose', dest = 'verbosity', default=0
+        help="Turn on detailed info log", action='count')
 
     return parser.parse_args()
 
