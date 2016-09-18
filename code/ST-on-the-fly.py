@@ -142,13 +142,15 @@ def assert_strictly_positive(value, name_var):
 
     Side effect : 
     -------------
-    If the assertion fails, it logs error 
+    If the assertion fails, it logs an error using logger module:
     <name_var> must be strictly positive
 
     Example : 
     ---------
 
-    >>>
+    >>> assert_strictly_positive (1, 'my_var_name') 
+    >>> assert_strictly_positive (-1, 'my_var_name') 
+    2016-09-18 15:14:17,262 :: ERROR :: my_var_name must be strictly positive.
     """
     try:
         assert (value > 0 )
@@ -157,6 +159,27 @@ def assert_strictly_positive(value, name_var):
         raise e 
 
 def assert_strictly_inferior(value1, value2, name_var1, name_var2): 
+    """Assert a value is strictly inferior to another one. If not, log an error. 
+
+    Arguments : 
+    ----------
+    value1 : number
+        The value of which you want to test the strict inferiority compared
+        to value2
+    value2 : number 
+        The value of which you want to test the strict superiority compared 
+        to value1
+    name_var1 : string
+        The name of value1
+    name_var2 : string 
+        The name of value2
+
+    Side effect : 
+    -------------
+    If the assertion fails, it logs an error using logger module:
+    <name_var1> must be strictly inferior to <name_var2>
+
+    """
     try:
         assert (value1 < value2 )
     except AssertionError, e:
@@ -166,13 +189,13 @@ def assert_strictly_inferior(value1, value2, name_var1, name_var2):
 
 def check_arguments_integrity(args): 
     """ Check integrity of arguments pass through the command line. 
-    Parameter
-    ---------
-    args : namespace object
-        Its attributes are arguments names 
-        and contain arguments values. 
-    Side effect
+
+    Arguments :
     -----------
+    args : namespace object
+        Its attributes are arguments names and contain arguments values. 
+    Side effect : 
+    -------------
     If one arg is not integrous, exit the script printing why. 
     """
     try:
