@@ -104,6 +104,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     @logger.log_decorator
     def compute_E_average(self):
         output = self.gmx_energy('Potential')
+        import pdb ; pdb.set_trace()
         for line in output : 
             splitted_line = line.split()
             print (splitted_line)
