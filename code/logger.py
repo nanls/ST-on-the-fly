@@ -1,23 +1,25 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-
-
-
-import logging
-from logging.handlers import RotatingFileHandler
-
-import time 
 
 import functools 
+import logging
+from logging.handlers import RotatingFileHandler
+import time 
 
-__DECO_ACTIVATED = True
+# Turn True to have info about function that take 
+# the decorator @logger.log_decorator
+__DECO_ACTIVATED = False 
+
+
 __logger = None 
 
 
 def set_functional_logger(logging_level = logging.DEBUG ):
     """ Set a functional global logger named __logger. 
 
-    Arguments
-    ---------
+    Arguments : 
+    -----------
     logging_level : logging level - optional
         Threshold for the logger among : 
         logging.CRITICAL
@@ -26,12 +28,12 @@ def set_functional_logger(logging_level = logging.DEBUG ):
         logging.INFO
         logging.DEBUG (default)
     
-    Side effect 
-    -----------
+    Side effect : 
+    --------------
     Create a file named 'ST-on-the-fly.log' where logs are appended.
 
-    Example
-    -------
+    Example : 
+    ----------
 
     >>> set_functional_logger(logging.INFO)
     >>> __logger.info('there is a logger set to INFO level')
@@ -61,15 +63,33 @@ def set_functional_logger(logging_level = logging.DEBUG ):
 
 
 def log_decorator(func):
+    """ This decorator prints infos about functions 
+
+    Usage : 
+    -------
+    Add the decorator @logger.log_decorator before every function on which 
+    you want information.
+    Turn True the flag __DECO_ACTIVATED
+
+    Side effect : 
+    -------------
+    Logs module name, function name, args and kwargs at the beginig of the fn
+    Logs module name, function name, args, kwargs and timing at the end of the fn
+
+    """
     if not __DECO_ACTIVATED:
         return func
         
     module_name = func.__module__    
     func_name = func.__name__ 
     
-    @functools.wraps(func) # reports attributs of the original function on the wrapper (including docstrings)
+    # @functools.wraps reports attributs of the original function on the wrapper
+    # (including docstrings)
+    @functools.wraps(func) 
     def wrapped(*args, **kwargs):
-        msg = "Module={} Function={} Args={} Kwargs={}".format(module_name, func_name, args, kwargs)       
+        msg = "Module={} Function={} Args={} Kwargs={}".format(
+            module_name, func_name, args, kwargs
+        )       
         __logger.debug("BEGIN " + msg)
         
         t = time.clock()
@@ -82,6 +102,28 @@ def log_decorator(func):
 
 
 def get_level(v):
+    """Get logging level corresponding to verbosity value
+
+    Argument : 
+    ----------
+    v : int 
+        verbosity value
+
+    Return : 
+    --------
+    level : int 
+        logging level 
+
+    Nota Bene : 
+    -----------
+    The correspondance used is : 
+    verbosity | level
+    ----------|---------------
+        0     |   0 : NOTSET         
+        1     |  30 : WARNING
+        2     |  20 : INFO
+        3     |  10 : DEBUG
+    """
     verbosity = [ 0, 30  ,20 ,10]
     try:
         return verbosity[v] 
