@@ -8,6 +8,8 @@
 from __future__ import print_function
 from __future__ import division 
 
+import pdb
+
 import logger
 
 
@@ -351,11 +353,14 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     @Simulation.T_current.setter
     def T_current(self, T_new):
+        pdb.set_trace()
+        print ("setter de Tcurrent ============")
         self.update_velocities(T_new)
 
         self.T_current = T_new
         
         self._mdp_filename = self._mdp_template % self.T_current
+
         
         
 
@@ -390,12 +395,11 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
                     for velocity in velocities : 
                         new_velocity = velocity * math.sqrt(T_new / self.T_current)
                         new_velocities.append(new_velocity)
-                    print (line)
+                    
                     line = "{0}{1:8.4f}{2:8.4f}{3:8.4f}\n".format(line [:44], *new_velocities)
                     print (line)
 
                 outfile.write(line)
-        import pdb; pdb.set_trace()
         print ("làààààààààààààààààààààààààààààààààààààààà")   
         # ... and rename it (the old one is erase)
         os.rename(self.gro_filename+'.tmp', self.gro_filename)
@@ -583,7 +587,7 @@ class SimulatedTempering(object):
                 res = float('inf')
             else : 
                 print ('case not handled !! ')
-                import pdb ; pdb.set_trace()
+                pdb.set_trace()
         
         mc = min (1, res)
         return mc
@@ -601,9 +605,9 @@ class SimulatedTempering(object):
     @logger.log_decorator
     def run(self):
         for step_idx in xrange(self._NUM_SIMU) : 
-
+            pdb.set_trace()
             E_current_average = self._SIMULATION.run()
-
+            pdb.set_trace()
             self.T_current.update_E(E_current_average) 
 
             self.update_f_current()
