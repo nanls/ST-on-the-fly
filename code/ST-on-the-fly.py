@@ -182,65 +182,6 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
 
 
-
-class Temperature(object):
-    """docstring for Temperature"""
-
-    class NoECurrent(Exception):
-        def __init__(self):
-            super(Temperature.NoECurrent, self).__init__()
-
-
-    k_Boltzmann = constants.value(u'Boltzmann constant') # ??? k
-
-    def __init__(self, value):
-        super(Temperature, self).__init__()
-        self._VALUE = value
-        self._number_of_passes = 0 
-        self._f = 0
-        self._E = None
-        self._BETA  = self.compute_beta()
-
-
-    @logger.log_decorator
-    def compute_beta(self):
-        return 1/Temperature.k_Boltzmann * self._VALUE
-        # __future__ division -> floting point division
-
-
-    @logger.log_decorator
-    def update_f(self, Tprev) : 
-        try:
-            self.compute_f(Tprev)
-        except Temperature.NoECurrent:
-            self.estimate_f(Tprev)
-
-
-    @logger.log_decorator
-    def estimate_f(self, Tprev):
-        # (beta_next - beta_previous) E_previous / 2
-        self._f = (self._BETA - Tprev._BETA ) * Tprev._E / 2
-
-
-    @logger.log_decorator
-    def compute_f(self, Tprev):
-        # f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
-        try:
-            self._f =  Tprev._f + (self._BETA - Tprev._BETA ) * ( self._E + Tprev._E )  / 2
-        except Exception:
-            raise Temperature.NoECurrent
-
-
-    @logger.log_decorator
-    def update_E(self, E_new):
-        self._number_of_passes += 1 
-        try:
-            self._E =  self._E  + ( (E_new - self._E ) / self._number_of_passes)
-        except TypeError: 
-            #self._E = None becase no updated yet
-            #First time init : 
-            self._E =  ( E_new  / self._number_of_passes)
-        
         
 
 
@@ -265,6 +206,66 @@ class SimulatedTempering(object):
                 raise TypeError ("TRange indices must be integers, not "+ str(type (key) ) )  
 
 
+
+
+    class Temperature(object):
+        """docstring for Temperature"""
+
+        class NoECurrent(Exception):
+            def __init__(self):
+                super(SimulatedTempering.Temperature.NoECurrent, self).__init__()
+
+
+        k_Boltzmann = constants.value(u'Boltzmann constant') # ??? k
+
+        def __init__(self, value):
+            super(SimulatedTempering.Temperature, self).__init__()
+            self._VALUE = value
+            self._number_of_passes = 0 
+            self._f = 0
+            self._E = None
+            self._BETA  = self.compute_beta()
+
+
+        @logger.log_decorator
+        def compute_beta(self):
+            return 1/SimulatedTempering.Temperature.k_Boltzmann * self._VALUE
+            # __future__ division -> floting point division
+
+
+        @logger.log_decorator
+        def update_f(self, Tprev) : 
+            try:
+                self.compute_f(Tprev)
+            except SimulatedTempering.Temperature.NoECurrent:
+                self.estimate_f(Tprev)
+
+
+        @logger.log_decorator
+        def estimate_f(self, Tprev):
+            # (beta_next - beta_previous) E_previous / 2
+            self._f = (self._BETA - Tprev._BETA ) * Tprev._E / 2
+
+
+        @logger.log_decorator
+        def compute_f(self, Tprev):
+            # f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
+            try:
+                self._f =  Tprev._f + (self._BETA - Tprev._BETA ) * ( self._E + Tprev._E )  / 2
+            except Exception:
+                raise SimulatedTempering.Temperature.NoECurrent
+
+
+        @logger.log_decorator
+        def update_E(self, E_new):
+            self._number_of_passes += 1 
+            try:
+                self._E =  self._E  + ( (E_new - self._E ) / self._number_of_passes)
+            except TypeError: 
+                #self._E = None becase no updated yet
+                #First time init : 
+                self._E =  ( E_new  / self._number_of_passes)
+            
     @logger.log_decorator
     def __init__(self, num_simu, Tmin, Tmax, Tstep, simu_type='md', st_mdp_template_filename = None, **kwargs):
         
@@ -276,7 +277,7 @@ class SimulatedTempering(object):
         for T in np.arange(Tmin,Tmax+1,Tstep):
             if simu_type == 'md' : 
                 self.create_mdp(T)
-            self._T_RANGE.append(Temperature(T))
+            self._T_RANGE.append(SimulatedTempering.Temperature(T))
         #range (a, b) = [a, b[
         #range (a, b+1) = [a, b+1[ = [a, b]
         kwargs['T_current'] = self._T_RANGE[0]._VALUE
