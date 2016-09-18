@@ -29,7 +29,7 @@ logger.set_functional_logger()
 global log
 log = logger.__logger
 log.info('logger OK')
-    
+
 from md import MolecularDynamics
 from st import SimulatedTempering
 
@@ -103,7 +103,7 @@ def get_arguments_values():
         "in N'Guyen 2013 /!\ Be carefull"), 
         action='store_true'
     )
-    parser.add_argument('-v', '--verbose', dest = 'verbosity', default=0
+    parser.add_argument('-v', '--verbose', dest = 'verbosity', default=0,
         help="Turn on detailed info log", action='count')
 
     return parser.parse_args()
