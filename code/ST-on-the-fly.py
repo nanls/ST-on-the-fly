@@ -36,6 +36,7 @@ import sys
 # 3. local application/library specific imports
 #---
 import logger
+from md import MolecularDynamics
 from st import SimulatedTempering
 
 
