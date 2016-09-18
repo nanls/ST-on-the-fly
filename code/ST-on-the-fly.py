@@ -44,13 +44,13 @@ import logger
 
 def get_arguments_values(): 
     """ Use argparse module to get arguments values.
+
     Return
     ------
     args : Namespace object
-        Namespace object populated with arguments converted from strings to objects 
+        Namespace object populated with arguments converted from strings to 
+        objects (str or int, or whatever, according to the spec in the code)
         and assigned as attributes of the namespace object.
-        They store arguments values (str or int or whatever, according to the specifications in
-        the code)
     """
     help_str = "ST-on-the-fly experiment"
 
@@ -121,10 +121,31 @@ def get_arguments_values():
 
 
 def print_use_help_message() : 
+    """ Print use help message
+    """
     logger.__logger.error("Use --help for help.\n")
 
 
 def assert_strictly_positive(value, name_var): 
+    """ Assert a value is strictly positive. If not, log an error. 
+
+    Argument : 
+    ----------
+    value : number
+        The value of which you want to test the strict positivity 
+    name_var : string
+        The name of the value
+
+    Side effect : 
+    -------------
+    If the assertion fails, it logs error 
+    <name_var> must be strictly positive
+
+    Example : 
+    ---------
+
+    >>>
+    """
     try:
         assert (value > 0 )
     except AssertionError, e:
