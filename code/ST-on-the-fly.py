@@ -246,6 +246,7 @@ def get_integrous_arguments_values():
 
 
 
+
 ################################################################################
 if __name__ == "__main__":
     """
@@ -269,13 +270,7 @@ if __name__ == "__main__":
     args = get_integrous_arguments_values()
     
 
-
-    verbosity = [ 0, 30  ,20 ,10]
-    try:
-        level = verbosity[args.verbosity] 
-    except IndexError:
-        level = 10 
-
+    level = logger.get_level(args.verbosity)
     log.setLevel(level)
 
     

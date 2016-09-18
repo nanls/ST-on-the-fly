@@ -81,3 +81,9 @@ def log_decorator(func):
 
 
 
+def get_level(v):
+    verbosity = [ 0, 30  ,20 ,10]
+    try:
+        return verbosity[v] 
+    except IndexError:
+        return 10 
