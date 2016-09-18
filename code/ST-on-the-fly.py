@@ -35,6 +35,8 @@ import argparse
 
 import sys
 
+import shutil
+
 def get_arguments_values(): 
     """ Use argparse module to get arguments values.
     Return
@@ -223,10 +225,11 @@ class MolecularDynamics(object):
         print ('je suis dans le constructor de MolecularDynamics')
         super(MolecularDynamics, self).__init__(**kwargs)
         self._mdp_filename = mdp_filename
-        self._gro_filename = gro_filename
-        self._top_filename = top_filename
         self._out_path = out_path
         self._out_name = out_name
+        self._gro_filename = self.out_path + self.out_name + '.gro'
+        shutil.copyfile(gro_filename, self._gro_filename)
+        self._top_filename = top_filename
         self._maxwarn = maxwarn
 
     @property 
