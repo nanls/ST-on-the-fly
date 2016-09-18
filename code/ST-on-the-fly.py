@@ -246,11 +246,12 @@ def check_arguments_integrity(args):
 
 def get_integrous_arguments_values(): 
     """ Get arguments passed through command line and check their integrity.
-    Return
-    ------
+
+    Return : 
+    --------
     args : namespace object
-        Its attributes are arguments names 
-        and contain arguments values (str or int or whatever according to code specifications). 
+        Its attributes are arguments names and contain arguments values 
+        (str or int or whatever according to code specifications). 
     """
     args = get_arguments_values()
     check_arguments_integrity(args)
@@ -258,8 +259,11 @@ def get_integrous_arguments_values():
 
 
 class ListWithoutNegIdx(list):
-
+    """A list without negative indiciation
+    """
     def __getitem__(self, key):
+        """Override list getitem to disable negative indices
+        """
         if isinstance(key, int):
             if key < 0:
                 raise IndexError("negative index not allowed")
