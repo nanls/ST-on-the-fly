@@ -50,7 +50,25 @@ import logger
 
 
 class MolecularDynamics(object):
-    """docstring for MolecularDynamics"""
+    """MolecularDynamics class 
+
+    Instance Attributs : 
+    --------------------
+    _mdp_filename : string, private 
+        Path to the mdp file 
+    _gro_filename : string, private 
+        Path to the gro file
+    _top_filename : string, private 
+        Path to the top file
+    _out_path : string, private 
+        Path where to store outputs 
+    _out_name : string, private 
+        Templace for the outputs
+    _maxwarn : int, private
+        Number of warnings allowed for GROMACS grompp function
+
+    """
+
     @logger.log_decorator
     def __init__(self, mdp_filename, gro_filename, top_filename, out_path, out_name, maxwarn, **kwargs):
         print ('je suis dans le constructor de MolecularDynamics')
@@ -299,7 +317,10 @@ class Temperature(object):
 
 
 class SimulatedTempering(object):
-    """docstring for ST"""
+    """SimulatedTempering class
+    
+
+    """
 
     class TRange(list):
         """A list without negative indiciation
