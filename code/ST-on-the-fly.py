@@ -162,6 +162,8 @@ class MolecularDynamics(object):
 
     @logger.log_decorator
     def gmx_grompp(self) : 
+        """Run GROMACS grompp command
+        """
         cmd = "gmx grompp -f {0} -c {1} -p {2} -o {3}.tpr -po {3}.mdp -maxwarn {4}".format(   \
             self.mdp_filename, \
             self.gro_filename, \
@@ -175,6 +177,8 @@ class MolecularDynamics(object):
 
     @logger.log_decorator
     def gmx_mdrun(self):
+        """Run GROMACS mdrun command
+        """
         cmd = "gmx mdrun -v -s {0}.tpr -o {0}.trr -e {0}.edr -g {0}.log -c {0}.gro".format(self.out_path + self.out_name)
         print (cmd)
         p = subprocess.Popen(shlex.split(cmd))
@@ -182,6 +186,8 @@ class MolecularDynamics(object):
 
     @logger.log_decorator
     def run(self): 
+        """Run a MD using GROMACS grompp then mdrun 
+        """
         self.gmx_grompp()
         self.gmx_mdrun()
 
