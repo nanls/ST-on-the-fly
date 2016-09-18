@@ -534,7 +534,7 @@ class SimulatedTempering(object):
     def update_f_current(self):
         try : 
             T_previous = self._T_RANGE[self.T_current_idx-1]
-            self._SIMULATION.T_current.update_f(T_previous)
+            self.T_current.update_f(T_previous)
         except IndexError : #no previous T because Tcurrent = Tmin 
             self.T_current._f = 0 #f_Tmin is always equal to 0.
 
