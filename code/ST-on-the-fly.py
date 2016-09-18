@@ -265,15 +265,18 @@ if __name__ == "__main__":
     """
     print ('go')
 
-
+    #-----------------
+    # get arguments : 
     log.info('get args')
     args = get_integrous_arguments_values()
     
-
+    #-----------------
+    # set verbosity : 
     level = logger.get_level(args.verbosity)
     log.setLevel(level)
 
-    
+    #-----------------
+    # run minimi if needed : 
     if args.minimisation : 
 
         log.info('run minimi')
@@ -290,6 +293,9 @@ if __name__ == "__main__":
         st_gro_filename = args.out_path + args.minimisation_outname + '.gro'
     else : 
         st_gro_filename = args.gro_filename
+
+    #------------------
+    # ST experiment : 
     log.info('new ST')
     ST = SimulatedTempering(
         args.nb_md, 
