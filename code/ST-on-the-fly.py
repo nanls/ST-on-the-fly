@@ -115,7 +115,7 @@ def get_arguments_values():
 def print_use_help_message() : 
     """ Print use help message
     """
-    logger.__logger.error("Use --help for help.\n")
+    log.error("Use --help for help.\n")
 
 
 def assert_strictly_positive(value, name_var): 
@@ -143,7 +143,7 @@ def assert_strictly_positive(value, name_var):
     try:
         assert (value > 0 )
     except AssertionError, e:
-        logger.__logger.error(name_var + ' must be strictly positive.')
+        log.error(name_var + ' must be strictly positive.')
         raise e 
 
 def assert_strictly_inferior(value1, value2, name_var1, name_var2): 
@@ -171,7 +171,7 @@ def assert_strictly_inferior(value1, value2, name_var1, name_var2):
     try:
         assert (value1 < value2 )
     except AssertionError, e:
-        logger.__logger.error(name_var1 + ' must be strictly inferior to ' + name_var2+'.')
+        log.error(name_var1 + ' must be strictly inferior to ' + name_var2+'.')
         raise e 
 
 
@@ -229,7 +229,7 @@ def check_arguments_integrity(args):
             with open(file):
                 pass
         except IOError as e:
-            logger.__logger.error ("Unable to open file "+ file +". (Does not exist or no read permissions)" ) 
+            log.error ("Unable to open file "+ file +". (Does not exist or no read permissions)" ) 
 
 
 def get_integrous_arguments_values(): 
@@ -287,7 +287,7 @@ if __name__ == "__main__":
     log = logger.__logger
     if args.minimisation : 
 
-        logger.__logger.info('run minimi')
+        log.info('run minimi')
         MD_minimi = MolecularDynamics(        
             mdp_filename = args.minimisation_mdp_filename, 
             gro_filename = args.gro_filename, 
@@ -296,12 +296,12 @@ if __name__ == "__main__":
             out_name = args.minimisation_outname, 
             maxwarn = args.maxwarn)
         MD_minimi.run()
-        logger.__logger.info('minimi OK')
+        log.info('minimi OK')
 
         st_gro_filename = args.out_path + args.minimisation_outname + '.gro'
     else : 
         st_gro_filename = args.gro_filename
-    logger.__logger.info('new ST')
+    log.info('new ST')
     ST = SimulatedTempering(
         args.nb_md, 
         args.Tmin, args.Tmax, args.Tstep, 
@@ -314,7 +314,7 @@ if __name__ == "__main__":
         maxwarn = args.maxwarn
     )
     
-    logger.__logger.info('ST.run')
+    log.info('ST.run')
     ST.run()
 
-    logger.__logger.info('the end')
+    log.info('the end')
