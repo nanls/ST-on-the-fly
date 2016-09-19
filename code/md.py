@@ -133,7 +133,7 @@ class MolecularDynamics(object):
         print (cmd)
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
-        #pdb.set_trace() 
+        
 
     @logger.log_decorator
     def gmx_mdrun(self):
@@ -143,7 +143,7 @@ class MolecularDynamics(object):
         print (cmd)
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
-        #pdb.set_trace()
+        
 
     @logger.log_decorator
     def run(self): 

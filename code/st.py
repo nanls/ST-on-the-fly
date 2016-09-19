@@ -104,7 +104,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     @logger.log_decorator
     def compute_E_average(self):
         output = self.gmx_energy('Potential')
-        #import pdb ; pdb.set_trace()
+        
         for line in output : 
             splitted_line = line.split()
             print (splitted_line)
@@ -116,7 +116,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     @Simulation.T_current.setter
     def T_current(self, T_new):
-        #pdb.set_trace()
+        
         print ("setter de Tcurrent ============")
         self.update_velocities(T_new)
 
@@ -198,7 +198,7 @@ class SimulatedTempering(object):
                 if key < 0:
                     
                     raise SimulatedTempering.TRange.NegativeIndexError ("neg index not allowed")
-                    pdb.set_trace()
+                    
                 else :  
                     return super(SimulatedTempering.TRange, self).__getitem__(key)
             else : 
@@ -354,7 +354,7 @@ class SimulatedTempering(object):
         try:
             direction= SimulatedTempering.toss_coin()
             print ('direction = '+str(direction))
-            pdb.set_trace()
+            
             T_attempt = self._T_RANGE[self.T_current_idx + direction ]
         except IndexError:
             T_attempt = None
@@ -407,9 +407,9 @@ class SimulatedTempering(object):
     @logger.log_decorator
     def run(self):
         for step_idx in xrange(self._NUM_SIMU) : 
-            #pdb.set_trace()
+            
             E_current_average = self._SIMULATION.run()
-            #pdb.set_trace()
+            
             self.T_current.update_E(E_current_average) 
 
             self.update_f_current()
