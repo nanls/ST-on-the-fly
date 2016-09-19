@@ -173,7 +173,6 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
 
 
-        
 
 
 class SimulatedTempering(object):
@@ -185,10 +184,11 @@ class SimulatedTempering(object):
     class TRange(list):
         """A list without negative indiciation
         """
+
         class NegativeIndexError(IndexError):
             """docstring for Exception"""
-            def __init__(self, message):
-                super(Exception, self).__init__(message)
+            def __init__(self,*args,**kwargs):
+                super(Exception, self).__init__(*args,**kwargs)
 
 
         def __getitem__(self, key):
@@ -196,7 +196,9 @@ class SimulatedTempering(object):
             """
             if isinstance(key, int):
                 if key < 0:
-                    raise SimulatedTempering.TRange.NegativeIndexError("negative index not allowed")
+                    
+                    raise SimulatedTempering.TRange.NegativeIndexError ("neg index not allowed")
+                    pdb.set_trace()
                 else :  
                     return super(SimulatedTempering.TRange, self).__getitem__(key)
             else : 
@@ -313,7 +315,7 @@ class SimulatedTempering(object):
         try : 
             T_previous = self._T_RANGE[self.T_current_idx-1]
             self.T_current.update_f(T_previous)
-        except SimulatedTempering.Temperature.NoECurrent : #no previous T because Tcurrent = Tmin 
+        except SimulatedTempering.TRange.NegativeIndexError : #no previous T because Tcurrent = Tmin 
             self.T_current._f = 0 #f_Tmin is always equal to 0.
 
         # Remember : 
