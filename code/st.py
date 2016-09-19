@@ -147,7 +147,9 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
             print (splitted_line)
             if splitted_line and splitted_line[0] == 'Potential' : 
                 E_average = splitted_line[1]
-                return int(E_average)
+                return -int(E_average) 
+                # in NGuyen 2013, Energies are defined as integral -> positive
+                # in gmx, E are negative -> take the oposite to have positive value
         log.error('E_average could not be found') 
         return 0
 
