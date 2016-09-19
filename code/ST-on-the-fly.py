@@ -39,8 +39,9 @@ from __future__ import print_function
 from __future__ import division 
 
 import argparse
+import errno
 import pdb
-
+import os
 # 2. other imports
 #--- 
 
@@ -266,6 +267,12 @@ def get_integrous_arguments_values():
 
 ################################################################################
 
+def make_sure_path_exists(path):
+    try:
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise
 
 
 
@@ -278,7 +285,8 @@ if __name__ == "__main__":
     # get arguments : 
     log.info('get args')
     args = get_integrous_arguments_values()
-    
+    make_sure_path_exists(args.out_path)
+
     #-----------------
     # set verbosity : 
     level = logger.get_level(args.verbosity)
