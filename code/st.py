@@ -89,11 +89,12 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         print (self._out_name)
         import pdb; pdb.set_trace()
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
+        E = self.compute_E_average()
         os.rename("{0}/{1}.gro".format(self._out_path, self._out_name), self.gro_filename)
         self.cat_edr(tcurrent)
         self.cat_xtc(tcurrent)
         self._out_name = save_out_name
-        return self.compute_E_average()
+        return E
 
 
     def cat_gmx_files(self, fn, ext, t_current):
@@ -127,7 +128,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     def gmx_energy(self, arg = 'Potential') : 
 
         p1 = subprocess.Popen( shlex.split("echo {0}".format(arg)), stdout=subprocess.PIPE ) 
-
+        
         cmd = "gmx energy -f {0}.edr -o {0}_Potential.xvg ".format(
                     self.out_path + self.out_name
                 )
@@ -142,7 +143,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     @logger.log_decorator
     def compute_E_average(self):
         output = self.gmx_energy('Potential')
-        
+        pdb.set_trace()
         for line in output : 
             splitted_line = line.split()
             print (splitted_line)
