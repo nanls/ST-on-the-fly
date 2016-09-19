@@ -228,7 +228,7 @@ class SimulatedTempering(object):
 
         @logger.log_decorator
         def compute_beta(self):
-            return 1/SimulatedTempering.Temperature.k_Boltzmann * self._VALUE
+            return 1/ (SimulatedTempering.Temperature.k_Boltzmann * self._VALUE)
             # __future__ division -> floting point division
 
 
