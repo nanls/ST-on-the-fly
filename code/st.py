@@ -108,11 +108,11 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
         
     def cat_trr(self, t_current):
-        cat_gmx_files('trjcat', 'xtc', t_current)
+        self.cat_gmx_files('trjcat', 'xtc', t_current)
         os.remove("{0}{1}.xtc".format(self.out_path, self._out_name))
 
     def cat_edr(self, t_current):
-        cat_gmx_files('eneconv', 'edr', t_current)
+        self.cat_gmx_files('eneconv', 'edr', t_current)
         os.remove("{0}{1}.edr".format(self.out_path, self._out_name))
 
 
