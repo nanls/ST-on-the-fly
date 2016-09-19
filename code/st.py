@@ -286,7 +286,7 @@ class SimulatedTempering(object):
         self._NUM_SIMU = num_simu
         self._T_RANGE=SimulatedTempering.TRange() 
         self._ST_MDP_TEMPLATE_FILENAME= st_mdp_template_filename
-        self.md_step = get_md_step(st_mdp_template_filename)
+        self.md_step = SimulatedTempering.get_md_step(st_mdp_template_filename)
         T_range = np.logspace(np.log10(Tmin), np.log10(Tmax), num=Tnum, endpoint=True)
         for T in T_range:
             if simu_type == 'md' : 
@@ -301,7 +301,7 @@ class SimulatedTempering(object):
         kwargs['mdp_filename'] = self._ST_MDP_TEMPLATE_FILENAME
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
 
-
+    @staticmethod
     @logger.log_decorator
     def get_md_step(st_mdp_template_filename):
         with open(st_mdp_template_filename, 'r') as fin: 
