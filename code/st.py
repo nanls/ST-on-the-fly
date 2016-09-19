@@ -163,10 +163,9 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
                         new_velocities.append(new_velocity)
                     
                     line = "{0}{1:8.4f}{2:8.4f}{3:8.4f}\n".format(line [:44], *new_velocities)
-                    print (line)
+                    
 
                 outfile.write(line)
-        print ("làààààààààààààààààààààààààààààààààààààààà")   
         # ... and rename it (the old one is erase)
         os.rename(self.gro_filename+'.tmp', self.gro_filename)
 
