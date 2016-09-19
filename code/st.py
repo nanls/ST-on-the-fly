@@ -253,7 +253,9 @@ class SimulatedTempering(object):
                 super(SimulatedTempering.Temperature.NoECurrent, self).__init__()
 
 
-        k_Boltzmann = constants.value(u'Boltzmann constant') # ??? k
+        k_Boltzmann = constants.value(u'Boltzmann constant') / 1000 
+        # using gromacs, E are in kilo Joule / K 
+        # scipy gives Boltmann constant in Joule per K -> / 1000 
 
         def __init__(self, value):
             super(SimulatedTempering.Temperature, self).__init__()
