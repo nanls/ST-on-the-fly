@@ -82,9 +82,23 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     @logger.log_decorator
     def run(self, tcurrent):
+        save_outname = self._outname
         self._outname += str(tcurrent)
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
+        self.cat_edr(tcurrent)
+
+        self._outname = save_outname
         return self.compute_E_average()
+
+    def cat_edr(self, t_current):
+        if t_current == 0 : 
+            cmd = 'gmx eneconv -f {0}/{1}.edr -o {0}/cat.edr'.format(self.outpath, self._outname)
+        else : 
+            cmd = ("gmx eneconv -f {0}/cat.edr {0}/{1}.edr -o {0}/cat.edr  -settime << EOF"
+                    "0\n{2}\nEOF".format(self.outpath, self._outname, t_current))
+
+        os.remove("{0}/{1}.edr".format(self.outpath, self._outname))
+
 
     @logger.log_decorator
     def gmx_energy(self, arg = 'Potential') : 
@@ -412,13 +426,14 @@ class SimulatedTempering(object):
             to_write += '\n'
             fout.write (to_write )
 
+
     @logger.log_decorator
     def run(self):
         for step_idx in xrange(self._NUM_SIMU) : 
             t_current = step_idx * self.md_step
 
             E_current_average = self._SIMULATION.run(t_current)
-            
+
             self.T_current.update_E(E_current_average) 
 
             self.update_f_current()
