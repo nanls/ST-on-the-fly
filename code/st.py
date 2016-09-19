@@ -81,7 +81,8 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
 
     @logger.log_decorator
-    def run(self):
+    def run(self, tcurrent):
+        self._outname += str(tcurrent)
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
         return self.compute_E_average()
 
@@ -416,7 +417,7 @@ class SimulatedTempering(object):
         for step_idx in xrange(self._NUM_SIMU) : 
             t_current = step_idx * self.md_step
 
-            E_current_average = self._SIMULATION.run()
+            E_current_average = self._SIMULATION.run(t_current)
             
             self.T_current.update_E(E_current_average) 
 
