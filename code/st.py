@@ -315,9 +315,9 @@ class SimulatedTempering(object):
         with open(st_mdp_template_filename, 'r') as fin: 
             for line in fin : 
                 if line.startswith("dt") : 
-                    dt= float(line.split()[2])
+                    dt= float(line.split('=')[1])
                 elif line.startswith("nsteps") : 
-                    nsteps = float(line.split()[2])
+                    nsteps = float(line.split('=')[1])
         return dt * nsteps
 
     @logger.log_decorator
