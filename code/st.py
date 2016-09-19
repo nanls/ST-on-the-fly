@@ -413,6 +413,7 @@ class SimulatedTempering(object):
     @logger.log_decorator
     def run(self):
         for step_idx in xrange(self._NUM_SIMU) : 
+            t_current = step_idx * self.md_step
             
             E_current_average = self._SIMULATION.run()
             
