@@ -139,7 +139,7 @@ class MolecularDynamics(object):
     def gmx_mdrun(self):
         """Run GROMACS mdrun command
         """
-        cmd = "gmx mdrun -v -s {0}.tpr -o {0}.trr -e {0}.edr -g {0}.log -c {0}.gro".format(self.out_path + self.out_name)
+        cmd = "gmx mdrun -v -s {0}.tpr -o {0}.trr  -x {0}.xtc -e {0}.edr -g {0}.log -c {0}.gro".format(self.out_path + self.out_name)
         print (cmd)
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
