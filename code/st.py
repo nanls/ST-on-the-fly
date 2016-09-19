@@ -185,12 +185,18 @@ class SimulatedTempering(object):
     class TRange(list):
         """A list without negative indiciation
         """
+        class NegativeIndexError(IndexError):
+            """docstring for Exception"""
+            def __init__(sel, f):
+                super(Exception, self).__init__()
+
+
         def __getitem__(self, key):
             """Override list getitem to disable negative indices
             """
             if isinstance(key, int):
                 if key < 0:
-                    raise IndexError("negative index not allowed")
+                    raise SimulatedTempering.TRange.NegativeIndexError("negative index not allowed")
                 else :  
                     return super(SimulatedTempering.TRange, self).__getitem__(key)
             else : 
@@ -307,7 +313,7 @@ class SimulatedTempering(object):
         try : 
             T_previous = self._T_RANGE[self.T_current_idx-1]
             self.T_current.update_f(T_previous)
-        except IndexError : #no previous T because Tcurrent = Tmin 
+        except SimulatedTempering.Temperature.NoECurrent : #no previous T because Tcurrent = Tmin 
             self.T_current._f = 0 #f_Tmin is always equal to 0.
 
         # Remember : 
