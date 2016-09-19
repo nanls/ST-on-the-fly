@@ -277,6 +277,9 @@ class SimulatedTempering(object):
             if simu_type == 'md' : 
                 self.create_mdp(T)
             self._T_RANGE.append(SimulatedTempering.Temperature(T))
+        for T in self._T_RANGE : 
+            print (T._VALUE, T._BETA)
+        import pdb; pdb.set_trace()
         #range (a, b) = [a, b[
         #range (a, b+1) = [a, b+1[ = [a, b]
         kwargs['T_current'] = self._T_RANGE[0]._VALUE
