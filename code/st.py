@@ -96,16 +96,22 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
 
     def cat_gmx_files(self, fn, ext, t_current):
-        import pdb; pdb.set_trace()
+        
+        
         if t_current == 0 : 
             cmd = 'gmx {0} -f {1}/{2}.{3} -o {1}/cat.{3}'.format(fn, self.out_path, self._out_name, ext)
+            p = subprocess.Popen(shlex.split(cmd))
         else : 
-            cmd = ("gmx {0} -f {1}/cat.{4} {1}/{2}.{4} -o {1}/cat.{4}  -settime << EOF"
-                    "0\n{3}\nEOF".format(fn, self.out_path, self._out_name, t_current, ext))
+            cmd1 = "echo '0\n{0}\n'".format(t_current)
+            p1 =  subprocess.Popen(cmd1, shell = True, stdout=subprocess.PIPE)
 
-        p = subprocess.Popen(shlex.split(cmd))
-        p.wait()
+            cmd2 = ("gmx {0} -f {1}/cat.{3} {1}/{2}.{3} -o {1}/cat.{3}  -settime ".format(fn, self.out_path, self._out_name, ext))
 
+            p2 = subprocess.Popen(shlex.split(cmd2), stdin=p1.stdout)
+            p2.wait()
+            p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
+
+        import pdb; pdb.set_trace()
         
     def cat_xtc(self, t_current):
         self.cat_gmx_files('trjcat', 'xtc', t_current)
