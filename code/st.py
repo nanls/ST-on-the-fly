@@ -264,14 +264,14 @@ class SimulatedTempering(object):
                 self._E =  ( E_new  / self._number_of_passes)
             
     @logger.log_decorator
-    def __init__(self, num_simu, Tmin, Tmax, Tstep, simu_type='md', st_mdp_template_filename = None, **kwargs):
+    def __init__(self, num_simu, Tmin, Tmax, Tnum, simu_type='md', st_mdp_template_filename = None, **kwargs):
         
         super(SimulatedTempering,self).__init__()
         self._NUM_SIMU = num_simu
         self._T_RANGE=SimulatedTempering.TRange() 
         self._ST_MDP_TEMPLATE_FILENAME= st_mdp_template_filename
-
-        for T in np.arange(Tmin,Tmax+1,Tstep):
+        T_range = np.logspace(np.log10(Tmin), np.log10(Tmax), num=Tnum, endpoint=True)
+        for T in T_range:
             if simu_type == 'md' : 
                 self.create_mdp(T)
             self._T_RANGE.append(SimulatedTempering.Temperature(T))

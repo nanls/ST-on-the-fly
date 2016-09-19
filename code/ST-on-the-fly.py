@@ -7,7 +7,7 @@ Example :
 
 # With previous minimisation : 
 python ST-on-the-fly.py \
---Tmin 1 --Tmax 5 --Tstep 1 \
+--Tmin 1 --Tmax 5 --Tnum 1 \
 --gro-filename ../data/ala10_md000.pdb \
 --top-filename ../data/ala10.top \
 --nb-md 3   --st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
@@ -17,7 +17,7 @@ python ST-on-the-fly.py \
 
 #Without previous minimisation : 
 python ST-on-the-fly.py \
---Tmin 1 --Tmax 5 --Tstep 1  \
+--Tmin 1 --Tmax 5 --Tnum 1  \
 --gro-filename ../data/test.gro \
 --top-filename ../data/ala10.top  \
 --nb-md 3  --st-mdp-template-filename ../data/md1.mdp  --st-outname outst \
@@ -82,8 +82,8 @@ def get_arguments_values():
         help="At which temperature (in Kelvin) begins the experiment")
     parser.add_argument("--Tmax", required=True, type=float,
         help="The maximal temperature (in Kelvin) during the experiment")
-    parser.add_argument("--Tstep", required=True, type=int,
-        help="The step of the range of temperature ")
+    parser.add_argument("--Tnum", required=True, type=int,
+        help="Number of temperature in the given range [Tmin, Tmax]")
 
     # About struct : 
     parser.add_argument("--gro-filename", required=True, type=str,
@@ -224,8 +224,8 @@ def check_arguments_integrity(args):
         sys.exit(-1)
 
     try:
-        assert_strictly_inferior (args.Tmin + args.Tstep,  args.Tmax, 
-            'Tmin + Tstep', 'Tmax') 
+        assert_strictly_inferior (args.Tmin + args.Tnum,  args.Tmax, 
+            'Tmin + Tnum', 'Tmax') 
     except AssertionError:
         print_use_help_message()
         sys.exit(-1)
@@ -308,7 +308,7 @@ if __name__ == "__main__":
     log.info('new ST')
     ST = SimulatedTempering(
         args.nb_md, 
-        args.Tmin, args.Tmax, args.Tstep, 
+        args.Tmin, args.Tmax, args.Tnum, 
         'md',  
         st_mdp_template_filename = args.st_mdp_template_filename, 
         gro_filename = st_gro_filename, 
