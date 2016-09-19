@@ -89,6 +89,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         print (self._out_name)
         import pdb; pdb.set_trace()
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
+        os.rename("{0}/{1}.gro".format(self._out_path, self._out_name), self.gro_filename)
         self.cat_edr(tcurrent)
         self.cat_xtc(tcurrent)
         self._out_name = save_out_name
