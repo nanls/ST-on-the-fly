@@ -101,7 +101,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
             cmd = ("gmx eneconv -f {0}/cat.edr {0}/{1}.edr -o {0}/cat.edr  -settime << EOF"
                     "0\n{2}\nEOF".format(self.out_path, self._out_name, t_current))
 
-        
+
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
 
@@ -315,7 +315,10 @@ class SimulatedTempering(object):
         with open(st_mdp_template_filename, 'r') as fin: 
             for line in fin : 
                 if line.startswith("dt") : 
-                    return float(line.split()[2])
+                    dt= float(line.split()[2])
+                elif line.startswith("nsteps") : 
+                    nsteps = float(line.split()[2])
+        return dt * nsteps
 
     @logger.log_decorator
     def create_mdp(self, T) : 
