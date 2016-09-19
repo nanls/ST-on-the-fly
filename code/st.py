@@ -96,13 +96,13 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
 
     def cat_gmx_files(self, fn, ext, t_current):
-        import pdb; pdb.set_trace()
+        
         if t_current == 0 : 
             cmd = 'gmx {0} -f {1}/{2}.{3} -o {1}/cat.{3}'.format(fn, self.out_path, self._out_name, ext)
         else : 
             cmd = ("gmx {0} -f {1}/cat.{4} {1}/{2}.{4} -o {1}/cat.{4}  -settime << EOF"
                     "0\n{3}\nEOF".format(fn, self.out_path, self._out_name, t_current, ext))
-
+        import pdb; pdb.set_trace()
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
 
