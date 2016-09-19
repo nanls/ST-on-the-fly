@@ -128,7 +128,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     def gmx_energy(self, arg = 'Potential') : 
 
         p1 = subprocess.Popen( shlex.split("echo {0}".format(arg)), stdout=subprocess.PIPE ) 
-        
+
         cmd = "gmx energy -f {0}.edr -o {0}_Potential.xvg ".format(
                     self.out_path + self.out_name
                 )
@@ -153,7 +153,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
                 # in NGuyen 2013, Energies are defined as integral -> positive
                 # in gmx, E are negative -> take the oposite to have positive value
         log.error('E_average could not be found') 
-        return 0
+        
 
     @Simulation.T_current.setter
     def T_current(self, T_new):
