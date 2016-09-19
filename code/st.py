@@ -90,24 +90,24 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         import pdb; pdb.set_trace()
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
         self.cat_edr(tcurrent)
-        self.cat_trr(tcurrent)
+        self.cat_xtc(tcurrent)
         self._out_name = save_out_name
         return self.compute_E_average()
 
 
     def cat_gmx_files(self, fn, ext, t_current):
-        
+        import pdb; pdb.set_trace()
         if t_current == 0 : 
             cmd = 'gmx {0} -f {1}/{2}.{3} -o {1}/cat.{3}'.format(fn, self.out_path, self._out_name, ext)
         else : 
             cmd = ("gmx {0} -f {1}/cat.{4} {1}/{2}.{4} -o {1}/cat.{4}  -settime << EOF"
                     "0\n{3}\nEOF".format(fn, self.out_path, self._out_name, t_current, ext))
-        import pdb; pdb.set_trace()
+
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
 
         
-    def cat_trr(self, t_current):
+    def cat_xtc(self, t_current):
         self.cat_gmx_files('trjcat', 'xtc', t_current)
         os.remove("{0}{1}.xtc".format(self.out_path, self._out_name))
 
