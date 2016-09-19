@@ -8,6 +8,7 @@ import math
 import os
 import pdb
 import random
+import re
 import shlex
 import shutil
 import subprocess
@@ -322,9 +323,9 @@ class SimulatedTempering(object):
         with open(st_mdp_template_filename, 'r') as fin: 
             for line in fin : 
                 if line.startswith("dt") : 
-                    dt= float(line.split('=')[1])
+                    dt= float(re.split(r'[=;]', line)[1])
                 elif line.startswith("nsteps") : 
-                    nsteps = float(line.split('=')[1])
+                    nsteps = float(re.split(r'[=;]', line)[1])
         return dt * nsteps
 
     @logger.log_decorator
