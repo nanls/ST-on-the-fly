@@ -94,31 +94,24 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         return self.compute_E_average()
 
 
+    def cat_gmx_files(self, fn, ext, t_current):
+        import pdb; pdb.set_trace()
+        if t_current == 0 : 
+            cmd = 'gmx {0} -f {1}/{2}.{3} -o {1}/cat.{3}'.format(fn, self.out_path, self._out_name, ext)
+        else : 
+            cmd = ("gmx {0} -f {1}/cat.{4} {1}/{2}.{4} -o {1}/cat.{4}  -settime << EOF"
+                    "0\n{3}\nEOF".format(fn, self.out_path, self._out_name, t_current, ext))
+
+        p = subprocess.Popen(shlex.split(cmd))
+        p.wait()
+
+        
     def cat_trr(self, t_current):
-        import pdb; pdb.set_trace()
-        if t_current == 0 : 
-            cmd = 'gmx trjcat -f {0}/{1}.xtc -o {0}/cat.xtc'.format(self.out_path, self._out_name)
-        else : 
-            cmd = ("gmx trjcat -f {0}/cat.xtc {0}/{1}.xtc -o {0}/cat.edr  -settime << EOF"
-                    "0\n{2}\nEOF".format(self.out_path, self._out_name, t_current))
-
-        p = subprocess.Popen(shlex.split(cmd))
-        p.wait()
-
+        cat_gmx_files('trjcat', 'xtc', t_current)
         os.remove("{0}{1}.xtc".format(self.out_path, self._out_name))
-        pass
+
     def cat_edr(self, t_current):
-        import pdb; pdb.set_trace()
-        if t_current == 0 : 
-            cmd = 'gmx eneconv -f {0}/{1}.edr -o {0}/cat.edr'.format(self.out_path, self._out_name)
-        else : 
-            cmd = ("gmx eneconv -f {0}/cat.edr {0}/{1}.edr -o {0}/cat.edr  -settime << EOF"
-                    "0\n{2}\nEOF".format(self.out_path, self._out_name, t_current))
-
-
-        p = subprocess.Popen(shlex.split(cmd))
-        p.wait()
-
+        cat_gmx_files('eneconv', 'edr', t_current)
         os.remove("{0}{1}.edr".format(self.out_path, self._out_name))
 
 
