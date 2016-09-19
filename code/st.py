@@ -89,7 +89,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         import pdb; pdb.set_trace()
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
         self.cat_edr(tcurrent)
-        self.cat_xtc(t_current)
+        self.cat_xtc(tcurrent)
         self._out_name = save_out_name
         return self.compute_E_average()
 
