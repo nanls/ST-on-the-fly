@@ -87,7 +87,6 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         print (save_out_name)
         self._out_name += str(tcurrent)
         print (self._out_name)
-        import pdb; pdb.set_trace()
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
         E = self.compute_E_average()
         os.rename("{0}/{1}.gro".format(self._out_path, self._out_name), self.gro_filename)
@@ -113,7 +112,6 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
             p2.wait()
             p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
 
-        import pdb; pdb.set_trace()
         
     def cat_xtc(self, t_current):
         self.cat_gmx_files('trjcat', 'xtc', t_current)
@@ -143,7 +141,6 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     @logger.log_decorator
     def compute_E_average(self):
         output = self.gmx_energy('Potential')
-        pdb.set_trace()
         for line in output : 
             splitted_line = line.split()
             print (splitted_line)
@@ -322,7 +319,6 @@ class SimulatedTempering(object):
             self._T_RANGE.append(SimulatedTempering.Temperature(T))
         for T in self._T_RANGE : 
             print (T._VALUE, T._BETA)
-        import pdb; pdb.set_trace()
         #range (a, b) = [a, b[
         #range (a, b+1) = [a, b+1[ = [a, b]
         kwargs['T_current'] = self._T_RANGE[0]._VALUE
@@ -428,7 +424,6 @@ class SimulatedTempering(object):
                 res = float('inf')
             else : 
                 print ('case not handled !! ')
-                pdb.set_trace()
         
         mc = min (1, res)
         return mc
