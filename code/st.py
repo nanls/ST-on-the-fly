@@ -150,7 +150,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
                 # from third line to x = 3 + nb_of_atom th line : 
                 if line_idx in xrange(2, 2 + nb_of_atom ) : 
-                	# this range do not take the line defining th ebox
+                	# this range do not take the line defining the box
 
                     if len(line) < 69: # 68 + \n 
                         log.error('There is no velocities in the {0} file'.format(infile))
