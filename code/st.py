@@ -187,7 +187,7 @@ class SimulatedTempering(object):
         """
         class NegativeIndexError(IndexError):
             """docstring for Exception"""
-            def __init__(sel, f):
+            def __init__(self):
                 super(Exception, self).__init__()
 
 
