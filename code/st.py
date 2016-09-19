@@ -82,22 +82,30 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     @logger.log_decorator
     def run(self, tcurrent):
-        save_outname = self._outname
-        self._outname += str(tcurrent)
+        save_out_name = self._out_name
+        print (save_out_name)
+        self._out_name += str(tcurrent)
+        print (self._out_name)
+        import pdb; pdb.set_trace()
         super(MolecularDynamicsProduction, self).run() # call MolecularDynamics.run()
         self.cat_edr(tcurrent)
 
-        self._outname = save_outname
+        self._out_name = save_out_name
         return self.compute_E_average()
 
     def cat_edr(self, t_current):
+        import pdb; pdb.set_trace()
         if t_current == 0 : 
-            cmd = 'gmx eneconv -f {0}/{1}.edr -o {0}/cat.edr'.format(self.outpath, self._outname)
+            cmd = 'gmx eneconv -f {0}/{1}.edr -o {0}/cat.edr'.format(self.out_path, self._out_name)
         else : 
             cmd = ("gmx eneconv -f {0}/cat.edr {0}/{1}.edr -o {0}/cat.edr  -settime << EOF"
-                    "0\n{2}\nEOF".format(self.outpath, self._outname, t_current))
+                    "0\n{2}\nEOF".format(self.out_path, self._out_name, t_current))
 
-        os.remove("{0}/{1}.edr".format(self.outpath, self._outname))
+        
+        p = subprocess.Popen(shlex.split(cmd))
+        p.wait()
+
+        os.remove("{0}{1}.edr".format(self.out_path, self._out_name))
 
 
     @logger.log_decorator
