@@ -398,10 +398,11 @@ class SimulatedTempering(object):
             return False
 
     @logger.log_decorator
-    def write_results (self, idx, E_current_average) : 
+    def write_results (self, idx, t_current, E_current_average) : 
         with open('./st.results', 'a') as fout: 
-            to_write = "{0}\t{1}\t{2}\t{3}".format(
+            to_write = "{0}\t{1}\t{2}\t{3}\t{4}".format(
                 idx, 
+                t_current,
                 self.T_current._VALUE, 
                 E_current_average, 
                 self.T_current._E)
@@ -414,7 +415,7 @@ class SimulatedTempering(object):
     def run(self):
         for step_idx in xrange(self._NUM_SIMU) : 
             t_current = step_idx * self.md_step
-            
+
             E_current_average = self._SIMULATION.run()
             
             self.T_current.update_E(E_current_average) 
@@ -422,7 +423,7 @@ class SimulatedTempering(object):
             self.update_f_current()
             self.update_f_next ()
 
-            self.write_results(step_idx, E_current_average)
+            self.write_results(step_idx, t_current, E_current_average)
 
             T_attempt = self.choose_T_attempt()
         
