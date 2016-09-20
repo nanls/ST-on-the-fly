@@ -434,6 +434,13 @@ class SimulatedTempering(object):
             self._f = (self._BETA - Tprev._BETA ) * Tprev._E / 2
 
 
+        @property
+        def E(self):
+            if not self._E : 
+                raise SimulatedTempering.Temperature.NoECurrent
+            else : 
+                return self._E
+        
         @logger.log_decorator
         def compute_f(self, Tprev):
             """Do a computation of the weight of the temperature 
@@ -444,12 +451,17 @@ class SimulatedTempering(object):
             Raise : 
             -------
             NoECurrent : 
-                If Ecurrent is not available
+                If E is not available
             """
             try:
-                self._f =  Tprev._f + (self._BETA - Tprev._BETA ) * ( self._E + Tprev._E )  / 2
-            except Exception:
-                raise SimulatedTempering.Temperature.NoECurrent
+                self._f =  Tprev._f + (self._BETA - Tprev._BETA ) * ( self.E + Tprev.E )  / 2
+            except SimulatedTempering.Temperature.NoECurrent:
+                if not self.E : 
+                    print ('no E for T = {}'.format(self._VALUE))
+                    raise 
+                elif not Tprev.E : 
+                    print ('problem when trying to access E for T = {}'.format(self._VALUE))
+                    exit()
 
 
         @logger.log_decorator
