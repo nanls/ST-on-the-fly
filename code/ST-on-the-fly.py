@@ -42,6 +42,7 @@ import argparse
 import errno
 import pdb
 import os
+
 # 2. other imports
 #--- 
 
@@ -57,7 +58,7 @@ from md import MolecularDynamics
 from st import SimulatedTempering
 
 
-################################################################################
+#------------------------------------------------------------------------------
 # Arguments getter functions : 
 
 def get_arguments_values(): 
@@ -265,7 +266,7 @@ def get_integrous_arguments_values():
     check_arguments_integrity(args)
     return args
 
-################################################################################
+#------------------------------------------------------------------------------
 
 def make_sure_path_exists(path):
     try:
