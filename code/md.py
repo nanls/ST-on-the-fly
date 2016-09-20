@@ -79,6 +79,17 @@ class MolecularDynamics(object):
             Path to the mdp file
         """
         return self._mdp_filename
+    @mdp_filename.setter
+    def mdp_filename(self, new_mdp_filename):
+        """Setter of mdp filename 
+
+        Argument : 
+        --------
+        new_mdp_filename : str 
+            Path to the mdp file
+        """
+        self._mdp_filename = new_mdp_filename
+
     @property 
     def gro_filename(self):
         """Getter of gro filename
