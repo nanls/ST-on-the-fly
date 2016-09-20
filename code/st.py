@@ -191,6 +191,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     mdp_template : string 
         Path to the mdp template file 
+
     """
     @logger.log_decorator
     def __init__(self, T_range, **kwargs):
@@ -208,7 +209,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         self._mdp_template = kwargs['mdp_filename'] 
         for T in T_range : 
             self.create_mdp(T)
-        self._mdp_filename = '{0}_{1}.mdp'.format(self._mdp_template , self.T_current)
+        self.mdp_filename = '{0}_{1}.mdp'.format(self._mdp_template , self.T_current)
 
 
     @logger.log_decorator
