@@ -740,10 +740,9 @@ class SimulatedTempering(object):
     def attempt_OK(self, T_attempt):
         if not T_attempt : return False
         mc =  self.compute_metropolis_criterion(T_attempt) 
-        if mc == 1 : 
-            return True
-        else : 
-            return False
+
+        return np.random.choice([True, False], 1, p= [ mc , 1 - mc  ])[0]
+
 
     @logger.log_decorator
     def write_results (self, idx, t_current, E_current_average) : 
