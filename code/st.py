@@ -617,7 +617,7 @@ class SimulatedTempering(object):
         #range (a, b) = [a, b[
         #range (a, b+1) = [a, b+1[ = [a, b]
         kwargs['T_current'] = self._T_RANGE[0]._VALUE
-        self._SIMULATION=create_simulation(simu_type, T_range = self._T_RANGE, **kwargs ) #pattern strategy
+        self._SIMULATION=create_simulation(simu_type, T_range = [T._VALUE for T in self._T_RANGE], **kwargs ) #pattern strategy
         self.simu_step = self._SIMULATION.get_simu_step()
 
 
