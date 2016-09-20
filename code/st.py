@@ -63,8 +63,7 @@ def create_simulation(simu_type, **kwargs):
         'mc' - Monte Carlo 
         Currently the only one that works is 'md'
     **kwargs :
-        Every named argumnents needed for the constructor 
-        of the chosen type.
+        Every named argumnents needed for the constructor of the chosen type.
 
     Return : 
     --------
@@ -94,9 +93,10 @@ class Simulation(object):
     T_current : int 
         Current temperature
 
-    Must be overrided : 
-    -------------------
+    Must be overrided by child classes: 
+    -----------------------------------
     run method
+    get_simu_step method
     """
     @logger.log_decorator
     def __init__(self, T_current, **kwargs):
