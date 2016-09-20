@@ -40,15 +40,11 @@ from scipy import constants
 # 3. local imports
 #---
 import logger
-from md import MolecularDynamics
-
-
 logger.set_functional_logger()
 global log
 log = logger.__logger
 
-
-
+from md import MolecularDynamics
 
 #------------------------------------------------------------------------------
 
