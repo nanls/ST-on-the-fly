@@ -270,21 +270,36 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 class SimulatedTempering(object):
     """SimulatedTempering class
     
+    Nested classes : 
+    ----------------
+    TRange
+    Temperature 
+
+    
 
     """
 
     class TRange(list):
-        """A list without negative indiciation
+        """ TRange class 
+
+        A list-like without negative indiciation
+
+        Specific Exception : 
+        --------------------
+        NegativeIndexError 
+
         """
 
         class NegativeIndexError(IndexError):
-            """docstring for Exception"""
+            """NegativeIndexError Exeption
+            """
             def __init__(self,*args,**kwargs):
                 super(Exception, self).__init__(*args,**kwargs)
 
 
         def __getitem__(self, key):
-            """Override list getitem to disable negative indices
+            """Get item corresponding to the given index
+            Override list getitem to disable negative indices
             """
             if isinstance(key, int):
                 if key < 0:
