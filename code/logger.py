@@ -3,10 +3,21 @@
 
 """ Log module
 """
+#------------------------------------------------------------------------------
+# 1. standard library imports
+#---
 import functools 
 import logging
 from logging.handlers import RotatingFileHandler
 import time 
+
+# 2. other imports
+#--- 
+
+# 3. local imports
+#---
+
+#------------------------------------------------------------------------------
 
 # Turn True to have info about function that take 
 # the decorator @logger.log_decorator
