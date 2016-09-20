@@ -119,6 +119,9 @@ class Simulation(object):
 
         """
         pass
+    @abc.abstractmethod
+    def get_simu_step(self) : 
+        pass
     
 
 class MonteCarlo(Simulation):
@@ -158,6 +161,16 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         self._mdp_template = kwargs['mdp_filename'] # ??? XXX A quoi il sert
         self._mdp_filename = '{0}_{1}.mdp'.format(self._mdp_template , self.T_current)
 
+
+    @logger.log_decorator
+    def get_simu_step(self):
+        with open(self._mdp_template, 'r') as fin: 
+            for line in fin : 
+                if line.startswith("dt") : 
+                    dt= float(re.split(r'[=;]', line)[1])
+                elif line.startswith("nsteps") : 
+                    nsteps = float(re.split(r'[=;]', line)[1])
+        return dt * nsteps
 
     @logger.log_decorator
     def run(self, tcurrent):
@@ -568,7 +581,6 @@ class SimulatedTempering(object):
         self._NUM_SIMU = num_simu
         self._T_RANGE=SimulatedTempering.TRange() 
         self._ST_MDP_TEMPLATE_FILENAME= st_mdp_template_filename
-        self.simu_step = SimulatedTempering.get_simu_step(st_mdp_template_filename)
         T_range = np.logspace(np.log10(Tmin), np.log10(Tmax), num=Tnum, endpoint=True)
         for T in T_range:
             if simu_type == 'md' : 
@@ -581,17 +593,8 @@ class SimulatedTempering(object):
         kwargs['T_current'] = self._T_RANGE[0]._VALUE
         kwargs['mdp_filename'] = self._ST_MDP_TEMPLATE_FILENAME
         self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
+        self.simu_step = self._SIMULATION.get_simu_step()
 
-    @staticmethod
-    @logger.log_decorator
-    def get_simu_step(st_mdp_template_filename):
-        with open(st_mdp_template_filename, 'r') as fin: 
-            for line in fin : 
-                if line.startswith("dt") : 
-                    dt= float(re.split(r'[=;]', line)[1])
-                elif line.startswith("nsteps") : 
-                    nsteps = float(re.split(r'[=;]', line)[1])
-        return dt * nsteps
 
     @logger.log_decorator
     def create_mdp(self, T) : 
