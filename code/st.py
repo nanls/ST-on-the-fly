@@ -490,8 +490,8 @@ class SimulatedTempering(object):
             """
             self._number_of_passes += 1 
             try:
-                self._E =  self._E  + ( (E_new - self._E ) / self._number_of_passes)
-            except TypeError: 
+                self._E =  self.E  + ( (E_new - self.E ) / self._number_of_passes)
+            except SimulatedTempering.Temperature.NoECurrent: 
                 #self._E = None becase no updated yet
                 #First time init : 
                 self._E =  ( E_new  / self._number_of_passes)
