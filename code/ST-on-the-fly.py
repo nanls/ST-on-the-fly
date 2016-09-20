@@ -152,6 +152,10 @@ def assert_strictly_positive(value, name_var):
     name_var : string
         The name of the value
 
+    Raise : 
+    -------
+    AsserionError if the assertion fails.
+
     Side effect : 
     -------------
     If the assertion fails, it logs an error using logger module:
@@ -186,6 +190,11 @@ def assert_strictly_inferior(value1, value2, name_var1, name_var2):
     name_var2 : string 
         The name of value2
 
+    Raise : 
+    -------
+    AsserionError if the assertion fails.
+    
+
     Side effect : 
     -------------
     If the assertion fails, it logs an error using logger module:
@@ -206,6 +215,7 @@ def check_arguments_integrity(args):
     -----------
     args : namespace object
         Its attributes are arguments names and contain arguments values. 
+
     Side effect : 
     -------------
     If one arg is not integrous, exit the script printing why. 
@@ -283,6 +293,10 @@ def make_sure_path_exists(path):
     Raise : 
     --------
     OSError if problem when creating the dir
+
+    Side effect : 
+    -------------
+    Create dir if it not not already exists
     """
     try:
         os.makedirs(path)
