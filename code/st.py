@@ -76,10 +76,7 @@ class Simulation(object):
             current temperature of the simulation 
             (it should be Tmin of the ST experiment)
         """
-        print ('je suis dans le constructor de Simulation')
-
         super(Simulation,self).__init__(**kwargs)
-        print ('je suis revenu de super')
         self._T_current = T_current
 
 
@@ -202,7 +199,6 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         kwargs : dict
             every arguments needed for parent constructors
         """
-        print ('je suis dans le constructor de Prod') 
         super(MolecularDynamicsProduction, self).__init__(**kwargs)
         self._MDP_TEMPLATE = kwargs['mdp_filename'] 
         for T in T_range : 
@@ -265,6 +261,8 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     def run(self, tcurrent):
         """ Run an MDP 
 
+        Override Simulation
+
         Agument : 
         ---------
         tcurrent : float 
@@ -275,18 +273,26 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         E : float 
             energy of the run 
         """
+
+        # New out name use tcurrent
+        # But we have to remember current out_name that is the template : 
+
         save_out_name = self.out_name
         print (save_out_name)
         self.out_name += str(tcurrent)
         print (self.out_name)
-        print ('j apelle super MDrun ')
-        MolecularDynamics.run(self) # call MolecularDynamics.run()
+
+        MolecularDynamics.run(self) 
+
         E = self.compute_E_average()
 
         os.rename("{0}/{1}.gro".format(self.out_path, self.out_name), self.gro_filename)
+
         self.cat_edr(tcurrent)
         self.cat_xtc(tcurrent)
+        
         self.out_name = save_out_name
+        
         return E
 
 
@@ -308,6 +314,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         """
         
         if t_current == 0 : 
+            # First time, so no concatenation 
             cmd = 'gmx {0} -f {1}/{2}.{3} -o {1}/cat.{3}'.format(fn, self.out_path, self.out_name, ext)
             p = subprocess.Popen(shlex.split(cmd))
             p.wait()
@@ -356,13 +363,20 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
             argument given to gmx energy
         """
 
-        p1 = subprocess.Popen( shlex.split("echo {0}".format(arg)), stdout=subprocess.PIPE ) 
+        p1 = subprocess.Popen( shlex.split("echo {0}".format(arg)), 
+            stdout=subprocess.PIPE 
+        ) 
 
         cmd = "gmx energy -f {0}.edr -o {0}_Potential.xvg ".format(
-                    self.out_path + self.out_name
-                )
+            self.out_path + self.out_name
+        )
                
-        p2 = subprocess.Popen(shlex.split(cmd), stdin=p1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p2 = subprocess.Popen(
+            shlex.split(cmd), 
+            stdin=p1.stdout, 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE
+        )
 
         p2_com = p2.communicate() 
         p2_out = p2_com[0].split('\n') 
@@ -375,8 +389,8 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
         Return : 
         --------
-        E : float 
-            energy of the last MDP run 
+        E : float > 0 
+            energy of the last MDP run in KJ
         """
         output = self.gmx_energy('Potential')
         for line in output : 
@@ -496,7 +510,8 @@ class SimulatedTempering(object):
         NUM_SIMU : int 
             The number of simulation (therefore number of attempt) to do
         T_RANGE : TRange (list-like)
-            List of Temperature used in the ST experiment 
+            List of Temperature (in K) used in the ST experiment 
+            The range is exponential
         _ST_MDP_TEMPLATE_FILENAME : string 
             Path to the mdp file used as template for the ST experiment 
         simu_step : float 
@@ -550,13 +565,15 @@ class SimulatedTempering(object):
             self._T_RANGE.append(SimulatedTempering.Temperature(T))
         for T in self._T_RANGE : 
             print (T.VALUE, T.BETA)
-        #range (a, b) = [a, b[
-        #range (a, b+1) = [a, b+1[ = [a, b]
+
         kwargs['T_current'] = self._T_RANGE[0].VALUE
-        self._SIMULATION=create_simulation(simu_type, T_range = [T.VALUE for T in self._T_RANGE], **kwargs ) #pattern strategy
+        self._SIMULATION=create_simulation(simu_type, 
+            T_range = [T.VALUE for T in self._T_RANGE], 
+            **kwargs 
+        ) #pattern strategy
         self.simu_step = self._SIMULATION.get_simu_step()
 
-        #T in T_range must be initialized before init res file 
+        #T in T_range must be initialized before init res file !!
         self._RES_FILENAME =res_filename
         self.init_res_file()
 
@@ -589,6 +606,10 @@ class SimulatedTempering(object):
         Create a file named <self._RES_FILENAME>
         /!\ if a file with the same name already exists, it override it
         and write the header 
+
+        Nota bene : 
+        -----------
+        T in T_RANGE have to be initialized 
         """
         with open(self._RES_FILENAME, 'w') as fout : 
             to_write = "idx\tt_current\tT_current\tE_run\tE_T"
@@ -609,9 +630,9 @@ class SimulatedTempering(object):
         try : 
             T_previous = self._T_RANGE[self.T_current_idx-1]
             self.T_current.update_f(T_previous)
-        except SimulatedTempering.TRange.NegativeIndexError : #no previous T because Tcurrent = Tmin 
+        except SimulatedTempering.TRange.NegativeIndexError : 
+            #no previous T because Tcurrent = Tmin 
             self.T_current.f = 0 #f_Tmin is always equal to 0.
-
         # Remember : 
         # If an exeption occurs during execution of the try clause,
         # the rest of the clause is skipped.    
@@ -629,7 +650,6 @@ class SimulatedTempering(object):
             T_next.update_f( self.T_current)
         except IndexError : #no next T because Tcurrent = Tmax 
             pass
-
         # Remember : 
         # If an exeption occurs during execution of the try clause,
         # the rest of the clause is skipped.    
@@ -673,9 +693,9 @@ class SimulatedTempering(object):
         """
 
         try:
-            insider = - (                                                        \
-                ( T_attempt.BETA- self.T_current.BETA )  * self.T_current.E   \
-                - ( T_attempt.f - self.T_current.f )                           \
+            insider = - (                                                    \
+                ( T_attempt.BETA- self.T_current.BETA )  * self.T_current.E  \
+                - ( T_attempt.f - self.T_current.f )                         \
             )           
             res = math.exp ( insider  ) 
         except OverflowError: 
@@ -689,7 +709,15 @@ class SimulatedTempering(object):
         mc = min (1, res)
         print ('Metropolis Criterion = {0}'.format(mc) ) 
         return mc
-        # mc = min (1 , exp (-   [  (beta_attempt - beta_current) * E_current_average  -   (f_attempt_estimate - f_current_compute)  ]   ) )
+        # mc = min (
+        #   1 , 
+        #   exp (-  
+        #        [  
+        #           (beta_attempt - beta_current) * E_current_average  
+        #         -   (f_attempt_estimate - f_current_compute) 
+        #        ]
+        #   )
+        #)
 
     @logger.log_decorator
     def attempt_OK(self, T_attempt):
@@ -793,7 +821,7 @@ class SimulatedTempering(object):
 
         """
         return [T.VALUE for T in self._T_RANGE].index(T_wanted)
-        
+
 
 
 
