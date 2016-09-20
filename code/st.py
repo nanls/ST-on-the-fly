@@ -297,19 +297,19 @@ class SimulatedTempering(object):
                 super(Exception, self).__init__(*args,**kwargs)
 
 
-        def __getitem__(self, key):
+        def __getitem__(self, idx):
             """Get item corresponding to the given index
             Override list getitem to disable negative indices
             """
-            if isinstance(key, int):
-                if key < 0:
+            if isinstance(idx, int):
+                if idx < 0:
                     
                     raise SimulatedTempering.TRange.NegativeIndexError ("neg index not allowed")
                     
                 else :  
-                    return super(SimulatedTempering.TRange, self).__getitem__(key)
+                    return super(SimulatedTempering.TRange, self).__getitem__(idx)
             else : 
-                raise TypeError ("TRange indices must be integers, not "+ str(type (key) ) )  
+                raise TypeError ("TRange indices must be integers, not "+ str(type (idx) ) )  
 
 
 
