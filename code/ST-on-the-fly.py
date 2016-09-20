@@ -308,7 +308,7 @@ if __name__ == "__main__":
     log.setLevel(level)
 
     #-----------------
-    # run minimi if needed : 
+    # run minimi + velocities generation if needed : 
     if args.minimisation : 
 
         log.info('run minimi')
