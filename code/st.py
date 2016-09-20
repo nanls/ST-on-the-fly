@@ -784,6 +784,27 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def run(self):
+        """Run the ST experiment 
+
+        Algorithm : 
+        ----------
+        The algorithm is fully described in Nguyen 2013. 
+
+        For short : 
+
+        for each run : 
+            run a simulation at Tcurrent
+            accumulate potential energy for Tcurrent
+            estimate f(Tcurrent)
+            estimate f(Tnext) 
+            choose Tattempt 
+            Attempt switching to temperature Tattempt 
+            if attempt successful : 
+                Tcurrent = Tattempt
+        
+        nota bene : the ST starts at the lowest temperature
+
+        """
         for step_idx in xrange(self._NUM_SIMU) : 
             t_current = step_idx * self.md_step
 
