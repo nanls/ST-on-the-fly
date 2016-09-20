@@ -86,7 +86,7 @@ def create_simulation(simu_type, **kwargs):
 class Simulation(object):
     """Simulation class
     
-    Correspond to the first step of ST experiment 
+    Corresponds to the first step of ST experiment 
 
     Instance Attributs : 
     ---------------------
