@@ -890,7 +890,7 @@ class SimulatedTempering(object):
         and write the header 
         """
         with open(self._RES_FILENAME, 'w') as fout : 
-            to_write = "idx\tt_current\tT_current\tE_MD\tE_T"
+            to_write = "idx\tt_current\tT_current\tE_run\tE_T"
             for T in self._T_RANGE : 
                 to_write += "\tf({0})".format(T.VALUE)
                 print (to_write)
