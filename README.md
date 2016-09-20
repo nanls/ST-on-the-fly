@@ -73,15 +73,15 @@ TODO : finish unit test
 
 ```bash
 python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
-                        --gro-filename GRO_FILENAME --top-filename
-                        TOP_FILENAME --nb-run NB_RUN [--simu-type {md,mc}]
-                        --st-mdp-template-filename ST_MDP_TEMPLATE_FILENAME
+                        [--gro-filename GRO_FILENAME] [--top-filename
+                        TOP_FILENAME] --nb-run NB_RUN --simu-type {md,mc}
+                        [--st-mdp-template-filename ST_MDP_TEMPLATE_FILENAME]
                         --st-outname ST_OUTNAME
                         [--minimisation | --no-minimisation]
                         [--minimisation-mdp-filename MINIMISATION_MDP_FILENAME]
                         [--minimisation-outname MINIMISATION_OUTNAME]
                         [--gene-veloc-outname GENE_VELOC_OUTNAME]
-                        [--out-path OUT_PATH] [--maxwarn MAXWARN]
+                        --out-path OUT_PATH [--maxwarn MAXWARN]
                         [--clean-all] [-v]
 ```
 
@@ -145,20 +145,47 @@ python ST-on-the-fly.py \
 
 ### using Molecular Dynamics with GROMACS
 
+#### without minimisation 
 
+
+python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
+                        --gro-filename GRO_FILENAME --top-filename
+                        TOP_FILENAME --nb-run NB_RUN --simu-type md
+                        --st-mdp-template-filename ST_MDP_TEMPLATE_FILENAME
+                        --st-outname ST_OUTNAME
+                        --no-minimisation
+                        --out-path OUT_PATH [--maxwarn MAXWARN]
+                        [--clean-all] [-v]
+                        
+#### with minimisation 
+
+python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
+                        --gro-filename GRO_FILENAME --top-filename
+                        TOP_FILENAME --nb-run NB_RUN --simu-type md
+                        --st-mdp-template-filename ST_MDP_TEMPLATE_FILENAME
+                        --st-outname ST_OUTNAME
+                        --minimisation
+                        --minimisation-mdp-filename MINIMISATION_MDP_FILENAME
+                        --minimisation-outname MINIMISATION_OUTNAME
+                        --gene-veloc-outname GENE_VELOC_OUTNAME
+                        --out-path OUT_PATH [--maxwarn MAXWARN]
+                        [--clean-all] [-v]
+                        
+                        
 ### using Monte Carlo
 
-TODO
-
-## Run Molecular Dynamics
-
-TODO 
-
-## Run Monte Carlo experiments
+Not working 
 
 TODO
+
 
 ## Output visualisation
+
+Use : 
+
+```bash 
+python plot.py ... 
+```
 
 TODO
 
@@ -204,6 +231,7 @@ You can find a description of the format [here](http://manual.gromacs.org/online
 * log file
 * tpr file
 * xtc file
+* xvg file
 
 You can find a description of the format [here](http://manual.gromacs.org/online/files.html)
 
