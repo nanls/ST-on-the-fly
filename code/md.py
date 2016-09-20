@@ -4,6 +4,7 @@ Run GROMACS Molecular Dynamics using a Python wrapper
 #------------------------------------------------------------------------------
 # 1. standard library imports
 #---
+import doctest
 import pdb
 import shutil 
 import shlex
@@ -162,3 +163,7 @@ class MolecularDynamics(object):
         """
         self.gmx_grompp()
         self.gmx_mdrun()
+
+
+if __name__ == "__main__":
+    doctest.testmod()

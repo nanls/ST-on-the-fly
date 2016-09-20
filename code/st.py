@@ -12,6 +12,7 @@
 from __future__ import print_function
 from __future__ import division 
 
+import doctest
 import math
 import os
 import pdb
@@ -838,3 +839,5 @@ class SimulatedTempering(object):
                 self._SIMULATION.T_current = self.T_current._VALUE #if MD : change velocity --> Overriding
 
 
+if __name__ == "__main__":
+    doctest.testmod()

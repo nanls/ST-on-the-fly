@@ -6,6 +6,7 @@
 #------------------------------------------------------------------------------
 # 1. standard library imports
 #---
+import doctest
 import functools 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -148,3 +149,7 @@ def get_level(v):
         return verbosity[v] 
     except IndexError:
         return 10 
+
+
+if __name__ == "__main__":
+    doctest.testmod()
