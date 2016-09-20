@@ -70,7 +70,11 @@ This causes the examples in the docsttrings to get executed and verified.
 
 TODO : finish unit test
 
-# Code documentation 
+# Code info: 
+
+The code is not fully PEP8 compliant.
+
+## Documentation  :
 
 You can use pydoc outputed documentation. 
 html files are store in `./code/doc`
