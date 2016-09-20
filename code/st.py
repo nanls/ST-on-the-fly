@@ -155,11 +155,40 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     Those of MolecularDynamics
     """
     @logger.log_decorator
-    def __init__(self, **kwargs):
+    def __init__(self, T_range, **kwargs):
         print ('je suis dans le constructor de Prod') 
         super(MolecularDynamicsProduction, self).__init__(**kwargs)
-        self._mdp_template = kwargs['mdp_filename'] # ??? XXX A quoi il sert
+        self._mdp_template = kwargs['mdp_filename'] 
+        for T in T_range : 
+            self.create_mdp(T)
         self._mdp_filename = '{0}_{1}.mdp'.format(self._mdp_template , self.T_current)
+
+
+    @logger.log_decorator
+    def create_mdp(self, T) : 
+        """Create an mdp file for the given Temperature 
+
+        Arguments : 
+        ----------
+        T : float 
+            Temperature value 
+
+        Side effect : 
+        -------------
+        Create a file named <args.st_mdp_template_filename>_<T>.mdp
+        where the field ref_t if set to <T>
+        """
+        
+        mdp_filename = '{0}_{1}.mdp'.format(self._mdp_template, T)
+
+        with open(self._mdp_template, 'r') as infile, \
+            open(mdp_filename, 'w') as outfile    :
+            for line in infile : 
+                if line.startswith('ref_t') : 
+                    line = "ref_t = {0}\n".format(T)
+
+                outfile.write(line)
+
 
 
     @logger.log_decorator
@@ -554,7 +583,7 @@ class SimulatedTempering(object):
                 self._E =  ( E_new  / self._number_of_passes)
             
     @logger.log_decorator
-    def __init__(self, num_simu, Tmin, Tmax, Tnum, simu_type='md', st_mdp_template_filename = None, **kwargs):
+    def __init__(self, num_simu, Tmin, Tmax, Tnum, simu_type='md', **kwargs):
         """ Constructor of an instance of SimulatedTempering 
 
         Aguments : 
@@ -580,46 +609,17 @@ class SimulatedTempering(object):
         super(SimulatedTempering,self).__init__()
         self._NUM_SIMU = num_simu
         self._T_RANGE=SimulatedTempering.TRange() 
-        self._ST_MDP_TEMPLATE_FILENAME= st_mdp_template_filename
         T_range = np.logspace(np.log10(Tmin), np.log10(Tmax), num=Tnum, endpoint=True)
         for T in T_range:
-            if simu_type == 'md' : 
-                self.create_mdp(T)
             self._T_RANGE.append(SimulatedTempering.Temperature(T))
         for T in self._T_RANGE : 
             print (T._VALUE, T._BETA)
         #range (a, b) = [a, b[
         #range (a, b+1) = [a, b+1[ = [a, b]
         kwargs['T_current'] = self._T_RANGE[0]._VALUE
-        kwargs['mdp_filename'] = self._ST_MDP_TEMPLATE_FILENAME
-        self._SIMULATION=create_simulation(simu_type, **kwargs ) #pattern strategy
+        self._SIMULATION=create_simulation(simu_type, T_range = self._T_RANGE, **kwargs ) #pattern strategy
         self.simu_step = self._SIMULATION.get_simu_step()
 
-
-    @logger.log_decorator
-    def create_mdp(self, T) : 
-        """Create an mdp file for the given Temperature 
-
-        Arguments : 
-        ----------
-        T : float 
-            Temperature value 
-
-        Side effect : 
-        -------------
-        Create a file named <args.st_mdp_template_filename>_<T>.mdp
-        where the field ref_t if set to <T>
-        """
-        
-        mdp_filename = '{0}_{1}.mdp'.format(self._ST_MDP_TEMPLATE_FILENAME, T)
-
-        with open(self._ST_MDP_TEMPLATE_FILENAME, 'r') as infile, \
-            open(mdp_filename, 'w') as outfile    :
-            for line in infile : 
-                if line.startswith('ref_t') : 
-                    line = "ref_t = {0}\n".format(T)
-
-                outfile.write(line)
 
 
     @property

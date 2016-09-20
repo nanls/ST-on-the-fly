@@ -349,7 +349,7 @@ if __name__ == "__main__":
         args.nb_md, 
         args.Tmin, args.Tmax, args.Tnum, 
         'md',  
-        st_mdp_template_filename = args.st_mdp_template_filename, 
+        mdp_filename = args.st_mdp_template_filename, 
         gro_filename = st_gro_filename, 
         top_filename = args.top_filename, 
         out_path = args.out_path, 
