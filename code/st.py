@@ -37,6 +37,30 @@ log = logger.__logger
 
 @logger.log_decorator
 def create_simulation(simu_type, **kwargs): 
+    """ Create a simulation of the chosen type
+
+    Argumuents : 
+    ------------
+    simu_type : string
+        Type of the simulation. 
+        Could be : 
+        'md' - Molecular Dynamics
+        'mc' - Monte Carlo 
+        Currently the only one that works is 'md'
+    **kwargs :
+        Every named argumnents needed for the constructor 
+        of the chosen type.
+
+    Return : 
+    --------
+    None if simu_type does not correspond to a rigth choice.
+    -or-
+    simulation : Simulation derived object
+        Could be :  
+        MolecularDynamicsProduction object 
+        MonteCarlo object 
+        Currently : can only return MolecularDynamicsProduction
+    """
     if simu_type == 'md' : 
         return MolecularDynamicsProduction(**kwargs)
     elif simu_type == 'mc':
@@ -46,7 +70,19 @@ def create_simulation(simu_type, **kwargs):
         return None
 
 class Simulation(object):
-    """docstring for Simulation"""
+    """Simulation class
+    
+    Correspond to the first step of ST experiment 
+
+    Instance Attributs : 
+    ---------------------
+    T_current : int 
+        Current temperature
+
+    Must be overrided : 
+    -------------------
+    run method
+    """
     @logger.log_decorator
     def __init__(self, T_current, **kwargs):
         print ('je suis dans le constructor de Simulation')
