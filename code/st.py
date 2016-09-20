@@ -477,6 +477,8 @@ class SimulatedTempering(object):
                     exit()
 
         def update_number_of_passes(self):
+            """ Increment by one the number of passes
+            """
             self._number_of_passes += 1 
 
         @logger.log_decorator
