@@ -76,12 +76,19 @@ html files are store in `./Documentation`
 
 # Usage
 
-## Run Simulated Tempering 
 
 /!\
 Not not cheat on arguments because combinations are not verified in the code.
 
+
 TODO : verify arguments combination 
+
+
+The script should be able to recognize abbreviation of long option.
+
+## Run Simulated Tempering 
+
+
 
 
 ```bash
@@ -119,6 +126,8 @@ Arguments Explanation :
                         mdp file to use for the ST experiment
 *  --st-outname ST_OUTNAME
                         template name for output of the ST experiment
+                        Should not match either minimisation-outname 
+                        nor gene-veloc-outname
 *  --minimisation        Run a minimisation before ST experiment
 *  --no-minimisation     Do run a minimisation before ST experiment
 *  --minimisation-mdp-filename MINIMISATION_MDP_FILENAME
@@ -126,9 +135,11 @@ Arguments Explanation :
                         _ IF MINIMISATION _
 *  --minimisation-outname MINIMISATION_OUTNAME
                         template name for output of minimisation
+                        Should not match either st-outname nor gene-veloc-outname
                         _ IF MINIMISATION _
 *  --gene-veloc-outname GENE_VELOC_OUTNAME
                         template name for output of velocities generation
+                        Should not match either st-outname nor minimisation-outname
                         _ IF MINIMISATION _
 *  --out-path OUT_PATH   Where the outputed results files should be store
                         _/!\ must finish by '/'_
@@ -267,8 +278,12 @@ TODO : charts
 
 # Known Bugs : 
 
-probability of attempt given by the Metropolis Criteriion is always 0 or 1
+* Probabilities of attempt given by the Metropolis Criteriion is always 0 or 1
 could be because energies are to big
+
+* The code is vulnerable to TOCTTOU (Time Of Check to Time Of Use) Error
+
+
 
 # References
 
