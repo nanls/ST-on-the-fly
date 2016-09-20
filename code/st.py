@@ -644,7 +644,102 @@ class SimulatedTempering(object):
             self._E = None
             self._BETA  = self.compute_beta()
 
+        @property
+        def VALUE(self):
+            """get VALUE
 
+            Return : 
+            --------
+            VALUE : float 
+                Value stored for this Temperature
+            """
+            return self._VALUE
+        @property
+        def number_of_passes(self):
+            """get number_of_passes
+
+            Return : 
+            --------
+            number_of_passes : int 
+                Counter of how many simulation was run with this temperature value
+            """
+            return self._number_of_passes
+        @number_of_passes.setter
+        def number_of_passes(self, new) : 
+            """Set number_of_passes
+
+            Argument : 
+            ----------
+            new : int > 0 
+                new value for number_of_passes 
+            """
+            if new >= 0 : 
+                self._number_of_passes = new
+            else : 
+                raise ValueError
+
+        @property
+        def f(self):
+            """ get f 
+
+            Return : 
+            ---------
+            f : float 
+                Weight associated with this temperature
+            """
+            return self._f
+        @f.setter
+        def f(self, new_f):
+            """ set f 
+
+            Argument : 
+            ---------
+            new_f : float 
+                new f value 
+            """
+            self._f = new_f
+        
+        @property
+        def E(self):
+            """Get E
+
+            Return : 
+            --------
+            E : float 
+                The average potential energy for this temperature 
+
+            Raise :
+            -------
+            NoECurrent : 
+                if E is None
+
+            """
+            if not self._E : 
+                raise SimulatedTempering.Temperature.NoECurrent
+            else : 
+                return self._E
+        @E.setter 
+        def E (self, new): 
+            """Set E 
+
+            Argument : 
+            ----------
+            new : float 
+                new E value 
+            """
+            self._E = new
+        @property
+        def BETA(self):
+            """ Get BETA 
+
+            Return 
+            -------
+            BETA : float 
+                beta constant associated to this temperature
+            """
+            return self._BETA
+        
+        
         @logger.log_decorator
         def compute_beta(self):
             """Compute the beta constant of the temperature
@@ -654,7 +749,7 @@ class SimulatedTempering(object):
             beta : float 
                 beta constant of the Temperature 
             """
-            return 1/ (SimulatedTempering.Temperature.k_Boltzmann * self._VALUE)
+            return 1/ (SimulatedTempering.Temperature.k_Boltzmann * self.VALUE)
             # __future__ division -> floting point division
 
 
@@ -679,28 +774,10 @@ class SimulatedTempering(object):
             (beta_next - beta_previous) E_previous / 2
             """
 
-            self._f = (self._BETA - Tprev._BETA ) * Tprev._E / 2
+            self.f = (self.BETA - Tprev.BETA ) * Tprev.E / 2
 
 
-        @property
-        def E(self):
-            """E getter
 
-            Return : 
-            --------
-            E : float 
-                The average potential energy for this temperature 
-
-            Raise :
-            -------
-            NoECurrent : 
-                if E is None
-
-            """
-            if not self._E : 
-                raise SimulatedTempering.Temperature.NoECurrent
-            else : 
-                return self._E
         
         @logger.log_decorator
         def compute_f(self, Tprev):
@@ -715,19 +792,19 @@ class SimulatedTempering(object):
                 If E_Tcur is not available
             """
             try:
-                self._f =  Tprev._f + (self._BETA - Tprev._BETA ) * ( self.E + Tprev.E )  / 2
+                self.f =  Tprev.f + (self.BETA - Tprev.BETA ) * ( self.E + Tprev.E )  / 2
             except SimulatedTempering.Temperature.NoECurrent:
                 if not self.E : 
-                    print ('no E for T = {}'.format(self._VALUE))
+                    print ('no E for T = {}'.format(self.VALUE))
                     raise 
                 elif not Tprev.E : 
-                    print ('problem when trying to access E for T = {}'.format(self._VALUE))
+                    print ('problem when trying to access E for T = {}'.format(self.VALUE))
                     exit()
 
         def update_number_of_passes(self):
             """ Increment by one the number of passes
             """
-            self._number_of_passes += 1 
+            self.number_of_passes += 1 
 
         @logger.log_decorator
         def update_E(self, E_new):
@@ -741,11 +818,11 @@ class SimulatedTempering(object):
 
             """
             try:
-                self._E =  self.E  + ( (E_new - self.E ) / self._number_of_passes)
+                self.E =  self.E  + ( (E_new - self.E ) / self.number_of_passes)
             except SimulatedTempering.Temperature.NoECurrent: 
                 #self._E = None becase no updated yet
                 #First time init : 
-                self._E =  ( E_new  / self._number_of_passes)
+                self.E =  ( E_new  / self.number_of_passes)
             
     @logger.log_decorator
     def __init__(self, num_simu, Tmin, Tmax, Tnum, res_filename, simu_type='md', **kwargs):
@@ -780,11 +857,11 @@ class SimulatedTempering(object):
         for T in T_range:
             self._T_RANGE.append(SimulatedTempering.Temperature(T))
         for T in self._T_RANGE : 
-            print (T._VALUE, T._BETA)
+            print (T.VALUE, T.BETA)
         #range (a, b) = [a, b[
         #range (a, b+1) = [a, b+1[ = [a, b]
-        kwargs['T_current'] = self._T_RANGE[0]._VALUE
-        self._SIMULATION=create_simulation(simu_type, T_range = [T._VALUE for T in self._T_RANGE], **kwargs ) #pattern strategy
+        kwargs['T_current'] = self._T_RANGE[0].VALUE
+        self._SIMULATION=create_simulation(simu_type, T_range = [T.VALUE for T in self._T_RANGE], **kwargs ) #pattern strategy
         self.simu_step = self._SIMULATION.get_simu_step()
 
         #T in T_range must be initialized before init res file 
@@ -803,7 +880,7 @@ class SimulatedTempering(object):
         with open(self._RES_FILENAME, 'w') as fout : 
             to_write = "idx\tt_current\tT_current\tE_MD\tE_T"
             for T in self._T_RANGE : 
-                to_write += "\tf({0})".format(T._VALUE)
+                to_write += "\tf({0})".format(T.VALUE)
                 print (to_write)
             to_write += '\n'
             fout.write (to_write )
@@ -844,7 +921,7 @@ class SimulatedTempering(object):
             index in T_RANGE of the Temperature object which the value is T
 
         """
-        return [T._VALUE for T in self._T_RANGE].index(T_wanted)
+        return [T.VALUE for T in self._T_RANGE].index(T_wanted)
         
     @logger.log_decorator
     def update_f_current(self):
@@ -858,7 +935,7 @@ class SimulatedTempering(object):
             T_previous = self._T_RANGE[self.T_current_idx-1]
             self.T_current.update_f(T_previous)
         except SimulatedTempering.TRange.NegativeIndexError : #no previous T because Tcurrent = Tmin 
-            self.T_current._f = 0 #f_Tmin is always equal to 0.
+            self.T_current.f = 0 #f_Tmin is always equal to 0.
 
         # Remember : 
         # If an exeption occurs during execution of the try clause,
@@ -938,8 +1015,8 @@ class SimulatedTempering(object):
 
         try:
             insider = - (                                                        \
-                ( T_attempt._BETA- self.T_current._BETA )  * self.T_current._E   \
-                - ( T_attempt._f - self.T_current._f )                           \
+                ( T_attempt.BETA- self.T_current.BETA )  * self.T_current.E   \
+                - ( T_attempt.f - self.T_current.f )                           \
             )           
             res = math.exp ( insider  ) 
         except OverflowError: 
@@ -990,9 +1067,9 @@ class SimulatedTempering(object):
                 step_idx * self.simu_step, #t_current
                 self.T_current._VALUE, 
                 E_MD, 
-                self.T_current._E)
+                self.T_current.E)
             for T in self._T_RANGE : 
-                to_write += "\t{0}".format(T._f)
+                to_write += "\t{0}".format(T.f)
             to_write += '\n'
             fout.write (to_write )
 
@@ -1036,7 +1113,7 @@ class SimulatedTempering(object):
             T_attempt = self.choose_T_attempt()
         
             if self.attempt_OK(T_attempt) : 
-                self._SIMULATION.T_current = T_attempt._VALUE #if MD : change velocity --> Overriding
+                self._SIMULATION.T_current = T_attempt.VALUE #if MD : change velocity --> Overriding
 
 
 ################################################################################
