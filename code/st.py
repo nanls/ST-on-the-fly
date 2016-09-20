@@ -853,7 +853,7 @@ class SimulatedTempering(object):
             self.update_f_current()
             self.update_f_next ()
 
-            self.append_results(step_idx, t_current, E_current_average)
+            self.append_results(step_idx, E_current_average)
 
             T_attempt = self.choose_T_attempt()
         
