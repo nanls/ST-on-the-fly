@@ -141,13 +141,13 @@ def get_arguments_values():
     # Other :
     parser.add_argument("--out-path",default='./',  type= str, 
         help =("Where the outputed results files should be store"
-            "it must finish by '\'" ) 
+            "it must finish by '\ '" ) 
     )
     parser.add_argument("--maxwarn", default = '0', type=int, 
-        help="The max number of warnigs allowed when running MD" )
+        help="The max number of warnings allowed when running MD" )
     parser.add_argument("--clean-all", 
-        help=("Clean gromacs outputs unecessary to plot the figures"
-        "in N'Guyen 2013 /!\ Be carefull"), 
+        help=("Clean gromacs outputs unecessary to plot the figures "
+        "in N'Guyen 2013 /!\ Be carefull --not working--"), 
         action='store_true'
     )
     parser.add_argument('-v', '--verbose', dest = 'verbosity', default=0,
