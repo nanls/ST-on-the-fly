@@ -476,6 +476,8 @@ class SimulatedTempering(object):
                     print ('problem when trying to access E for T = {}'.format(self._VALUE))
                     exit()
 
+        def update_number_of_passes(self):
+            self._number_of_passes += 1 
 
         @logger.log_decorator
         def update_E(self, E_new):
@@ -488,7 +490,6 @@ class SimulatedTempering(object):
                 to be included in E.
 
             """
-            self._number_of_passes += 1 
             try:
                 self._E =  self.E  + ( (E_new - self.E ) / self._number_of_passes)
             except SimulatedTempering.Temperature.NoECurrent: 
@@ -651,7 +652,7 @@ class SimulatedTempering(object):
             t_current = step_idx * self.md_step
 
             E_current_average = self._SIMULATION.run(t_current)
-
+            self.T_current.update_number_of_passes()
             self.T_current.update_E(E_current_average) 
 
             self.update_f_current()
