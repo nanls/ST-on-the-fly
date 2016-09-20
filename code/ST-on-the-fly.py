@@ -348,7 +348,7 @@ if __name__ == "__main__":
     ST = SimulatedTempering(
         args.nb_md, 
         args.Tmin, args.Tmax, args.Tnum, 
-        "{0}/{1}.results".format(args.out_path,args.out_name) , 
+        "{0}/{1}.results".format(args.out_path,args.st_outname) , 
         'md',  
         mdp_filename = args.st_mdp_template_filename, 
         gro_filename = st_gro_filename, 
