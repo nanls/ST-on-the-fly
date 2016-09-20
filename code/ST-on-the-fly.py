@@ -116,6 +116,8 @@ def get_arguments_values():
         help="mdp file to use for minimisation")
     parser.add_argument("--minimisation-outname", required=False, type=str,
         help="template name for output of minimisation"  )
+    parser.add_argument("--gene_veloc_outname", required=False, type=str,
+        help="template name for output of velocities generation"  )
 
     # Other :
     parser.add_argument("--out-path",default='./',  type= str, 
@@ -309,6 +311,21 @@ if __name__ == "__main__":
         log.info('minimi OK')
 
         st_gro_filename = args.out_path + args.minimisation_outname + '.gro'
+
+        log.info('gene velocities')
+        MD_gene_velo = MolecularDynamics(        
+            mdp_filename = "../data/gene_velocities.mdp", 
+            gro_filename = st_gro_filename, 
+            top_filename = args.top_filename, 
+            out_path = args.out_path, 
+            out_name = args.gene_veloc_outname, 
+            maxwarn = args.maxwarn)
+        MD_gene_velo.run()
+        log.info('gene vel OK')
+
+        st_gro_filename = args.out_path + args.gene_veloc_outname + '.gro'
+
+
     else : 
         st_gro_filename = args.gro_filename
 
