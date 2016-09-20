@@ -716,6 +716,7 @@ class SimulatedTempering(object):
         --------
         mc : float 
             Metropolis criterion computed using the formula in Nguyen 2013
+            it corresponds to the probability to choose to move to <T_attempt>
         """
 
         try:
@@ -738,6 +739,17 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def attempt_OK(self, T_attempt):
+        """Determine wheather the simulation should move to T_attempt or not 
+
+        Argument : 
+        ----------
+        T_attempt : Temperature object 
+            The temperature ST is trying 
+        Return : 
+        --------
+        answer : boolean 
+            wheather the simulation will move to T_attempt or not 
+        """
         if not T_attempt : return False
         mc =  self.compute_metropolis_criterion(T_attempt) 
 
@@ -746,6 +758,17 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def write_results (self, idx, t_current, E_current_average) : 
+        """Update the result files with new info about the run
+
+        Arguments: 
+        -----------
+        idx : int 
+            run idx 
+        t_current : float 
+            time at the beggining of the run 
+        E_current_average : float 
+            Average Epot of the run 
+        """
         with open('./st.results', 'a') as fout: 
             to_write = "{0}\t{1}\t{2}\t{3}\t{4}".format(
                 idx, 
