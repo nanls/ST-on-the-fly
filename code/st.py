@@ -132,6 +132,10 @@ class Simulation(object):
         ----------
         new_T : float > 0 
             New value for T_current 
+
+        Raise : 
+        -------
+        ValueError if new_T < 0
         """
         if new_T > 0 : 
             self._T_current = new_T
@@ -672,6 +676,10 @@ class SimulatedTempering(object):
             ----------
             new : int > 0 
                 new value for number_of_passes 
+
+            Raise : 
+            -------
+            ValueError if new < 0
             """
             if new >= 0 : 
                 self._number_of_passes = new
@@ -790,6 +798,10 @@ class SimulatedTempering(object):
             -------
             NoECurrent : 
                 If E_Tcur is not available
+
+            Nota Bene : 
+            -----------
+            Exits if Tprev do not have Energy
             """
             try:
                 self.f =  Tprev.f + (self.BETA - Tprev.BETA ) * ( self.E + Tprev.E )  / 2
