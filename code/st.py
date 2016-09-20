@@ -95,7 +95,7 @@ class Simulation(object):
     def T_current(self):
         return self._T_current
     
-
+    # XXX??? TODO : use abc. must be overrided
 
 class MonteCarlo(Simulation):
     """MonteCarlo class 
@@ -114,7 +114,7 @@ class MonteCarlo(Simulation):
         return compute_E_average()
     @logger.log_decorator
     def compute_E_average(self):
-        return 0
+        return 0 # ??? XXX pass
 
 class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     """MolecularDynamicProduction class
@@ -131,7 +131,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     def __init__(self, **kwargs):
         print ('je suis dans le constructor de Prod') 
         super(MolecularDynamicsProduction, self).__init__(**kwargs)
-        self._mdp_template = kwargs['mdp_filename']
+        self._mdp_template = kwargs['mdp_filename'] # ??? XXX A quoi il sert
         self._mdp_filename = '{0}_{1}.mdp'.format(self._mdp_template , self.T_current)
 
 
