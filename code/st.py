@@ -808,7 +808,7 @@ class SimulatedTempering(object):
         """
         with open(self._RES_FILENAME, 'a') as fout: 
             to_write = "{0}\t{1}\t{2}\t{3}\t{4}".format(
-                idx, 
+                step_idx, 
                 step_idx * self.simu_step, #t_current
                 self.T_current._VALUE, 
                 E_MD, 
