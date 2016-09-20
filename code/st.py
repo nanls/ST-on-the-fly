@@ -796,7 +796,7 @@ class SimulatedTempering(object):
 
 
     @logger.log_decorator
-    def append_results (self, idx, E_MD) : 
+    def append_results (self, step_idx, E_MD) : 
         """Update the result files with new info about the run
 
         Arguments: 
