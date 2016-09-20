@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
+#------------------------------------------------------------------------------
+
+# 1. standard library imports
+#---
+
+# from __future__ imports must occur at the beginning of the file.
+# if not : SyntaxError 
 from __future__ import print_function
 from __future__ import division 
 
@@ -14,8 +22,11 @@ import shutil
 import subprocess
 import sys
 
+# 2. other imports
+#--- 
 
 import numpy as np
+
 # scipy is a library (package) that contains modules 
 # and to import a specific module from the scipy library, 
 # it is needed to specify it and import the module itself.
@@ -26,6 +37,8 @@ import numpy as np
 from scipy import constants
 
 
+# 3. local imports
+#---
 import logger
 from md import MolecularDynamics
 
@@ -34,6 +47,10 @@ logger.set_functional_logger()
 global log
 log = logger.__logger
 
+
+
+
+#------------------------------------------------------------------------------
 
 @logger.log_decorator
 def create_simulation(simu_type, **kwargs): 
@@ -801,7 +818,7 @@ class SimulatedTempering(object):
             Attempt switching to temperature Tattempt 
             if attempt successful : 
                 Tcurrent = Tattempt
-        
+
         nota bene : the ST starts at the lowest temperature
 
         """
