@@ -50,38 +50,6 @@ from md import MolecularDynamics
 
 #------------------------------------------------------------------------------
 
-@logger.log_decorator
-def create_simulation(simu_type, **kwargs): 
-    """ Create a simulation of the chosen type
-
-    Argumuents : 
-    ------------
-    simu_type : string
-        Type of the simulation. 
-        Could be : 
-        'md' - Molecular Dynamics
-        'mc' - Monte Carlo 
-        Currently the only one that works is 'md'
-    **kwargs :
-        Every named argumnents needed for the constructor of the chosen type.
-
-    Return : 
-    --------
-    None if simu_type does not correspond to a rigth choice.
-    -or-
-    simulation : Simulation derived object
-        Could be :  
-        MolecularDynamicsProduction object 
-        MonteCarlo object 
-        Currently : can only return MolecularDynamicsProduction
-    """
-    if simu_type == 'md' : 
-        return MolecularDynamicsProduction(**kwargs)
-    elif simu_type == 'mc':
-        return MonteCarlo(**kwargs)
-    else : 
-        log.error('Wrong choice of simulation')
-        return None
 
 class Simulation(object):
     """Simulation class
@@ -114,6 +82,27 @@ class Simulation(object):
         print ('je suis revenu de super')
         self._T_current = T_current
 
+
+    @abc.abstractmethod
+    def run(self) : 
+        """ Run the simulation
+
+        This method has to be override by any derived class
+        and should return Energy of the simulation.
+
+        """
+        pass
+
+
+    @abc.abstractmethod
+    def get_simu_step(self) : 
+        """Get the simulation duration 
+
+        This method has to be overided by any derived class 
+        and should return one simulation duration
+        """
+        pass
+
     @property
     def T_current(self):
         """ Get T_current attribut
@@ -142,24 +131,8 @@ class Simulation(object):
         else : 
             raise ValueError
 
-    @abc.abstractmethod
-    def run(self) : 
-        """ Run the simulation
 
-        This method has to be override by any derived class
-        and should return Energy of the simulation.
-
-        """
-        pass
-    @abc.abstractmethod
-    def get_simu_step(self) : 
-        """Get the simulation duration 
-
-        This method has to be overided by any derived class 
-        and should return one simulation duration
-        """
-        pass
-    
+#________________________________________________________________________
 
 class MonteCarlo(Simulation):
     """MonteCarlo class 
@@ -195,6 +168,13 @@ class MonteCarlo(Simulation):
             energy of the last Monte Carlo simulation 
         """
         return 0 # ??? XXX pass
+
+
+
+
+
+
+#________________________________________________________________________
 
 class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     """MolecularDynamicProduction class
@@ -410,35 +390,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         log.error('E_average could not be found') 
         
 
-    @Simulation.T_current.setter
-    def T_current(self, T_new):
-        """Set T_current attribut 
-        
-        Overdide Simulation 
 
-        Argument : 
-        ----------
-        T_new : float 
-            new value of T_current 
-
-        Side effect : 
-        -------------
-        change velocities in the gro file
-        change the mdp file to use 
-        """
-        
-        print ("setter de Tcurrent ============")
-        self.update_velocities(T_new)
-
-        self._T_current = T_new 
-        # not self.T_current = T_new
-        # otherwise it calls the setter that calls the setter, that c... 
-        # do not use setter in setter ! 
-        
-        self.mdp_filename = self.MDP_TEMPLATE % self.T_current
-
-        
-        
 
     def update_velocities(self, T_new):
         """Update velocities in the gro file 
@@ -473,7 +425,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
                 # from third line to x = 3 + nb_of_atom th line : 
                 if line_idx in xrange(2, 2 + nb_of_atom ) : 
-                	# this range do not take the line defining the box
+                    # this range do not take the line defining the box
 
                     if len(line) < 69: # 68 + \n 
                         log.error('There is no velocities in the {0} file'.format(infile))
@@ -493,8 +445,37 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         os.rename(self.gro_filename+'.tmp', self.gro_filename)
 
 
+    @Simulation.T_current.setter
+    def T_current(self, T_new):
+        """Set T_current attribut 
+        
+        Overdide Simulation 
 
+        Argument : 
+        ----------
+        T_new : float 
+            new value of T_current 
 
+        Side effect : 
+        -------------
+        change velocities in the gro file
+        change the mdp file to use 
+        """
+        
+        print ("setter de Tcurrent ============")
+        self.update_velocities(T_new)
+
+        self._T_current = T_new 
+        # not self.T_current = T_new
+        # otherwise it calls the setter that calls the setter, that c... 
+        # do not use setter in setter ! 
+        
+        self.mdp_filename = self.MDP_TEMPLATE % self.T_current
+
+        
+        
+
+#________________________________________________________________________
 
 
 class SimulatedTempering(object):
@@ -531,310 +512,9 @@ class SimulatedTempering(object):
        
     """
 
-    class TRange(list):
-        """ TRange class 
-
-        A list-like without negative indiciation
-
-        Specific Exception : 
-        --------------------
-        NegativeIndexError 
-
-        Attributes : 
-        -----------
-        Those of list
-        """
-
-        class NegativeIndexError(IndexError):
-            """NegativeIndexError Exeption
-
-            Atributes : 
-            ------------
-            Those of IndexError
-            """
-            def __init__(self,*args,**kwargs):
-                super(Exception, self).__init__(*args,**kwargs)
-
-
-        def __getitem__(self, idx):
-            """Get item corresponding to the given index
-
-            Override list getitem to disable negative indices
-
-            Argument : 
-            ----------
-            idx : int positive 
-                index of the wanted element 
-                0 <= idx <= len (list)
-
-            Return : 
-            --------
-            wanted element 
-
-            Raise : 
-            -------
-            NegativeIndexError : 
-                if idx < 0 
-            IndexError : 
-                if idx > len (list)
-            TypeError : 
-                if idx not int 
-            """
-            if isinstance(idx, int):
-                if idx < 0:
-                    
-                    raise SimulatedTempering.TRange.NegativeIndexError ("neg index not allowed")
-                    
-                else :  
-                    return super(SimulatedTempering.TRange, self).__getitem__(idx)
-            else : 
-                raise TypeError ("TRange indices must be integers, not "+ str(type (idx) ) )  
 
 
 
-
-    class Temperature(object):
-        """Temperature class
-
-        Specific Exeption : 
-        -------------------
-        NoECurrent 
-
-        Class attribute: 
-        ----------------
-        k_Boltzmann : float 
-            Boltzmann constant in kJ / K (same unit than Gromacs)
-
-        Instance attributes : 
-        ---------------------
-        VALUE : float, constant
-            The temperature itself in Kelvin (same unit than Gromacs)
-        number_of_passes : int
-            The number of time ST used this temperature
-        f : float
-            The weight associated to this temperature 
-        E : float / None
-            The average potential energy for this temperature 
-        BETA : float, constant 
-            the beta constant for this temperature
-            = 1 / (k_Boltzmann * VALUE)
-        """
-
-        class NoECurrent(Exception):
-            """NoECurrentExeption
-
-            Raised when trying to use E that is None 
-            """
-            def __init__(self):
-                super(SimulatedTempering.Temperature.NoECurrent, self).__init__()
-
-
-        k_Boltzmann = constants.value(u'Boltzmann constant') / 1000 
-        # using gromacs, E are in kilo Joule / K 
-        # scipy gives Boltmann constant in Joule per K -> / 1000 
-
-        def __init__(self, value):
-            """ Temperature constructor
-
-            Argument : 
-            ----------
-            value : float 
-                The value of the temperature
-            """
-            super(SimulatedTempering.Temperature, self).__init__()
-            self._VALUE = value
-            self._number_of_passes = 0 
-            self._f = 0
-            self._E = None
-            self._BETA  = self.compute_beta()
-
-        @property
-        def VALUE(self):
-            """get VALUE
-
-            Return : 
-            --------
-            VALUE : float 
-                Value stored for this Temperature
-            """
-            return self._VALUE
-        @property
-        def number_of_passes(self):
-            """get number_of_passes
-
-            Return : 
-            --------
-            number_of_passes : int 
-                Counter of how many simulation was run with this temperature value
-            """
-            return self._number_of_passes
-        @number_of_passes.setter
-        def number_of_passes(self, new) : 
-            """Set number_of_passes
-
-            Argument : 
-            ----------
-            new : int > 0 
-                new value for number_of_passes 
-
-            Raise : 
-            -------
-            ValueError if new < 0
-            """
-            if new >= 0 : 
-                self._number_of_passes = new
-            else : 
-                raise ValueError
-
-        @property
-        def f(self):
-            """ get f 
-
-            Return : 
-            ---------
-            f : float 
-                Weight associated with this temperature
-            """
-            return self._f
-        @f.setter
-        def f(self, new_f):
-            """ set f 
-
-            Argument : 
-            ---------
-            new_f : float 
-                new f value 
-            """
-            self._f = new_f
-        
-        @property
-        def E(self):
-            """Get E
-
-            Return : 
-            --------
-            E : float 
-                The average potential energy for this temperature 
-
-            Raise :
-            -------
-            NoECurrent : 
-                if E is None
-
-            """
-            if not self._E : 
-                raise SimulatedTempering.Temperature.NoECurrent
-            else : 
-                return self._E
-        @E.setter 
-        def E (self, new): 
-            """Set E 
-
-            Argument : 
-            ----------
-            new : float 
-                new E value 
-            """
-            self._E = new
-        @property
-        def BETA(self):
-            """ Get BETA 
-
-            Return 
-            -------
-            BETA : float 
-                beta constant associated to this temperature
-            """
-            return self._BETA
-        
-        
-        @logger.log_decorator
-        def compute_beta(self):
-            """Compute the beta constant of the temperature
-
-            Return : 
-            --------
-            beta : float 
-                beta constant of the Temperature 
-            """
-            return 1/ (SimulatedTempering.Temperature.k_Boltzmann * self.VALUE)
-            # __future__ division -> floting point division
-
-
-        @logger.log_decorator
-        def update_f(self, Tprev) : 
-            """Update the weight of the Temperature 
-
-            The update is done with either a computation 
-            or with an estimation if the computation is impossible.
-            """
-            try:
-                self.compute_f(Tprev)
-            except SimulatedTempering.Temperature.NoECurrent:
-                self.estimate_f(Tprev)
-
-
-        @logger.log_decorator
-        def estimate_f(self, Tprev):
-            """Do an estimation of the weight of the temperature
-
-            Use the formula in Nguyen 2013 : 
-            (beta_next - beta_previous) E_previous / 2
-            """
-
-            self.f = (self.BETA - Tprev.BETA ) * Tprev.E / 2
-
-
-
-        
-        @logger.log_decorator
-        def compute_f(self, Tprev):
-            """Do a computation of the weight of the temperature 
-
-            Use the formula in Nguyen2013 
-            f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
-
-            Raise : 
-            -------
-            NoECurrent : 
-                If E_Tcur is not available
-
-            Nota Bene : 
-            -----------
-            Exits if Tprev do not have Energy
-            """
-            try:
-                self.f =  Tprev.f + (self.BETA - Tprev.BETA ) * ( self.E + Tprev.E )  / 2
-            except SimulatedTempering.Temperature.NoECurrent:
-                if not self.E : 
-                    print ('no E for T = {}'.format(self.VALUE))
-                    raise 
-                elif not Tprev.E : 
-                    print ('problem when trying to access E for T = {}'.format(self.VALUE))
-                    exit()
-
-        def update_number_of_passes(self):
-            """ Increment by one the number of passes
-            """
-            self.number_of_passes += 1 
-
-        @logger.log_decorator
-        def update_E(self, E_new):
-            """Update E including E_new in E
-
-            Parameter : 
-            ------------
-            E_new : float 
-                The average potential energy for the last MD runed with this temperature 
-                to be included in E.
-
-            """
-            try:
-                self.E =  self.E  + ( (E_new - self.E ) / self.number_of_passes)
-            except SimulatedTempering.Temperature.NoECurrent: 
-                #self._E = None becase no updated yet
-                #First time init : 
-                self.E =  ( E_new  / self.number_of_passes)
             
     @logger.log_decorator
     def __init__(self, num_simu, Tmin, Tmax, Tnum, res_filename, simu_type='md', **kwargs):
@@ -880,6 +560,27 @@ class SimulatedTempering(object):
         self._RES_FILENAME =res_filename
         self.init_res_file()
 
+
+
+
+    # @staticmethod returns descriptor objects, not functions. 
+    # problem : most decorators are not designed to accept descriptors.
+    # solution : @staticmethod must be the top-most decorator 
+    # for another decorator to decorate it.
+    @staticmethod
+    @logger.log_decorator
+    def toss_coin():
+        """Toss a coin 
+
+        Return : 
+        -------
+        result : int 
+            random choice of -1 or 1
+        """
+        return random.choice ( [-1, 1] )
+
+
+
     def init_res_file(self):
         """Init the res file 
 
@@ -897,44 +598,6 @@ class SimulatedTempering(object):
             to_write += '\n'
             fout.write (to_write )
 
-    @property
-    def T_current(self):
-        """Getter of T_current 
-
-        Return : 
-        --------
-        T : Temperature object 
-            Temperature object corresponding to the current T
-        """
-        return self._T_RANGE[self.T_current_idx]
-    
-    @property    
-    def T_current_idx(self):
-        """Getter of T_current_idx
-
-        Return : 
-        --------
-        Tidx : int 
-            idx in T_RANGE of the Temperature object corresponding to the current T
-        """
-        return self.get_T_idx(self._SIMULATION.T_current)
-
-    def get_T_idx(self, T_wanted) : 
-        """Get idx in T_RANGE of the wanted temperature 
-        
-        Argument : 
-        ----------
-        T_wanted : float 
-            Value of the wanted temperature 
-
-        Return : 
-        --------
-        i : int
-            index in T_RANGE of the Temperature object which the value is T
-
-        """
-        return [T.VALUE for T in self._T_RANGE].index(T_wanted)
-        
     @logger.log_decorator
     def update_f_current(self):
         """ Update weight of the current Temperature object
@@ -972,22 +635,6 @@ class SimulatedTempering(object):
         # the rest of the clause is skipped.    
 
 
-
-    # @staticmethod returns descriptor objects, not functions. 
-    # problem : most decorators are not designed to accept descriptors.
-    # solution : @staticmethod must be the top-most decorator 
-    # for another decorator to decorate it.
-    @staticmethod
-    @logger.log_decorator
-    def toss_coin():
-        """Toss a coin 
-
-        Return : 
-        -------
-        result : int 
-            random choice of -1 or 1
-        """
-        return random.choice ( [-1, 1] )
 
 
     @logger.log_decorator
@@ -1128,6 +775,406 @@ class SimulatedTempering(object):
             if self.attempt_OK(T_attempt) : 
                 self._SIMULATION.T_current = T_attempt.VALUE #if MD : change velocity --> Overriding
 
+
+
+
+    def get_T_idx(self, T_wanted) : 
+        """Get idx in T_RANGE of the wanted temperature 
+        
+        Argument : 
+        ----------
+        T_wanted : float 
+            Value of the wanted temperature 
+
+        Return : 
+        --------
+        i : int
+            index in T_RANGE of the Temperature object which the value is T
+
+        """
+        return [T.VALUE for T in self._T_RANGE].index(T_wanted)
+        
+
+
+
+    @property
+    def T_current(self):
+        """Getter of T_current 
+
+        Return : 
+        --------
+        T : Temperature object 
+            Temperature object corresponding to the current T
+        """
+        return self._T_RANGE[self.T_current_idx]
+    
+    @property    
+    def T_current_idx(self):
+        """Getter of T_current_idx
+
+        Return : 
+        --------
+        Tidx : int 
+            idx in T_RANGE of the Temperature object corresponding to the current T
+        """
+        return self.get_T_idx(self._SIMULATION.T_current)
+
+
+        
+
+
+
+
+
+
+    #________________________________________________________________________
+    class TRange(list):
+        """ TRange class 
+
+        A list-like without negative indiciation
+
+        Specific Exception : 
+        --------------------
+        NegativeIndexError 
+
+        Attributes : 
+        -----------
+        Those of list
+        """
+
+
+        #________________________________________________________________________
+        class NegativeIndexError(IndexError):
+            """NegativeIndexError Exeption
+
+            Atributes : 
+            ------------
+            Those of IndexError
+            """
+            def __init__(self,*args,**kwargs):
+                super(Exception, self).__init__(*args,**kwargs)
+
+
+        def __getitem__(self, idx):
+            """Get item corresponding to the given index
+
+            Override list getitem to disable negative indices
+
+            Argument : 
+            ----------
+            idx : int positive 
+                index of the wanted element 
+                0 <= idx <= len (list)
+
+            Return : 
+            --------
+            wanted element 
+
+            Raise : 
+            -------
+            NegativeIndexError : 
+                if idx < 0 
+            IndexError : 
+                if idx > len (list)
+            TypeError : 
+                if idx not int 
+            """
+            if isinstance(idx, int):
+                if idx < 0:
+                    
+                    raise SimulatedTempering.TRange.NegativeIndexError ("neg index not allowed")
+                    
+                else :  
+                    return super(SimulatedTempering.TRange, self).__getitem__(idx)
+            else : 
+                raise TypeError ("TRange indices must be integers, not "+ str(type (idx) ) )  
+
+
+
+    #________________________________________________________________________
+
+    class Temperature(object):
+        """Temperature class
+
+        Specific Exeption : 
+        -------------------
+        NoECurrent 
+
+        Class attribute: 
+        ----------------
+        k_Boltzmann : float 
+            Boltzmann constant in kJ / K (same unit than Gromacs)
+
+        Instance attributes : 
+        ---------------------
+        VALUE : float, constant
+            The temperature itself in Kelvin (same unit than Gromacs)
+        number_of_passes : int
+            The number of time ST used this temperature
+        f : float
+            The weight associated to this temperature 
+        E : float / None
+            The average potential energy for this temperature 
+        BETA : float, constant 
+            the beta constant for this temperature
+            = 1 / (k_Boltzmann * VALUE)
+        """
+
+        k_Boltzmann = constants.value(u'Boltzmann constant') / 1000 
+        # using gromacs, E are in kilo Joule / K 
+        # scipy gives Boltmann constant in Joule per K -> / 1000 
+
+        class NoECurrent(Exception):
+            """NoECurrentExeption
+
+            Raised when trying to use E that is None 
+            """
+            def __init__(self):
+                super(SimulatedTempering.Temperature.NoECurrent, self).__init__()
+
+
+        def __init__(self, value):
+            """ Temperature constructor
+
+            Argument : 
+            ----------
+            value : float 
+                The value of the temperature
+            """
+            super(SimulatedTempering.Temperature, self).__init__()
+            self._VALUE = value
+            self._number_of_passes = 0 
+            self._f = 0
+            self._E = None
+            self._BETA  = self.compute_beta()
+
+
+
+        @logger.log_decorator
+        def compute_beta(self):
+            """Compute the beta constant of the temperature
+
+            Return : 
+            --------
+            beta : float 
+                beta constant of the Temperature 
+            """
+            return 1/ (SimulatedTempering.Temperature.k_Boltzmann * self.VALUE)
+            # __future__ division -> floting point division
+
+
+        @logger.log_decorator
+        def update_f(self, Tprev) : 
+            """Update the weight of the Temperature 
+
+            The update is done with either a computation 
+            or with an estimation if the computation is impossible.
+            """
+            try:
+                self.compute_f(Tprev)
+            except SimulatedTempering.Temperature.NoECurrent:
+                self.estimate_f(Tprev)
+
+
+        @logger.log_decorator
+        def estimate_f(self, Tprev):
+            """Do an estimation of the weight of the temperature
+
+            Use the formula in Nguyen 2013 : 
+            (beta_next - beta_previous) E_previous / 2
+            """
+
+            self.f = (self.BETA - Tprev.BETA ) * Tprev.E / 2
+
+
+
+        
+        @logger.log_decorator
+        def compute_f(self, Tprev):
+            """Do a computation of the weight of the temperature 
+
+            Use the formula in Nguyen2013 
+            f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
+
+            Raise : 
+            -------
+            NoECurrent : 
+                If E_Tcur is not available
+
+            Nota Bene : 
+            -----------
+            Exits if Tprev do not have Energy
+            """
+            try:
+                self.f =  Tprev.f + (self.BETA - Tprev.BETA ) * ( self.E + Tprev.E )  / 2
+            except SimulatedTempering.Temperature.NoECurrent:
+                if not self.E : 
+                    print ('no E for T = {}'.format(self.VALUE))
+                    raise 
+                elif not Tprev.E : 
+                    print ('problem when trying to access E for T = {}'.format(self.VALUE))
+                    exit()
+
+        def update_number_of_passes(self):
+            """ Increment by one the number of passes
+            """
+            self.number_of_passes += 1 
+
+        @logger.log_decorator
+        def update_E(self, E_new):
+            """Update E including E_new in E
+
+            Parameter : 
+            ------------
+            E_new : float 
+                The average potential energy for the last MD runed with this temperature 
+                to be included in E.
+
+            """
+            try:
+                self.E =  self.E  + ( (E_new - self.E ) / self.number_of_passes)
+            except SimulatedTempering.Temperature.NoECurrent: 
+                #self._E = None becase no updated yet
+                #First time init : 
+                self.E =  ( E_new  / self.number_of_passes)
+
+
+        @property
+        def VALUE(self):
+            """get VALUE
+
+            Return : 
+            --------
+            VALUE : float 
+                Value stored for this Temperature
+            """
+            return self._VALUE
+        @property
+        def number_of_passes(self):
+            """get number_of_passes
+
+            Return : 
+            --------
+            number_of_passes : int 
+                Counter of how many simulation was run with this temperature value
+            """
+            return self._number_of_passes
+        @number_of_passes.setter
+        def number_of_passes(self, new) : 
+            """Set number_of_passes
+
+            Argument : 
+            ----------
+            new : int > 0 
+                new value for number_of_passes 
+
+            Raise : 
+            -------
+            ValueError if new < 0
+            """
+            if new >= 0 : 
+                self._number_of_passes = new
+            else : 
+                raise ValueError
+
+        @property
+        def f(self):
+            """ get f 
+
+            Return : 
+            ---------
+            f : float 
+                Weight associated with this temperature
+            """
+            return self._f
+        @f.setter
+        def f(self, new_f):
+            """ set f 
+
+            Argument : 
+            ---------
+            new_f : float 
+                new f value 
+            """
+            self._f = new_f
+        
+        @property
+        def E(self):
+            """Get E
+
+            Return : 
+            --------
+            E : float 
+                The average potential energy for this temperature 
+
+            Raise :
+            -------
+            NoECurrent : 
+                if E is None
+
+            """
+            if not self._E : 
+                raise SimulatedTempering.Temperature.NoECurrent
+            else : 
+                return self._E
+        @E.setter 
+        def E (self, new): 
+            """Set E 
+
+            Argument : 
+            ----------
+            new : float 
+                new E value 
+            """
+            self._E = new
+        @property
+        def BETA(self):
+            """ Get BETA 
+
+            Return 
+            -------
+            BETA : float 
+                beta constant associated to this temperature
+            """
+            return self._BETA
+        
+        
+
+
+
+
+@logger.log_decorator
+def create_simulation(simu_type, **kwargs): 
+    """ Create a simulation of the chosen type
+
+    Argumuents : 
+    ------------
+    simu_type : string
+        Type of the simulation. 
+        Could be : 
+        'md' - Molecular Dynamics
+        'mc' - Monte Carlo 
+        Currently the only one that works is 'md'
+    **kwargs :
+        Every named argumnents needed for the constructor of the chosen type.
+
+    Return : 
+    --------
+    None if simu_type does not correspond to a rigth choice.
+    -or-
+    simulation : Simulation derived object
+        Could be :  
+        MolecularDynamicsProduction object 
+        MonteCarlo object 
+        Currently : can only return MolecularDynamicsProduction
+    """
+    if simu_type == 'md' : 
+        return MolecularDynamicsProduction(**kwargs)
+    elif simu_type == 'mc':
+        return MonteCarlo(**kwargs)
+    else : 
+        log.error('Wrong choice of simulation')
+        return None
 
 ################################################################################
 if __name__ == "__main__":
