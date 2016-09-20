@@ -583,7 +583,7 @@ class SimulatedTempering(object):
                 self._E =  ( E_new  / self._number_of_passes)
             
     @logger.log_decorator
-    def __init__(self, num_simu, Tmin, Tmax, Tnum, simu_type='md', **kwargs):
+    def __init__(self, num_simu, Tmin, Tmax, Tnum, res_filename, simu_type='md', **kwargs):
         """ Constructor of an instance of SimulatedTempering 
 
         Aguments : 
@@ -608,6 +608,9 @@ class SimulatedTempering(object):
         super(SimulatedTempering,self).__init__()
         self._NUM_SIMU = num_simu
         self._T_RANGE=SimulatedTempering.TRange() 
+        self._RES_FILENAME =res_filename
+        self.init_res_file()
+
         T_range = np.logspace(np.log10(Tmin), np.log10(Tmax), num=Tnum, endpoint=True)
         for T in T_range:
             self._T_RANGE.append(SimulatedTempering.Temperature(T))
@@ -619,7 +622,14 @@ class SimulatedTempering(object):
         self._SIMULATION=create_simulation(simu_type, T_range = [T._VALUE for T in self._T_RANGE], **kwargs ) #pattern strategy
         self.simu_step = self._SIMULATION.get_simu_step()
 
-
+    def init_res_file(self):
+        
+        with open(self._RES_FILENAME, 'w') as fout : 
+            to_write = "idx\tt_current\tT_current\tE_MD\tE_T"
+            for T in self._T_RANGE : 
+                to_write += "\tf({0})".format(T._VALUE)
+            to_write += '\n'
+            fout.write (to_write )
 
     @property
     def T_current(self):
