@@ -796,7 +796,7 @@ class SimulatedTempering(object):
 
 
     @logger.log_decorator
-    def write_results (self, idx, t_current, E_current_average) : 
+    def append_results (self, idx, t_current, E_current_average) : 
         """Update the result files with new info about the run
 
         Arguments: 
@@ -854,7 +854,7 @@ class SimulatedTempering(object):
             self.update_f_current()
             self.update_f_next ()
 
-            self.write_results(step_idx, t_current, E_current_average)
+            self.append_results(step_idx, t_current, E_current_average)
 
             T_attempt = self.choose_T_attempt()
         
