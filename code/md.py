@@ -143,7 +143,6 @@ class MolecularDynamics(object):
             self.maxwarn \
         )
         print (cmd)
-        pdb.set_trace()
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
         
@@ -154,7 +153,6 @@ class MolecularDynamics(object):
         """
         cmd = "gmx mdrun -v -s {0}.tpr -o {0}.trr  -x {0}.xtc -e {0}.edr -g {0}.log -c {0}.gro".format(self.out_path + self.out_name)
         print (cmd)
-        pdb.set_trace()
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
         
@@ -163,7 +161,6 @@ class MolecularDynamics(object):
     def run(self): 
         """Run a MD using GROMACS grompp then mdrun 
         """
-        pdb.set_trace()
         print ('ruuuuuuuuuuuuuun MD')
         self.gmx_grompp()
         self.gmx_mdrun()

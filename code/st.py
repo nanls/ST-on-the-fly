@@ -210,7 +210,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         print ('j apelle super MDrun ')
         MolecularDynamics.run(self) # call MolecularDynamics.run()
         E = self.compute_E_average()
-        pdb.set_trace()
+
         os.rename("{0}/{1}.gro".format(self._out_path, self._out_name), self.gro_filename)
         self.cat_edr(tcurrent)
         self.cat_xtc(tcurrent)
@@ -605,7 +605,6 @@ class SimulatedTempering(object):
             'md' is the only working choice.
             
         """
-        pdb.set_trace()
         super(SimulatedTempering,self).__init__()
         self._NUM_SIMU = num_simu
         self._T_RANGE=SimulatedTempering.TRange() 
