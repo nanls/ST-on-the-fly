@@ -242,7 +242,8 @@ def check_arguments_integrity(args):
         print_use_help_message()
         sys.exit(-1)
 
-
+    #--------------
+    # check given files exists : 
     files=[args.gro_filename, args.top_filename, args.st_mdp_template_filename]
     if args.minimisation : 
         files.append (args.minimisation_mdp_filename)
