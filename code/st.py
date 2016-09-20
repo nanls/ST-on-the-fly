@@ -277,18 +277,18 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         E : float 
             energy of the run 
         """
-        save_out_name = self._out_name
+        save_out_name = self.out_name
         print (save_out_name)
-        self._out_name += str(tcurrent)
-        print (self._out_name)
+        self.out_name += str(tcurrent)
+        print (self.out_name)
         print ('j apelle super MDrun ')
         MolecularDynamics.run(self) # call MolecularDynamics.run()
         E = self.compute_E_average()
 
-        os.rename("{0}/{1}.gro".format(self._out_path, self._out_name), self.gro_filename)
+        os.rename("{0}/{1}.gro".format(self._out_path, self.out_name), self.gro_filename)
         self.cat_edr(tcurrent)
         self.cat_xtc(tcurrent)
-        self._out_name = save_out_name
+        self.out_name = save_out_name
         return E
 
 
@@ -317,7 +317,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
             cmd1 = "echo '0\n{0}\n'".format(t_current)
             p1 =  subprocess.Popen(cmd1, shell = True, stdout=subprocess.PIPE)
 
-            cmd2 = ("gmx {0} -f {1}/cat.{3} {1}/{2}.{3} -o {1}/cat.{3}  -settime ".format(fn, self.out_path, self._out_name, ext))
+            cmd2 = ("gmx {0} -f {1}/cat.{3} {1}/{2}.{3} -o {1}/cat.{3}  -settime ".format(fn, self.out_path, self.out_name, ext))
 
             p2 = subprocess.Popen(shlex.split(cmd2), stdin=p1.stdout)
             p2.wait()
@@ -334,7 +334,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
         """
         self.cat_gmx_files('trjcat', 'xtc', t_current)
-        os.remove("{0}{1}.xtc".format(self.out_path, self._out_name))
+        os.remove("{0}{1}.xtc".format(self.out_path, self.out_name))
 
     def cat_edr(self, t_current):
         """Concatenate edr files using eneconv then rm the file of the run 
@@ -345,7 +345,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
             ST time at the begining of the MDP 
         """
         self.cat_gmx_files('eneconv', 'edr', t_current)
-        os.remove("{0}{1}.edr".format(self.out_path, self._out_name))
+        os.remove("{0}{1}.edr".format(self.out_path, self.out_name))
 
 
     @logger.log_decorator

@@ -130,6 +130,15 @@ class MolecularDynamics(object):
             Template name for the outputs 
         """
         return self._out_name
+    @out_name.setter
+    def out_name(self, new_out_name): 
+        """Set out_name 
+
+        Argument : 
+        ----------
+        new_outname : string 
+            Template name for the outputs
+        """
     @property 
     def maxwarn(self):
         """Getter of maxwarn
