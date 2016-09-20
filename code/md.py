@@ -165,5 +165,6 @@ class MolecularDynamics(object):
         self.gmx_mdrun()
 
 
+################################################################################
 if __name__ == "__main__":
     doctest.testmod()
