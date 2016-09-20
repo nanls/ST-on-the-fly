@@ -145,8 +145,8 @@ def print_use_help_message() :
 def assert_strictly_positive(value, name_var): 
     """ Assert a value is strictly positive. If not, log an error. 
 
-    Argument : 
-    ----------
+    Arguments : 
+    ------------
     value : number
         The value of which you want to test the strict positivity 
     name_var : string
@@ -272,6 +272,17 @@ def get_integrous_arguments_values():
 #------------------------------------------------------------------------------
 
 def make_sure_path_exists(path):
+    """Make sure a dir exists 
+
+    Argument : 
+    ----------
+    path : string 
+        The path you wan't to assert the existance 
+
+    Raise : 
+    --------
+    OSError if problem when creating the dir
+    """
     try:
         os.makedirs(path)
     except OSError as exception:
