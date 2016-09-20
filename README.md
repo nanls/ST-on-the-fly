@@ -147,11 +147,16 @@ tab separated file with following fields :
 * E_T : float - updated energy for T_current 
 * For each temperature in provided T range : f(T) 
 
-Charts
+#### Charts : 
+
+TODO : charts
 
 
 
 # References
+
+Communication: Simulated tempering with fast on-the-fly weight determination.
+Nguyen PH1, Okamoto Y, Derreumaux P. 2013
 
 
 
