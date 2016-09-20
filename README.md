@@ -11,11 +11,12 @@ It implements algorithm described in N'Guyen 2013.
 # Contributor :
 This work was initiated for a short Python project given in 2nd year of master 
 deggree of bioinformatics.
-Please contact me at vaginay.athenais@gmail.com for all inquiries.
+Please contact Athenais VAGINAY at vaginay.athenais@gmail.com for all inquiries.
 
 # Requirements
 
-* [Python2.7](https://www.python.org/download/releases/2.7/) (should works in [Python3](https://www.python.org/download/releases/3.0/) too)
+* [Python2.7](https://www.python.org/download/releases/2.7/) 
+    (should works in [Python3](https://www.python.org/download/releases/3.0/) too)
 
 * Python libraries/packages/ecosystems:
   
@@ -65,14 +66,14 @@ cd code
 python <module_name>
 ```
 
-This causes the exaples in the docsttrings to get executed and verified. 
+This causes the examples in the docsttrings to get executed and verified. 
 
 TODO : finish unit test
 
 # Code documentation 
 
 You can use pydoc outputed documentation. 
-html files are store in `./Documentation`
+html files are store in `./code/doc`
 
 # Usage
 
@@ -86,8 +87,7 @@ TODO : verify arguments combination
 
 The script should be able to recognize abbreviation of long option.
 
-## Run Simulated Tempering 
-
+## Run Simulated Tempering (ST)
 
 
 
@@ -102,7 +102,7 @@ python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
                         [--minimisation-outname MINIMISATION_OUTNAME]
                         [--gene-veloc-outname GENE_VELOC_OUTNAME]
                         --out-path OUT_PATH [--maxwarn MAXWARN]
-                        [--clean-all] [-v]
+                        [--clean-all] [-v[vv]]
 ```
 
 
@@ -120,8 +120,10 @@ Arguments Explanation :
 *  --nb-run NB_RUN       The number of molecular dynamics during the experiment
                         :t_one-md * num-run = t_ST
 *  --simu-type {md,mc}   type of simulation : 
-                        md - Molecular Dynamics (currently the only working choice)
-                        mc - Monte Carlo (currently not working)
+                        md - Molecular Dynamics 
+                            (currently the only working choice)
+                        mc - Monte Carlo 
+                            (currently not working)
 *  --st-mdp-template-filename ST_MDP_TEMPLATE_FILENAME
                         mdp file to use for the ST experiment
 *  --st-outname ST_OUTNAME
@@ -143,13 +145,31 @@ Arguments Explanation :
                         _ IF MINIMISATION _
 *  --out-path OUT_PATH   Where the outputed results files should be store
                         _/!\ must finish by '/'_
-*  --maxwarn MAXWARN     The max number of warnigs allowed when running MD
-*  --clean-all           Clean gromacs outputs unecessary to plot the figuresin
-                        N'Guyen 2013 /!\ Be carefull
-                        _NOT WORKING_
+*  --maxwarn MAXWARN     The max number of warnings allowed when running MD
+*  --clean-all           Clean gromacs outputs unecessary to plot the figures in
+                        N'Guyen 2013 /!\ Be carefull : _NOT WORKING_
 *  -v, --verbose         Turn on detailed info log
+                        The level of verbosity is function of the v count
 
 
+
+
+
+
+### using Molecular Dynamics with GROMACS
+
+#### without minimisation 
+
+```bash
+python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
+                        --gro-filename GRO_FILENAME --top-filename
+                        TOP_FILENAME --nb-run NB_RUN --simu-type md
+                        --st-mdp-template-filename ST_MDP_TEMPLATE_FILENAME
+                        --st-outname ST_OUTNAME
+                        [--no-minimisation]
+                        --out-path OUT_PATH [--maxwarn MAXWARN]
+                        [--clean-all] [-v[vv]]
+``` 
 
 
 Working example : 
@@ -159,30 +179,16 @@ python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1 \
 --gro-filename ../data/ala10_md000.gro \
 --top-filename ../data/ala10.top \
---simu-type md \
---nb-run 3   --st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
---minimisation \
---minimisation-mdp-filename ../data/mini2.mdp  --minimisation-outname miniout \ 
---maxwarn 1     --out-path ./     -vvv
+--nb-run 3  --simu-type md \
+--st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
+--out-path ../result/test-without-minimi   --maxwarn 1       -vvv
 ```
 
-
-### using Molecular Dynamics with GROMACS
-
-#### without minimisation 
-
-
-python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
-                        --gro-filename GRO_FILENAME --top-filename
-                        TOP_FILENAME --nb-run NB_RUN --simu-type md
-                        --st-mdp-template-filename ST_MDP_TEMPLATE_FILENAME
-                        --st-outname ST_OUTNAME
-                        --no-minimisation
-                        --out-path OUT_PATH [--maxwarn MAXWARN]
-                        [--clean-all] [-v]
-                        
+                    
 #### with minimisation 
 
+
+```bash
 python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
                         --gro-filename GRO_FILENAME --top-filename
                         TOP_FILENAME --nb-run NB_RUN --simu-type md
@@ -193,8 +199,23 @@ python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
                         --minimisation-outname MINIMISATION_OUTNAME
                         --gene-veloc-outname GENE_VELOC_OUTNAME
                         --out-path OUT_PATH [--maxwarn MAXWARN]
-                        [--clean-all] [-v]
-                        
+                        [--clean-all] [-v[vv]]
+```    
+
+Working example : 
+
+```bash 
+python ST-on-the-fly.py \
+--Tmin 1 --Tmax 5 --Tnum 1 \
+--gro-filename ../data/ala10_md000.gro \
+--top-filename ../data/ala10.top \
+--nb-run 3  --simu-type md \
+--st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
+--minimisation \
+--minimisation-mdp-filename ../data/mini2.mdp  --minimisation-outname miniout \ 
+--gene-veloc-outname gene-vel \
+--out-path ../result/test-with-minimi  --maxwarn 1  -vvv
+```     
                         
 ### using Monte Carlo
 
@@ -233,11 +254,12 @@ You can find a description of the format [here](http://manual.gromacs.org/online
 
 #### Classical GROMACS files
 
-* gro file
-* top file
-* mdp file
+* cpt file
 * edr file
+* gro file
 * log file
+* mdp file
+* top file
 * tpr file
 * xtc file
 
@@ -248,11 +270,13 @@ You can find a description of the format [here](http://manual.gromacs.org/online
 
 #### Classical GROMACS files
 
-* gro file
-* top file
-* mdp file
+
+* cpt file 
 * edr file
+* gro file
 * log file
+* mdp file
+* top file
 * tpr file
 * xtc file
 * xvg file
@@ -261,7 +285,7 @@ You can find a description of the format [here](http://manual.gromacs.org/online
 
 #### Results file : 
 
-* .results
+* <out-path>/<st-out-name>.results
 
 tab separated file with following fields : 
 
