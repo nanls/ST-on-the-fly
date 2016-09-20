@@ -11,7 +11,7 @@ python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1 \
 --gro-filename ../data/ala10_md000.gro \
 --top-filename ../data/ala10.top \
---nb-md 3   --st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
+--nb-run 3   --st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
 --minimisation \
 --minimisation-mdp-filename ../data/mini2.mdp  --minimisation-outname miniout \ 
 --maxwarn 1     --out-path ./     -vvv
@@ -21,7 +21,7 @@ python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1  \
 --gro-filename ../data/ala10_md000.gro \
 --top-filename ../data/ala10.top  \
---nb-md 3  --st-mdp-template-filename ../data/md1.mdp  --st-outname outst \
+--nb-run 3  --st-mdp-template-filename ../data/md1.mdp  --st-outname outst \
 --maxwarn 1     --out-path ./     -v
 
 """
@@ -95,9 +95,9 @@ def get_arguments_values():
         help="topology file to use for the ST experiment " )
 
     # About ST : 
-    parser.add_argument("--nb-md",required=True, type=int,
+    parser.add_argument("--nb-run",required=True, type=int,
         help=("The number of molecular dynamics during the experiment :"
-            "t_one-md * num-md = t_ST")
+            "t_one-md * num-run = t_ST")
     )
     parser.add_argument("--st-mdp-template-filename", required=True, type=str,
         help="mdp file to use for the ST experiment")
@@ -247,7 +247,7 @@ def check_arguments_integrity(args):
 
 
     try:
-        assert_strictly_positive(args.nb_md, 'nb-md')
+        assert_strictly_positive(args.nb_run, 'nb-run')
     except AssertionError:
         print_use_help_message()
         sys.exit(-1)
@@ -360,7 +360,7 @@ if __name__ == "__main__":
     # ST experiment : 
     log.info('new ST')
     ST = SimulatedTempering(
-        args.nb_md, 
+        args.nb_run, 
         args.Tmin, args.Tmax, args.Tnum, 
         "{0}/{1}.results".format(args.out_path,args.st_outname) , 
         'md',  
