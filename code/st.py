@@ -189,7 +189,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     Those of Simulation 
     Those of MolecularDynamics
 
-    mdp_template : string 
+    MDP_TEMPLATE : string , constant
         Path to the mdp template file 
 
     """
@@ -206,14 +206,14 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         """
         print ('je suis dans le constructor de Prod') 
         super(MolecularDynamicsProduction, self).__init__(**kwargs)
-        self._mdp_template = kwargs['mdp_filename'] 
+        self._MDP_TEMPLATE = kwargs['mdp_filename'] 
         for T in T_range : 
             self.create_mdp(T)
-        self.mdp_filename = '{0}_{1}.mdp'.format(self.mdp_template , self.T_current)
+        self.mdp_filename = '{0}_{1}.mdp'.format(self.MDP_TEMPLATE , self.T_current)
 
     @property
-    def mdp_template(self):
-        return self._mdp_template
+    def MDP_TEMPLATE(self):
+        return self._MDP_TEMPLATE
 
     
 
@@ -232,9 +232,9 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         where the field gen_temp if set to <T>
         """
         
-        mdp_filename = '{0}_{1}.mdp'.format(self._mdp_template, T)
+        mdp_filename = '{0}_{1}.mdp'.format(self.MDP_TEMPLATE, T)
 
-        with open(self._mdp_template, 'r') as infile, \
+        with open(self.MDP_TEMPLATE, 'r') as infile, \
             open(mdp_filename, 'w') as outfile    :
             for line in infile : 
                 if line.startswith('gen_temp') : 
@@ -255,7 +255,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         duration : float 
             duration of an MDP
         """
-        with open(self._mdp_template, 'r') as fin: 
+        with open(self.MDP_TEMPLATE, 'r') as fin: 
             for line in fin : 
                 if line.startswith("dt") : 
                     dt= float(re.split(r'[=;]', line)[1])
@@ -415,7 +415,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         # otherwise it calls the setter that calls the setter, that c... 
         # do not use setter in setter ! 
         
-        self._mdp_filename = self._mdp_template % self.T_current
+        self._mdp_filename = self.MDP_TEMPLATE % self.T_current
 
         
         
