@@ -1,12 +1,23 @@
 """
 Run GROMACS Molecular Dynamics using a Python wrapper 
 """
+#------------------------------------------------------------------------------
+# 1. standard library imports
+#---
 import pdb
 import shutil 
 import shlex
 import subprocess
 
+# 2. other imports
+#---
+
+
+# 3. local imports
+#---
 import logger
+#------------------------------------------------------------------------------
+
 
 class MolecularDynamics(object):
     """MolecularDynamics class 
