@@ -184,8 +184,8 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         with open(self._mdp_template, 'r') as infile, \
             open(mdp_filename, 'w') as outfile    :
             for line in infile : 
-                if line.startswith('ref_t') : 
-                    line = "ref_t = {0}\n".format(T)
+                if line.startswith('gen_temp') : 
+                    line = "gen_temp = {0}\n".format(T)
 
                 outfile.write(line)
 
