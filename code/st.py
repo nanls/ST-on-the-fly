@@ -495,6 +495,10 @@ class SimulatedTempering(object):
             An instance of the simulation of the desired type
         self._RES_FILENAME : string 
             Path to the file where results will be saved
+
+    Static Class Method : 
+    ---------------------
+    toss_coin
        
     """
 
