@@ -57,18 +57,31 @@ tar zxvf VAGINAY.athenais.tar.gz
 ```
 
 # Testing
-For testing (doctest) the differnet modules : 
+
+Each module can be tested (doctest) running the module as a script : 
 
 ```bash
 cd code
 python <module_name>
 ```
 
+This causes the exaples in the docsttrings to get executed and verified. 
+
 TODO : finish unit test
+
+# Code documentation 
+
+You can use pydoc outputed documentation. 
+html files are store in `./Documentation`
 
 # Usage
 
 ## Run Simulated Tempering 
+
+/!\
+Not not cheat on arguments because combinations are not verified in the code.
+
+TODO : verify arguments combination 
 
 
 ```bash
@@ -252,7 +265,10 @@ tab separated file with following fields :
 
 TODO : charts
 
+# Known Bugs : 
 
+probability of attempt given by the Metropolis Criteriion is always 0 or 1
+could be because energies are to big
 
 # References
 
