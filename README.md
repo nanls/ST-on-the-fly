@@ -96,6 +96,7 @@ The script should be able to recognize abbreviation of long option.
 
 
 ```bash
+cd code
 python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
                         [--gro-filename GRO_FILENAME] [--top-filename
                         TOP_FILENAME] --nb-run NB_RUN --simu-type {md,mc}
@@ -165,6 +166,7 @@ Arguments Explanation :
 #### without minimisation 
 
 ```bash
+cd code
 python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
                         --gro-filename GRO_FILENAME --top-filename
                         TOP_FILENAME --nb-run NB_RUN --simu-type md
@@ -179,13 +181,14 @@ python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
 Working example : 
 
 ```bash 
+cd code
 python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1 \
 --gro-filename ../data/ala10_md000.gro \
 --top-filename ../data/ala10.top \
 --nb-run 3  --simu-type md \
 --st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
---out-path ../result/test-without-minimi   --maxwarn 1       -vvv
+--out-path ../result/test-without-minimi/   --maxwarn 1       -vvv
 ```
 
                     
@@ -193,6 +196,7 @@ python ST-on-the-fly.py \
 
 
 ```bash
+cd code
 python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
                         --gro-filename GRO_FILENAME --top-filename
                         TOP_FILENAME --nb-run NB_RUN --simu-type md
@@ -209,6 +213,7 @@ python ST-on-the-fly.py [-h] --Tmin TMIN --Tmax TMAX --Tnum TNUM
 Working example : 
 
 ```bash 
+cd code
 python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1 \
 --gro-filename ../data/ala10_md000.gro \
@@ -218,7 +223,8 @@ python ST-on-the-fly.py \
 --minimisation \
 --minimisation-mdp-filename ../data/mini2.mdp  --minimisation-outname miniout \ 
 --gene-veloc-outname gene-vel \
---out-path ../result/test-with-minimi  --maxwarn 1  -vvv
+--out-path ../result/test-with-minimi/  --maxwarn 1  -vvv 
+
 ```     
                         
 ### using Monte Carlo
