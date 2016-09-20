@@ -69,86 +69,6 @@ class MolecularDynamics(object):
         self._top_filename = top_filename
         self._maxwarn = maxwarn
 
-    @property 
-    def mdp_filename(self):
-        """Getter of mdp filename
-
-        Return : 
-        --------
-        mdp_filename : string
-            Path to the mdp file
-        """
-        return self._mdp_filename
-    @mdp_filename.setter
-    def mdp_filename(self, new_mdp_filename):
-        """Setter of mdp filename 
-
-        Argument : 
-        --------
-        new_mdp_filename : str 
-            Path to the mdp file
-        """
-        self._mdp_filename = new_mdp_filename
-
-    @property 
-    def gro_filename(self):
-        """Getter of gro filename
-
-        Return : 
-        --------
-        gro_filename : string
-            Path to the gro file
-        """
-        return self._gro_filename
-    @property 
-    def top_filename(self):
-        """Getter of top filename
-
-        Return : 
-        --------
-        top_filename : string
-            Path to the top file
-        """
-        return self._top_filename
-    @property 
-    def out_path(self):
-        """Getter of out path 
-
-        Return : 
-        --------
-        out_path : string
-            Path where to store outputs
-        """
-        return self._out_path
-    @property 
-    def out_name(self):
-        """Getter of out_name
-
-        Return : 
-        --------
-        out_name : string
-            Template name for the outputs 
-        """
-        return self._out_name
-    @out_name.setter
-    def out_name(self, new_out_name): 
-        """Set out_name 
-
-        Argument : 
-        ----------
-        new_outname : string 
-            Template name for the outputs
-        """
-    @property 
-    def maxwarn(self):
-        """Getter of maxwarn
-
-        Return : 
-        --------
-        maxwarn : int
-            Number of warning allowed for GROMACS grompp function
-        """
-        return self._maxwarn
 
 
     @logger.log_decorator
@@ -184,6 +104,93 @@ class MolecularDynamics(object):
         print ('ruuuuuuuuuuuuuun MD')
         self.gmx_grompp()
         self.gmx_mdrun()
+
+
+    @property 
+    def gro_filename(self):
+        """Getter of gro filename
+
+        Return : 
+        --------
+        gro_filename : string
+            Path to the gro file
+        """
+        return self._gro_filename
+
+    @property 
+    def maxwarn(self):
+        """Getter of maxwarn
+
+        Return : 
+        --------
+        maxwarn : int
+            Number of warning allowed for GROMACS grompp function
+        """
+        return self._maxwarn
+
+    @property 
+    def mdp_filename(self):
+        """Getter of mdp filename
+
+        Return : 
+        --------
+        mdp_filename : string
+            Path to the mdp file
+        """
+        return self._mdp_filename
+
+    @mdp_filename.setter
+    def mdp_filename(self, new_mdp_filename):
+        """Setter of mdp filename 
+
+        Argument : 
+        --------
+        new_mdp_filename : str 
+            Path to the mdp file
+        """
+        self._mdp_filename = new_mdp_filename
+
+    
+    @property 
+    def out_path(self):
+        """Getter of out path 
+
+        Return : 
+        --------
+        out_path : string
+            Path where to store outputs
+        """
+        return self._out_path
+    @property 
+    def out_name(self):
+        """Getter of out_name
+
+        Return : 
+        --------
+        out_name : string
+            Template name for the outputs 
+        """
+        return self._out_name
+    @out_name.setter
+    def out_name(self, new_out_name): 
+        """Set out_name 
+
+        Argument : 
+        ----------
+        new_outname : string 
+            Template name for the outputs
+        """
+
+    @property 
+    def top_filename(self):
+        """Getter of top filename
+
+        Return : 
+        --------
+        top_filename : string
+            Path to the top file
+        """
+        return self._top_filename
 
 
 ################################################################################
