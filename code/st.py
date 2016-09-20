@@ -479,6 +479,15 @@ class SimulatedTempering(object):
 
         @logger.log_decorator
         def update_E(self, E_new):
+            """Update E including E_new in E
+
+            Parameter : 
+            ------------
+            E_new : float 
+                The average potential energy for the last MD runed with this temperature 
+                to be included in E.
+
+            """
             self._number_of_passes += 1 
             try:
                 self._E =  self._E  + ( (E_new - self._E ) / self._number_of_passes)
