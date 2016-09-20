@@ -12,6 +12,7 @@
 from __future__ import print_function
 from __future__ import division 
 
+import abc
 import doctest
 import math
 import os
@@ -108,8 +109,17 @@ class Simulation(object):
     @property
     def T_current(self):
         return self._T_current
+
+    @abc.abstractmethod
+    def run(self) : 
+        """ Run the simulation
+
+        This method has to be override by any derived class
+        and should return Energy of the simulation.
+
+        """
+        pass
     
-    # XXX??? TODO : use abc. must be overrided
 
 class MonteCarlo(Simulation):
     """MonteCarlo class 
