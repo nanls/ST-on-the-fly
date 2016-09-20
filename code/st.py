@@ -314,7 +314,7 @@ class SimulatedTempering(object):
             List of Temperature used in the ST experiment 
         _ST_MDP_TEMPLATE_FILENAME : string 
             Path to the mdp file used as template for the ST experiment 
-        md_step : float 
+        simu_step : float 
             Duration of a Molecular Dynamics 
         _SIMULATION : Simulation derived object
 
@@ -568,7 +568,7 @@ class SimulatedTempering(object):
         self._NUM_SIMU = num_simu
         self._T_RANGE=SimulatedTempering.TRange() 
         self._ST_MDP_TEMPLATE_FILENAME= st_mdp_template_filename
-        self.md_step = SimulatedTempering.get_simu_step(st_mdp_template_filename)
+        self.simu_step = SimulatedTempering.get_simu_step(st_mdp_template_filename)
         T_range = np.logspace(np.log10(Tmin), np.log10(Tmax), num=Tnum, endpoint=True)
         for T in T_range:
             if simu_type == 'md' : 
@@ -833,7 +833,7 @@ class SimulatedTempering(object):
 
         """
         for step_idx in xrange(self._NUM_SIMU) : 
-            t_current = step_idx * self.md_step
+            t_current = step_idx * self.simu_step
 
             E_current_average = self._SIMULATION.run(t_current)
             self.T_current.update_number_of_passes()
