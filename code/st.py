@@ -270,12 +270,27 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 class SimulatedTempering(object):
     """SimulatedTempering class
     
+    Currently : 
+    works only using a Molecular Dynamics 
+    Monte Carlo usage is an ongoing work
+
     Nested classes : 
     ----------------
     TRange
     Temperature 
 
-    
+    Instance Attributes : 
+    ---------------------
+
+        NUM_SIMU : int 
+            The number of simulation (therefore number of attempt) to do
+        T_RANGE : TRange (list-like)
+            List of Temperature used in the ST experiment 
+        _ST_MDP_TEMPLATE_FILENAME : string 
+            Path to the mdp file used as template for the ST experiment 
+        md_step : float 
+            Duration of a Molecular Dynamics 
+        _SIMULATION : Simulation derived object
 
     """
 
@@ -501,7 +516,27 @@ class SimulatedTempering(object):
             
     @logger.log_decorator
     def __init__(self, num_simu, Tmin, Tmax, Tnum, simu_type='md', st_mdp_template_filename = None, **kwargs):
-        
+        """ Constructor of an instance of SimulatedTempering 
+
+        Aguments : 
+        ----------
+        num_simu : int 
+            The number of simulation (therefore number of attempt) to do
+        Tmin : float 
+            Value of the temperature the ST experiment begins with 
+        Tmax : float 
+            Maximal value of temperature the ST experiment can reach
+        Tnum : int 
+            Number of temperature in the given range [Tmin ; Tmax] 
+        simu_type : string 
+            Type of simulaiton to use. 
+            Can be : 
+            'md' - Molecular Dynamics (by default)
+            'mc' - Monte Carlo 
+            Currently : 
+            'md' is the only working choice.
+            
+        """
         super(SimulatedTempering,self).__init__()
         self._NUM_SIMU = num_simu
         self._T_RANGE=SimulatedTempering.TRange() 
@@ -533,6 +568,18 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def create_mdp(self, T) : 
+        """Create an mdp file for the given Temperature 
+
+        Arguments : 
+        ----------
+        T : float 
+            Temperature value 
+
+        Side effect : 
+        -------------
+        Create a file named <args.st_mdp_template_filename>_<T>.mdp
+        where the field ref_t if set to <T>
+        """
         
         mdp_filename = '{0}_{1}.mdp'.format(self._ST_MDP_TEMPLATE_FILENAME, T)
 
@@ -547,17 +594,50 @@ class SimulatedTempering(object):
 
     @property
     def T_current(self):
+        """Getter of T_current 
+
+        Return : 
+        --------
+        T : Temperature object 
+            Temperature object corresponding to the current T
+        """
         return self._T_RANGE[self.T_current_idx]
     
     @property    
     def T_current_idx(self):
+        """Getter of T_current_idx
+
+        Return : 
+        --------
+        Tidx : int 
+            idx in T_RANGE of the Temperature object corresponding to the current T
+        """
         return self.get_T_idx(self._SIMULATION.T_current)
 
     def get_T_idx(self, T_wanted) : 
+        """Get idx in T_RANGE of the wanted temperature 
+        
+        Argument : 
+        ----------
+        T_wanted : float 
+            Value of the wanted temperature 
+
+        Return : 
+        --------
+        i : int
+            index in T_RANGE of the Temperature object which the value is T
+
+        """
         return [T._VALUE for T in self._T_RANGE].index(T_wanted)
         
     @logger.log_decorator
     def update_f_current(self):
+        """ Update weight of the current Temperature object
+
+        Nota Bene : 
+        -----------
+        f(Tmin) is always equal to 0 
+        """
         try : 
             T_previous = self._T_RANGE[self.T_current_idx-1]
             self.T_current.update_f(T_previous)
@@ -570,6 +650,12 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def update_f_next(self):
+        """Update weight of the upper numbering Temperature object
+
+        Nota Bene : 
+        -----------
+        if T_current = Tmax, there is not update to do 
+        """
         try : 
             T_next = self._T_RANGE[self.T_current_idx + 1 ]
             T_next.update_f( self.T_current)
@@ -589,11 +675,25 @@ class SimulatedTempering(object):
     @staticmethod
     @logger.log_decorator
     def toss_coin():
+        """Toss a coin 
+
+        Return : 
+        -------
+        result : int 
+            random choice of -1 or 1
+        """
         return random.choice ( [-1, 1] )
 
 
     @logger.log_decorator
     def choose_T_attempt(self):
+        """Choose T attempt 
+
+        Return : 
+        --------
+        T_attempt : Temperature object 
+            The temperature ST will attempt
+        """
         try:
             direction= SimulatedTempering.toss_coin()
             print ('direction = '+str(direction))
@@ -605,6 +705,18 @@ class SimulatedTempering(object):
 
     @logger.log_decorator
     def compute_metropolis_criterion(self, T_attempt) : 
+        """Compute metropolis criterion 
+
+        Argument : 
+        ----------
+        T_attempt : Temperature object 
+            The temperature of which ST is trying 
+
+        Return : 
+        --------
+        mc : float 
+            Metropolis criterion computed using the formula in Nguyen 2013
+        """
 
         try:
             insider = - (                                                        \
