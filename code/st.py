@@ -124,6 +124,20 @@ class Simulation(object):
         """
         return self._T_current
 
+    @T_current.setter
+    def T(self, new_T) : 
+        """ Set T
+
+        Argument : 
+        ----------
+        new_T : float > 0 
+            New value for T_current 
+        """
+        if new_T > 0 : 
+            self._T_current = new_T
+        else : 
+            raise ValueError
+
     @abc.abstractmethod
     def run(self) : 
         """ Run the simulation
@@ -285,7 +299,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         MolecularDynamics.run(self) # call MolecularDynamics.run()
         E = self.compute_E_average()
 
-        os.rename("{0}/{1}.gro".format(self._out_path, self.out_name), self.gro_filename)
+        os.rename("{0}/{1}.gro".format(self.out_path, self.out_name), self.gro_filename)
         self.cat_edr(tcurrent)
         self.cat_xtc(tcurrent)
         self.out_name = save_out_name
@@ -310,7 +324,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         """
         
         if t_current == 0 : 
-            cmd = 'gmx {0} -f {1}/{2}.{3} -o {1}/cat.{3}'.format(fn, self.out_path, self._out_name, ext)
+            cmd = 'gmx {0} -f {1}/{2}.{3} -o {1}/cat.{3}'.format(fn, self.out_path, self.out_name, ext)
             p = subprocess.Popen(shlex.split(cmd))
             p.wait()
         else : 
@@ -396,6 +410,8 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     def T_current(self, T_new):
         """Set T_current attribut 
         
+        Overdide Simulation 
+
         Argument : 
         ----------
         T_new : float 
@@ -415,7 +431,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         # otherwise it calls the setter that calls the setter, that c... 
         # do not use setter in setter ! 
         
-        self._mdp_filename = self.MDP_TEMPLATE % self.T_current
+        self.mdp_filename = self.MDP_TEMPLATE % self.T_current
 
         
         
