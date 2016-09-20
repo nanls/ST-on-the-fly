@@ -796,24 +796,22 @@ class SimulatedTempering(object):
 
 
     @logger.log_decorator
-    def append_results (self, idx, t_current, E_current_average) : 
+    def append_results (self, idx, E_MD) : 
         """Update the result files with new info about the run
 
         Arguments: 
         -----------
         idx : int 
             run idx 
-        t_current : float 
-            time at the beggining of the run 
-        E_current_average : float 
+        E_MD : float 
             Average Epot of the run 
         """
-        with open('./st.results', 'a') as fout: 
+        with open(self._RES_FILENAME, 'a') as fout: 
             to_write = "{0}\t{1}\t{2}\t{3}\t{4}".format(
                 idx, 
-                t_current,
+                step_idx * self.simu_step, #t_current
                 self.T_current._VALUE, 
-                E_current_average, 
+                E_MD, 
                 self.T_current._E)
             for T in self._T_RANGE : 
                 to_write += "\t{0}".format(T._f)
@@ -844,6 +842,7 @@ class SimulatedTempering(object):
         nota bene : the ST starts at the lowest temperature
 
         """
+
         for step_idx in xrange(self._NUM_SIMU) : 
             t_current = step_idx * self.simu_step
 
