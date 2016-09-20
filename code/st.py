@@ -1040,6 +1040,7 @@ class SimulatedTempering(object):
                 print ('case not handled !! ')
         
         mc = min (1, res)
+        print ('Metropolis Criterion = {0}'.format(mc) ) 
         return mc
         # mc = min (1 , exp (-   [  (beta_attempt - beta_current) * E_current_average  -   (f_attempt_estimate - f_current_compute)  ]   ) )
 
