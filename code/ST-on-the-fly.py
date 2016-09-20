@@ -4,11 +4,12 @@
 """Run ST-on-the-fly
 
 Example : 
+---------
 
 # With previous minimisation : 
 python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1 \
---gro-filename ../data/ala10_md000.pdb \
+--gro-filename ../data/ala10_md000.gro \
 --top-filename ../data/ala10.top \
 --nb-md 3   --st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
 --minimisation \
@@ -18,7 +19,7 @@ python ST-on-the-fly.py \
 #Without previous minimisation : 
 python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1  \
---gro-filename ../data/test.gro \
+--gro-filename ../data/ala10_md000.gro \
 --top-filename ../data/ala10.top  \
 --nb-md 3  --st-mdp-template-filename ../data/md1.mdp  --st-outname outst \
 --maxwarn 1     --out-path ./     -v
