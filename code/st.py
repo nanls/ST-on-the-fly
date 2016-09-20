@@ -188,6 +188,9 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     -------------------
     Those of Simulation 
     Those of MolecularDynamics
+
+    mdp_template : string 
+        Path to the mdp template file 
     """
     @logger.log_decorator
     def __init__(self, T_range, **kwargs):
