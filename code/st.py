@@ -209,8 +209,13 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         self._mdp_template = kwargs['mdp_filename'] 
         for T in T_range : 
             self.create_mdp(T)
-        self.mdp_filename = '{0}_{1}.mdp'.format(self._mdp_template , self.T_current)
+        self.mdp_filename = '{0}_{1}.mdp'.format(self.mdp_template , self.T_current)
 
+    @property
+    def mdp_template(self):
+        return self._mdp_template
+
+    
 
     @logger.log_decorator
     def create_mdp(self, T) : 
