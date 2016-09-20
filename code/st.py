@@ -80,7 +80,7 @@ def create_simulation(simu_type, **kwargs):
     elif simu_type == 'mc':
         return MonteCarlo(**kwargs)
     else : 
-        logger.__logger.error('Wrong choice of simulation')
+        log.error('Wrong choice of simulation')
         return None
 
 class Simulation(object):
