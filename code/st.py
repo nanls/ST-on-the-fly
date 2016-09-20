@@ -436,6 +436,19 @@ class SimulatedTempering(object):
 
         @property
         def E(self):
+            """E getter
+
+            Return : 
+            --------
+            E : float 
+                The average potential energy for this temperature 
+
+            Raise :
+            -------
+            NoECurrent : 
+                if E is None
+
+            """
             if not self._E : 
                 raise SimulatedTempering.Temperature.NoECurrent
             else : 
@@ -451,7 +464,7 @@ class SimulatedTempering(object):
             Raise : 
             -------
             NoECurrent : 
-                If E is not available
+                If E_Tcur is not available
             """
             try:
                 self._f =  Tprev._f + (self._BETA - Tprev._BETA ) * ( self.E + Tprev.E )  / 2
