@@ -11,6 +11,7 @@ python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1 \
 --gro-filename ../data/ala10_md000.gro \
 --top-filename ../data/ala10.top \
+--simu-type md \
 --nb-run 3   --st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
 --minimisation \
 --minimisation-mdp-filename ../data/mini2.mdp  --minimisation-outname miniout \ 
@@ -21,6 +22,7 @@ python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1  \
 --gro-filename ../data/ala10_md000.gro \
 --top-filename ../data/ala10.top  \
+--simu-type md \
 --nb-run 3  --st-mdp-template-filename ../data/md1.mdp  --st-outname outst \
 --maxwarn 1     --out-path ./     -v
 
@@ -98,6 +100,12 @@ def get_arguments_values():
     parser.add_argument("--nb-run",required=True, type=int,
         help=("The number of molecular dynamics during the experiment :"
             "t_one-md * num-run = t_ST")
+    )
+    parser.add_argument('--simu-type', choices=['md', 'mc'],
+        help=("type of simulation "
+            "md - Molecular Dynamics (currently the only working choice)"
+            "mc - Monte Carlo (currently not working)"
+        )
     )
     parser.add_argument("--st-mdp-template-filename", required=True, type=str,
         help="mdp file to use for the ST experiment")
@@ -252,6 +260,13 @@ def check_arguments_integrity(args):
         print_use_help_message()
         sys.exit(-1)
 
+    #Currently, md is the only working choice : 
+    try : 
+        assert (args.simu_type == 'md')
+    except AssertionError : 
+        print_use_help_message
+        sys.exit(-1)
+
     #--------------
     # check given files exists : 
     files=[args.gro_filename, args.top_filename, args.st_mdp_template_filename]
@@ -363,7 +378,7 @@ if __name__ == "__main__":
         args.nb_run, 
         args.Tmin, args.Tmax, args.Tnum, 
         "{0}/{1}.results".format(args.out_path,args.st_outname) , 
-        'md',  
+        args.simu_type,  
         mdp_filename = args.st_mdp_template_filename, 
         gro_filename = st_gro_filename, 
         top_filename = args.top_filename, 
