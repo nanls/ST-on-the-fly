@@ -74,7 +74,9 @@ def get_arguments_values():
         objects (str or int, or whatever, according to the spec in the code)
         and assigned as attributes of the namespace object.
     """
-    help_str = "ST-on-the-fly experiment"
+    help_str = ("ST-on-the-fly experiment\n"
+        "Please do not cheat on arguments"
+    )
 
     parser = argparse.ArgumentParser(description=help_str,add_help=True)
 
@@ -92,7 +94,7 @@ def get_arguments_values():
 
     # About struct : 
     parser.add_argument("--gro-filename", required=True, type=str,
-        help="gro / pdb file to use for the ST experiment")
+        help="gro (!) file to use for the ST experiment")
     parser.add_argument("--top-filename", required=True, type=str,
         help="topology file to use for the ST experiment " )
 
@@ -101,16 +103,18 @@ def get_arguments_values():
         help=("The number of molecular dynamics during the experiment :"
             "t_one-md * num-run = t_ST")
     )
-    parser.add_argument('--simu-type', choices=['md', 'mc'],
-        help=("type of simulation "
-            "md - Molecular Dynamics (currently the only working choice)"
+    parser.add_argument('--simu-type', choices=['md', 'mc'], required=True,
+        help=("type of simulation \n"
+            "md - Molecular Dynamics (currently the only working choice)\n"
             "mc - Monte Carlo (currently not working)"
         )
     )
     parser.add_argument("--st-mdp-template-filename", required=True, type=str,
         help="mdp file to use for the ST experiment")
     parser.add_argument("--st-outname", required=True, type=str, 
-        help="template name for output of the ST experiment ")
+        help=("template name for output of the ST experiment "
+        'Should not match either minimisation-outname nor gene-veloc-outname')
+    )
 
     # About minimisation : 
     minimisation_parser = parser.add_mutually_exclusive_group(required=False)
@@ -122,15 +126,23 @@ def get_arguments_values():
         help="Do run a minimisation before ST experiment")
     parser.set_defaults(minimisation=False)
     parser.add_argument("--minimisation-mdp-filename", required=False,type=str,
-        help="mdp file to use for minimisation")
+        help=("mdp file to use for minimisation "
+        "to provide if minimisation is True")
+    )
     parser.add_argument("--minimisation-outname", required=False, type=str,
-        help="template name for output of minimisation"  )
+        help= ("template name for output of minimisation" 
+            'Should not match either st-outname nor gene-veloc-outname')
+    )
     parser.add_argument("--gene-veloc-outname", required=False, type=str,
-        help="template name for output of velocities generation"  )
+        help=("template name for output of velocities generation. "
+            "Should not match either st-outname nor minimisation-outname ")
+    )
 
     # Other :
     parser.add_argument("--out-path",default='./',  type= str, 
-        help = "Where the outputed results files should be store")
+        help =("Where the outputed results files should be store"
+            "it must finish by '\'" ) 
+    )
     parser.add_argument("--maxwarn", default = '0', type=int, 
         help="The max number of warnigs allowed when running MD" )
     parser.add_argument("--clean-all", 
