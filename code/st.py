@@ -288,10 +288,17 @@ class SimulatedTempering(object):
         --------------------
         NegativeIndexError 
 
+        Attributes : 
+        -----------
+        Those of list
         """
 
         class NegativeIndexError(IndexError):
             """NegativeIndexError Exeption
+
+            Atributes : 
+            ------------
+            Those of IndexError
             """
             def __init__(self,*args,**kwargs):
                 super(Exception, self).__init__(*args,**kwargs)
@@ -299,7 +306,27 @@ class SimulatedTempering(object):
 
         def __getitem__(self, idx):
             """Get item corresponding to the given index
+
             Override list getitem to disable negative indices
+
+            Argument : 
+            ----------
+            idx : int positive 
+                index of the wanted element 
+                0 <= idx <= len (list)
+
+            Return : 
+            --------
+            wanted element 
+
+            Raise : 
+            -------
+            NegativeIndexError : 
+                if idx < 0 
+            IndexError : 
+                if idx > len (list)
+            TypeError : 
+                if idx not int 
             """
             if isinstance(idx, int):
                 if idx < 0:
@@ -315,9 +342,37 @@ class SimulatedTempering(object):
 
 
     class Temperature(object):
-        """docstring for Temperature"""
+        """Temperature class
+
+        Specific Exeption : 
+        -------------------
+        NoECurrent 
+
+        Class attribute: 
+        ----------------
+        k_Boltzmann : float 
+            Boltzmann constant in kJ / K (same unit than Gromacs)
+
+        Instance attributes : 
+        ---------------------
+        VALUE : float, constant
+            The temperature itself in Kelvin (same unit than Gromacs)
+        number_of_passes : int
+            The number of time ST used this temperature
+        f : float
+            The weight associated to this temperature 
+        E : float / None
+            The average potential energy for this temperature 
+        BETA : float, constant 
+            the beta constant for this temperature
+            = 1 / (k_Boltzmann * VALUE)
+        """
 
         class NoECurrent(Exception):
+            """NoECurrentExeption
+
+            Raised when trying to use E that is None 
+            """
             def __init__(self):
                 super(SimulatedTempering.Temperature.NoECurrent, self).__init__()
 
@@ -327,6 +382,13 @@ class SimulatedTempering(object):
         # scipy gives Boltmann constant in Joule per K -> / 1000 
 
         def __init__(self, value):
+            """ Temperature constructor
+
+            Argument : 
+            ----------
+            value : float 
+                The value of the temperature
+            """
             super(SimulatedTempering.Temperature, self).__init__()
             self._VALUE = value
             self._number_of_passes = 0 
@@ -337,12 +399,24 @@ class SimulatedTempering(object):
 
         @logger.log_decorator
         def compute_beta(self):
+            """Compute the beta constant of the temperature
+
+            Return : 
+            --------
+            beta : float 
+                beta constant of the Temperature 
+            """
             return 1/ (SimulatedTempering.Temperature.k_Boltzmann * self._VALUE)
             # __future__ division -> floting point division
 
 
         @logger.log_decorator
         def update_f(self, Tprev) : 
+            """Update the weight of the Temperature 
+
+            The update is done with either a computation 
+            or with an estimation if the computation is impossible.
+            """
             try:
                 self.compute_f(Tprev)
             except SimulatedTempering.Temperature.NoECurrent:
@@ -351,13 +425,27 @@ class SimulatedTempering(object):
 
         @logger.log_decorator
         def estimate_f(self, Tprev):
-            # (beta_next - beta_previous) E_previous / 2
+            """Do an estimation of the weight of the temperature
+
+            Use the formula in Nguyen 2013 : 
+            (beta_next - beta_previous) E_previous / 2
+            """
+
             self._f = (self._BETA - Tprev._BETA ) * Tprev._E / 2
 
 
         @logger.log_decorator
         def compute_f(self, Tprev):
-            # f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
+            """Do a computation of the weight of the temperature 
+
+            Use the formula in Nguyen2013 
+            f_prev + (beta_curr - beta_prev) (E_curr + E_prev) / 2 
+
+            Raise : 
+            -------
+            NoECurrent : 
+                If Ecurrent is not available
+            """
             try:
                 self._f =  Tprev._f + (self._BETA - Tprev._BETA ) * ( self._E + Tprev._E )  / 2
             except Exception:
