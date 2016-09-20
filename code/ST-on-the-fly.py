@@ -3,10 +3,10 @@
 
 """Run ST-on-the-fly
 
-Example : 
+Example :
 ---------
 
-# With previous minimisation : 
+# With previous minimisation :
 python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1 \
 --gro-filename ../data/ala10_md000.gro \
@@ -14,10 +14,10 @@ python ST-on-the-fly.py \
 --simu-type md \
 --nb-run 3   --st-mdp-template-filename ../data/md1.mdp  --st-outname outst  \
 --minimisation \
---minimisation-mdp-filename ../data/mini2.mdp  --minimisation-outname miniout \ 
+--minimisation-mdp-filename ../data/mini2.mdp  --minimisation-outname miniout \
 --maxwarn 1     --out-path ./     -vvv
 
-#Without previous minimisation : 
+#Without previous minimisation :
 python ST-on-the-fly.py \
 --Tmin 1 --Tmax 5 --Tnum 1  \
 --gro-filename ../data/ala10_md000.gro \
@@ -29,7 +29,7 @@ python ST-on-the-fly.py \
 """
 
 #------------------------------------------------------------------------------
-# PEP8 imports : 
+# PEP8 imports :
 # on separate lines
 # at the top of the file
 
@@ -37,9 +37,9 @@ python ST-on-the-fly.py \
 #---
 
 # from __future__ imports must occur at the beginning of the file.
-# if not : SyntaxError 
+# if not : SyntaxError
 from __future__ import print_function
-from __future__ import division 
+from __future__ import division
 
 import argparse
 import errno
@@ -47,7 +47,7 @@ import os
 import pdb
 
 # 2. other imports
-#--- 
+#---
 
 # 3. local imports
 #---
@@ -62,15 +62,15 @@ from st import SimulatedTempering
 
 
 #------------------------------------------------------------------------------
-# Arguments getter functions : 
+# Arguments getter functions :
 
-def get_arguments_values(): 
+def get_arguments_values():
     """ Use argparse module to get arguments values.
 
     Return
     ------
     args : Namespace object
-        Namespace object populated with arguments converted from strings to 
+        Namespace object populated with arguments converted from strings to
         objects (str or int, or whatever, according to the spec in the code)
         and assigned as attributes of the namespace object.
     """
@@ -80,11 +80,11 @@ def get_arguments_values():
 
     parser = argparse.ArgumentParser(description=help_str,add_help=True)
 
-    # argparse automatically convert any internal - characters to _ characters 
+    # argparse automatically convert any internal - characters to _ characters
     # to make sure the string is a valid attribute name.
     # So in this case, use dest is not necessary.
 
-    # About T_range : 
+    # About T_range :
     parser.add_argument("--Tmin", required=True, type=float,
         help="At which temperature (in Kelvin) begins the experiment")
     parser.add_argument("--Tmax", required=True, type=float,
@@ -92,13 +92,13 @@ def get_arguments_values():
     parser.add_argument("--Tnum", required=True, type=int,
         help="Number of temperature in the given range [Tmin, Tmax]")
 
-    # About struct : 
+    # About struct :
     parser.add_argument("--gro-filename", required=True, type=str,
         help="gro (!) file to use for the ST experiment")
     parser.add_argument("--top-filename", required=True, type=str,
         help="topology file to use for the ST experiment " )
 
-    # About ST : 
+    # About ST :
     parser.add_argument("--nb-run",required=True, type=int,
         help=("The number of molecular dynamics during the experiment :"
             "t_one-md * num-run = t_ST")
@@ -111,18 +111,18 @@ def get_arguments_values():
     )
     parser.add_argument("--st-mdp-template-filename", required=True, type=str,
         help="mdp file to use for the ST experiment")
-    parser.add_argument("--st-outname", required=True, type=str, 
+    parser.add_argument("--st-outname", required=True, type=str,
         help=("template name for output of the ST experiment "
         'Should not match either minimisation-outname nor gene-veloc-outname')
     )
 
-    # About minimisation : 
+    # About minimisation :
     minimisation_parser = parser.add_mutually_exclusive_group(required=False)
-    minimisation_parser.add_argument('--minimisation', 
-        action='store_true', 
+    minimisation_parser.add_argument('--minimisation',
+        action='store_true',
         help="Run a minimisation before ST experiment")
-    minimisation_parser.add_argument('--no-minimisation', 
-        dest='minimisation', action='store_false', 
+    minimisation_parser.add_argument('--no-minimisation',
+        dest='minimisation', action='store_false',
         help="Do run a minimisation before ST experiment")
     parser.set_defaults(minimisation=False)
     parser.add_argument("--minimisation-mdp-filename", required=False,type=str,
@@ -130,7 +130,7 @@ def get_arguments_values():
         "to provide if minimisation is True")
     )
     parser.add_argument("--minimisation-outname", required=False, type=str,
-        help= ("template name for output of minimisation" 
+        help= ("template name for output of minimisation"
             'Should not match either st-outname nor gene-veloc-outname')
     )
     parser.add_argument("--gene-veloc-outname", required=False, type=str,
@@ -139,15 +139,15 @@ def get_arguments_values():
     )
 
     # Other :
-    parser.add_argument("--out-path",default='./',  type= str, 
+    parser.add_argument("--out-path",default='./',  type= str,
         help =("Where the outputed results files should be store"
-            "it must finish by '\ '" ) 
+            "it must finish by '\ '" )
     )
-    parser.add_argument("--maxwarn", default = '0', type=int, 
+    parser.add_argument("--maxwarn", default = '0', type=int,
         help="The max number of warnings allowed when running MD" )
-    parser.add_argument("--clean-all", 
+    parser.add_argument("--clean-all",
         help=("Clean gromacs outputs unecessary to plot the figures "
-        "in N'Guyen 2013 /!\ Be carefull --not working--"), 
+        "in N'Guyen 2013 /!\ Be carefull --not working--"),
         action='store_true'
     )
     parser.add_argument('-v', '--verbose', dest = 'verbosity', default=0,
@@ -156,66 +156,66 @@ def get_arguments_values():
     return parser.parse_args()
 
 
-def print_use_help_message() : 
+def print_use_help_message() :
     """ Print use help message
     """
     log.error("Use --help for help.\n")
 
 
-def assert_strictly_positive(value, name_var): 
-    """ Assert a value is strictly positive. If not, log an error. 
+def assert_strictly_positive(value, name_var):
+    """ Assert a value is strictly positive. If not, log an error.
 
-    Arguments : 
+    Arguments :
     ------------
     value : number
-        The value of which you want to test the strict positivity 
+        The value of which you want to test the strict positivity
     name_var : string
         The name of the value
 
-    Raise : 
+    Raise :
     -------
     AsserionError if the assertion fails.
 
-    Side effect : 
+    Side effect :
     -------------
     If the assertion fails, it logs an error using logger module:
     <name_var> must be strictly positive
 
-    Example : 
+    Example :
     ---------
 
-    >>> assert_strictly_positive (1, 'my_var_name') 
-    >>> assert_strictly_positive (-1, 'my_var_name') 
+    >>> assert_strictly_positive (1, 'my_var_name')
+    >>> assert_strictly_positive (-1, 'my_var_name')
     2016-09-18 15:14:17,262 :: ERROR :: my_var_name must be strictly positive.
     """
     try:
         assert (value > 0 )
     except AssertionError, e:
         log.error(name_var + ' must be strictly positive.')
-        raise e 
+        raise e
 
-def assert_strictly_inferior(value1, value2, name_var1, name_var2): 
-    """Assert a value is strictly inferior to another one. If not, log an error. 
+def assert_strictly_inferior(value1, value2, name_var1, name_var2):
+    """Assert a value is strictly inferior to another one. If not, log an error.
 
-    Arguments : 
+    Arguments :
     ----------
     value1 : number
         The value of which you want to test the strict inferiority compared
         to value2
-    value2 : number 
-        The value of which you want to test the strict superiority compared 
+    value2 : number
+        The value of which you want to test the strict superiority compared
         to value1
     name_var1 : string
         The name of value1
-    name_var2 : string 
+    name_var2 : string
         The name of value2
 
-    Raise : 
+    Raise :
     -------
     AsserionError if the assertion fails.
-    
 
-    Side effect : 
+
+    Side effect :
     -------------
     If the assertion fails, it logs an error using logger module:
     <name_var1> must be strictly inferior to <name_var2>
@@ -225,27 +225,27 @@ def assert_strictly_inferior(value1, value2, name_var1, name_var2):
         assert (value1 < value2 )
     except AssertionError, e:
         log.error(name_var1 + ' must be strictly inferior to ' + name_var2+'.')
-        raise e 
+        raise e
 
 
-def check_arguments_integrity(args): 
-    """ Check integrity of arguments pass through the command line. 
+def check_arguments_integrity(args):
+    """ Check integrity of arguments pass through the command line.
 
     Arguments :
     -----------
     args : namespace object
-        Its attributes are arguments names and contain arguments values. 
+        Its attributes are arguments names and contain arguments values.
 
-    Side effect : 
+    Side effect :
     -------------
-    If one arg is not integrous, exit the script printing why. 
+    If one arg is not integrous, exit the script printing why.
     """
     try:
         assert_strictly_positive(args.Tmin, 'Tmin')
     except AssertionError:
         print_use_help_message()
         sys.exit(-1)
-    
+
     try:
         assert_strictly_positive(args.Tmax, 'Tmax')
     except AssertionError:
@@ -259,8 +259,8 @@ def check_arguments_integrity(args):
         sys.exit(-1)
 
     try:
-        assert_strictly_inferior (args.Tmin + args.Tnum,  args.Tmax, 
-            'Tmin + Tnum', 'Tmax') 
+        assert_strictly_inferior (args.Tmin + args.Tnum,  args.Tmax,
+            'Tmin + Tnum', 'Tmax')
     except AssertionError:
         print_use_help_message()
         sys.exit(-1)
@@ -272,36 +272,36 @@ def check_arguments_integrity(args):
         print_use_help_message()
         sys.exit(-1)
 
-    #Currently, md is the only working choice : 
-    try : 
+    #Currently, md is the only working choice :
+    try :
         assert (args.simu_type == 'md')
-    except AssertionError : 
+    except AssertionError :
         print_use_help_message
         sys.exit(-1)
 
     #--------------
-    # check given files exists : 
+    # check given files exists :
     files=[args.gro_filename, args.top_filename, args.st_mdp_template_filename]
-    if args.minimisation : 
+    if args.minimisation :
         files.append (args.minimisation_mdp_filename)
 
-    for file in files : 
+    for file in files :
         try:
             with open(file):
                 pass
         except IOError as e:
             log.error ("Unable to open file "+ file +\
-                ". (Does not exist or no read permissions)" ) 
+                ". (Does not exist or no read permissions)" )
 
 
-def get_integrous_arguments_values(): 
+def get_integrous_arguments_values():
     """ Get arguments passed through command line and check their integrity.
 
-    Return : 
+    Return :
     --------
     args : namespace object
-        Its attributes are arguments names and contain arguments values 
-        (str or int or whatever according to code specifications). 
+        Its attributes are arguments names and contain arguments values
+        (str or int or whatever according to code specifications).
     """
     args = get_arguments_values()
     check_arguments_integrity(args)
@@ -310,18 +310,18 @@ def get_integrous_arguments_values():
 #------------------------------------------------------------------------------
 
 def make_sure_path_exists(path):
-    """Make sure a dir exists 
+    """Make sure a dir exists
 
-    Argument : 
+    Argument :
     ----------
-    path : string 
-        The path you wan't to assert the existance 
+    path : string
+        The path you wan't to assert the existance
 
-    Raise : 
+    Raise :
     --------
     OSError if problem when creating the dir
 
-    Side effect : 
+    Side effect :
     -------------
     Create dir if it not not already exists
     """
@@ -339,27 +339,27 @@ if __name__ == "__main__":
     print ('go')
 
     #-----------------
-    # get arguments : 
+    # get arguments :
     log.info('get args')
     args = get_integrous_arguments_values()
     make_sure_path_exists(args.out_path)
 
     #-----------------
-    # set verbosity : 
+    # set verbosity :
     level = logger.get_level(args.verbosity)
     log.setLevel(level)
 
     #-----------------
-    # run minimi + velocities generation if needed : 
-    if args.minimisation : 
+    # run minimi + velocities generation if needed :
+    if args.minimisation :
 
         log.info('run minimi')
-        MD_minimi = MolecularDynamics(        
-            mdp_filename = args.minimisation_mdp_filename, 
-            gro_filename = args.gro_filename, 
-            top_filename = args.top_filename, 
-            out_path = args.out_path, 
-            out_name = args.minimisation_outname, 
+        MD_minimi = MolecularDynamics(
+            mdp_filename = args.minimisation_mdp_filename,
+            gro_filename = args.gro_filename,
+            top_filename = args.top_filename,
+            out_path = args.out_path,
+            out_name = args.minimisation_outname,
             maxwarn = args.maxwarn)
         MD_minimi.run()
         log.info('minimi OK')
@@ -367,12 +367,12 @@ if __name__ == "__main__":
         st_gro_filename = args.out_path + args.minimisation_outname + '.gro'
 
         log.info('gene velocities')
-        MD_gene_velo = MolecularDynamics(        
-            mdp_filename = "../data/gene_velocities.mdp", 
-            gro_filename = st_gro_filename, 
-            top_filename = args.top_filename, 
-            out_path = args.out_path, 
-            out_name = args.gene_veloc_outname, 
+        MD_gene_velo = MolecularDynamics(
+            mdp_filename = "../data/gene_velocities.mdp",
+            gro_filename = st_gro_filename,
+            top_filename = args.top_filename,
+            out_path = args.out_path,
+            out_name = args.gene_veloc_outname,
             maxwarn = args.maxwarn)
         MD_gene_velo.run()
         log.info('gene vel OK')
@@ -380,25 +380,25 @@ if __name__ == "__main__":
         st_gro_filename = args.out_path + args.gene_veloc_outname + '.gro'
 
 
-    else : 
+    else :
         st_gro_filename = args.gro_filename
 
     #------------------
-    # ST experiment : 
+    # ST experiment :
     log.info('new ST')
     ST = SimulatedTempering(
-        args.nb_run, 
-        args.Tmin, args.Tmax, args.Tnum, 
-        "{0}/{1}.results".format(args.out_path,args.st_outname) , 
-        args.simu_type,  
-        mdp_filename = args.st_mdp_template_filename, 
-        gro_filename = st_gro_filename, 
-        top_filename = args.top_filename, 
-        out_path = args.out_path, 
-        out_name = args.st_outname, 
+        args.nb_run,
+        args.Tmin, args.Tmax, args.Tnum,
+        "{0}/{1}.results".format(args.out_path,args.st_outname) ,
+        args.simu_type,
+        mdp_filename = args.st_mdp_template_filename,
+        gro_filename = st_gro_filename,
+        top_filename = args.top_filename,
+        out_path = args.out_path,
+        out_name = args.st_outname,
         maxwarn = args.maxwarn
     )
-    
+
     log.info('ST.run')
     ST.run()
 

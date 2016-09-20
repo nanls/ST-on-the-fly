@@ -1,12 +1,12 @@
 """
-Run GROMACS Molecular Dynamics using a Python wrapper 
+Run GROMACS Molecular Dynamics using a Python wrapper
 """
 #------------------------------------------------------------------------------
 # 1. standard library imports
 #---
 import doctest
 import pdb
-import shutil 
+import shutil
 import shlex
 import subprocess
 
@@ -21,19 +21,19 @@ import logger
 
 
 class MolecularDynamics(object):
-    """MolecularDynamics class 
+    """MolecularDynamics class
 
-    Instance Attributs : 
+    Instance Attributs :
     --------------------
-    _mdp_filename : string, private 
-        Path to the mdp file 
-    _gro_filename : string, private 
+    _mdp_filename : string, private
+        Path to the mdp file
+    _gro_filename : string, private
         Path to the gro file
-    _top_filename : string, private 
+    _top_filename : string, private
         Path to the top file
-    _out_path : string, private 
-        Path where to store outputs 
-    _out_name : string, private 
+    _out_path : string, private
+        Path where to store outputs
+    _out_name : string, private
         Templace for the outputs
     _maxwarn : int, private
         Number of warnings allowed for GROMACS grompp function
@@ -42,19 +42,19 @@ class MolecularDynamics(object):
 
     @logger.log_decorator
     def __init__(self, mdp_filename, gro_filename, top_filename, out_path, out_name, maxwarn, **kwargs):
-        """ Molecular Dynamics constructor 
+        """ Molecular Dynamics constructor
 
-        Arguments : 
+        Arguments :
         -----------
-        mdp_filename : string, private 
-            Path to the mdp file 
-        gro_filename : string, private 
+        mdp_filename : string, private
+            Path to the mdp file
+        gro_filename : string, private
             Path to the gro file
-        top_filename : string, private 
+        top_filename : string, private
             Path to the top file
-        out_path : string, private 
-            Path where to store outputs 
-        out_name : string, private 
+        out_path : string, private
+            Path where to store outputs
+        out_name : string, private
             Templace for the outputs
         maxwarn : int, private
             Number of warnings allowed for GROMACS grompp function
@@ -72,7 +72,7 @@ class MolecularDynamics(object):
 
 
     @logger.log_decorator
-    def gmx_grompp(self) : 
+    def gmx_grompp(self) :
         """Run GROMACS grompp command
         """
         cmd = "gmx grompp -f {0} -c {1} -p {2} -o {3}.tpr -po {3}.mdp -maxwarn {4}".format(   \
@@ -85,7 +85,7 @@ class MolecularDynamics(object):
         print (cmd)
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
-        
+
 
     @logger.log_decorator
     def gmx_mdrun(self):
@@ -95,44 +95,44 @@ class MolecularDynamics(object):
         print (cmd)
         p = subprocess.Popen(shlex.split(cmd))
         p.wait()
-        
+
 
     @logger.log_decorator
-    def run(self): 
-        """Run a MD using GROMACS grompp then mdrun 
+    def run(self):
+        """Run a MD using GROMACS grompp then mdrun
         """
         print ('ruuuuuuuuuuuuuun MD')
         self.gmx_grompp()
         self.gmx_mdrun()
 
 
-    @property 
+    @property
     def gro_filename(self):
         """Getter of gro filename
 
-        Return : 
+        Return :
         --------
         gro_filename : string
             Path to the gro file
         """
         return self._gro_filename
 
-    @property 
+    @property
     def maxwarn(self):
         """Getter of maxwarn
 
-        Return : 
+        Return :
         --------
         maxwarn : int
             Number of warning allowed for GROMACS grompp function
         """
         return self._maxwarn
 
-    @property 
+    @property
     def mdp_filename(self):
         """Getter of mdp filename
 
-        Return : 
+        Return :
         --------
         mdp_filename : string
             Path to the mdp file
@@ -141,51 +141,51 @@ class MolecularDynamics(object):
 
     @mdp_filename.setter
     def mdp_filename(self, new_mdp_filename):
-        """Setter of mdp filename 
+        """Setter of mdp filename
 
-        Argument : 
+        Argument :
         --------
-        new_mdp_filename : str 
+        new_mdp_filename : str
             Path to the mdp file
         """
         self._mdp_filename = new_mdp_filename
 
-    
-    @property 
-    def out_path(self):
-        """Getter of out path 
 
-        Return : 
+    @property
+    def out_path(self):
+        """Getter of out path
+
+        Return :
         --------
         out_path : string
             Path where to store outputs
         """
         return self._out_path
-    @property 
+    @property
     def out_name(self):
         """Getter of out_name
 
-        Return : 
+        Return :
         --------
         out_name : string
-            Template name for the outputs 
+            Template name for the outputs
         """
         return self._out_name
     @out_name.setter
-    def out_name(self, new_out_name): 
-        """Set out_name 
+    def out_name(self, new_out_name):
+        """Set out_name
 
-        Argument : 
+        Argument :
         ----------
-        new_outname : string 
+        new_outname : string
             Template name for the outputs
         """
 
-    @property 
+    @property
     def top_filename(self):
         """Getter of top filename
 
-        Return : 
+        Return :
         --------
         top_filename : string
             Path to the top file
