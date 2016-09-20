@@ -98,7 +98,16 @@ class Simulation(object):
 
 
 class MonteCarlo(Simulation):
-    """docstring for MonteCarlo"""
+    """MonteCarlo class 
+
+    A possible kind of first step for ST experiment.
+    Currently : not implemented
+
+    Instance Attribut : 
+    -------------------
+    Those of simulation 
+
+    """
     
     @logger.log_decorator
     def run(self):
@@ -108,7 +117,16 @@ class MonteCarlo(Simulation):
         return 0
 
 class MolecularDynamicsProduction(Simulation,MolecularDynamics):
-    """docstring for MolecularDynamicProduction"""
+    """MolecularDynamicProduction class
+
+    A possible kind of first step for ST experiment.
+    Currently: working using GROMACS 
+
+    Instance Attribut : 
+    -------------------
+    Those of Simulation 
+    Those of MolecularDynamics
+    """
     @logger.log_decorator
     def __init__(self, **kwargs):
         print ('je suis dans le constructor de Prod') 
