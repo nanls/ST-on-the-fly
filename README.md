@@ -142,9 +142,9 @@ tab separated file with following fields :
 
 * idx : int < <num-run> - attempt index 
 * t_current : float - time at the begining of the run 
-* T_current
-* E_MD
-* E_T	
+* T_current : float - temperature of the run 
+* E_run : float - energy of the run 
+* E_T : float - updated energy for T_current 
 * For each temperature in provided T range : f(T) 
 
 Charts
