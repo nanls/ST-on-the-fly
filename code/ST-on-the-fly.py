@@ -117,7 +117,7 @@ def get_arguments_values():
         help="mdp file to use for minimisation")
     parser.add_argument("--minimisation-outname", required=False, type=str,
         help="template name for output of minimisation"  )
-    parser.add_argument("--gene_veloc_outname", required=False, type=str,
+    parser.add_argument("--gene-veloc-outname", required=False, type=str,
         help="template name for output of velocities generation"  )
 
     # Other :
