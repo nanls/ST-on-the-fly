@@ -100,6 +100,14 @@ class Simulation(object):
     """
     @logger.log_decorator
     def __init__(self, T_current, **kwargs):
+        """Simulation constructor 
+
+        Argument : 
+        ----------
+        T_current : float 
+            current temperature of the simulation 
+            (it should be Tmin of the ST experiment)
+        """
         print ('je suis dans le constructor de Simulation')
 
         super(Simulation,self).__init__(**kwargs)
@@ -108,6 +116,12 @@ class Simulation(object):
 
     @property
     def T_current(self):
+        """ Get T_current attribut
+
+        Return : 
+        T_current attribut : float 
+            current temperature of the simulation 
+        """
         return self._T_current
 
     @abc.abstractmethod
@@ -121,6 +135,11 @@ class Simulation(object):
         pass
     @abc.abstractmethod
     def get_simu_step(self) : 
+        """Get the simulation duration 
+
+        This method has to be overided by any derived class 
+        and should return one simulation duration
+        """
         pass
     
 
@@ -138,9 +157,25 @@ class MonteCarlo(Simulation):
     
     @logger.log_decorator
     def run(self):
+        """ Run a Monte Carlo simulation 
+
+        override Simulation
+
+        Return : 
+        ---------
+        E : float 
+            energy of the last Monte Carlo simulation 
+        """
         return compute_E_average()
     @logger.log_decorator
     def compute_E_average(self):
+        """ Compute E on the last Monte Carlo simulation 
+
+        Return : 
+        --------
+        E : float 
+            energy of the last Monte Carlo simulation 
+        """
         return 0 # ??? XXX pass
 
 class MolecularDynamicsProduction(Simulation,MolecularDynamics):
@@ -156,6 +191,15 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
     """
     @logger.log_decorator
     def __init__(self, T_range, **kwargs):
+        """constructot of MolecularDynamicsProduction instance
+
+        Arguments : 
+        ----------
+        T_range : list of float 
+            list of temperature value of the ST experiment 
+        kwargs : dict
+            every arguments needed for parent constructors
+        """
         print ('je suis dans le constructor de Prod') 
         super(MolecularDynamicsProduction, self).__init__(**kwargs)
         self._mdp_template = kwargs['mdp_filename'] 
@@ -176,7 +220,7 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         Side effect : 
         -------------
         Create a file named <args.st_mdp_template_filename>_<T>.mdp
-        where the field ref_t if set to <T>
+        where the field gen_temp if set to <T>
         """
         
         mdp_filename = '{0}_{1}.mdp'.format(self._mdp_template, T)
@@ -193,6 +237,15 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     @logger.log_decorator
     def get_simu_step(self):
+        """Get the duration of an MDP looking in mdp template file
+
+        overide Simulation 
+
+        Return : 
+        ---------
+        duration : float 
+            duration of an MDP
+        """
         with open(self._mdp_template, 'r') as fin: 
             for line in fin : 
                 if line.startswith("dt") : 
@@ -203,6 +256,18 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     @logger.log_decorator
     def run(self, tcurrent):
+        """ Run an MDP 
+
+        Agument : 
+        ---------
+        tcurrent : float 
+            ST time at the begining of the MDP 
+
+        Return : 
+        --------
+        E : float 
+            energy of the run 
+        """
         save_out_name = self._out_name
         print (save_out_name)
         self._out_name += str(tcurrent)
@@ -219,7 +284,21 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
 
     def cat_gmx_files(self, fn, ext, t_current):
-        
+        """Concatenate Gromacs file 
+
+        Arguments : 
+        -----------
+        fn : string 
+            The Gromacs function that has to be used 
+        ext : string 
+            extention of the file to concatenante 
+        t_current : float 
+            ST time at the begining of the MDP 
+
+        Side effect :
+        -------------
+        Concatenate desired files within <out_path>/cat.<out_name>.<ext>
+        """
         
         if t_current == 0 : 
             cmd = 'gmx {0} -f {1}/{2}.{3} -o {1}/cat.{3}'.format(fn, self.out_path, self._out_name, ext)
@@ -237,16 +316,38 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         
        
     def cat_xtc(self, t_current):
+        """Concatenate xtc files using trjcat then rm the file of the run 
+
+        Argument : 
+        ---------
+        t_current : float 
+            ST time at the begining of the MDP 
+
+        """
         self.cat_gmx_files('trjcat', 'xtc', t_current)
         os.remove("{0}{1}.xtc".format(self.out_path, self._out_name))
 
     def cat_edr(self, t_current):
+        """Concatenate edr files using eneconv then rm the file of the run 
+
+        Argument : 
+        ----------
+        t_current : float 
+            ST time at the begining of the MDP 
+        """
         self.cat_gmx_files('eneconv', 'edr', t_current)
         os.remove("{0}{1}.edr".format(self.out_path, self._out_name))
 
 
     @logger.log_decorator
     def gmx_energy(self, arg = 'Potential') : 
+        """ Run gmx energy on the last run 
+
+        Argumnent : 
+        -----------
+        arg : string (default : Potential)
+            argument given to gmx energy
+        """
 
         p1 = subprocess.Popen( shlex.split("echo {0}".format(arg)), stdout=subprocess.PIPE ) 
 
@@ -263,6 +364,13 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     @logger.log_decorator
     def compute_E_average(self):
+        """Compute E average of the last MDP run using gmx energy 
+
+        Return : 
+        --------
+        E : float 
+            energy of the last MDP run 
+        """
         output = self.gmx_energy('Potential')
         for line in output : 
             splitted_line = line.split()
@@ -277,6 +385,18 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
 
     @Simulation.T_current.setter
     def T_current(self, T_new):
+        """Set T_current attribut 
+        
+        Argument : 
+        ----------
+        T_new : float 
+            new value of T_current 
+
+        Side effect : 
+        -------------
+        change velocities in the gro file
+        change the mdp file to use 
+        """
         
         print ("setter de Tcurrent ============")
         self.update_velocities(T_new)
@@ -292,6 +412,19 @@ class MolecularDynamicsProduction(Simulation,MolecularDynamics):
         
 
     def update_velocities(self, T_new):
+        """Update velocities in the gro file 
+
+        Argument : 
+        ----------
+        T_new : float 
+            new temperature value 
+
+        Side effect : 
+        -------------
+        Change the velocities in the gro file 
+        Use a tmp file 
+        Then replace the old file by the tmp one. 
+        """
 
         #Can't change a file, so create a new temp one...
         nb_of_atom = 0 
@@ -359,7 +492,10 @@ class SimulatedTempering(object):
         simu_step : float 
             Duration of a Molecular Dynamics 
         _SIMULATION : Simulation derived object
-
+            An instance of the simulation of the desired type
+        self._RES_FILENAME : string 
+            Path to the file where results will be saved
+       
     """
 
     class TRange(list):
@@ -596,6 +732,8 @@ class SimulatedTempering(object):
             Maximal value of temperature the ST experiment can reach
         Tnum : int 
             Number of temperature in the given range [Tmin ; Tmax] 
+        res_filename : string
+            Path to the file results have to be saved 
         simu_type : string 
             Type of simulaiton to use. 
             Can be : 
@@ -625,7 +763,14 @@ class SimulatedTempering(object):
         self.init_res_file()
 
     def init_res_file(self):
-        
+        """Init the res file 
+
+        Side effect : 
+        -------------
+        Create a file named <self._RES_FILENAME>
+        /!\ if a file with the same name already exists, it override it
+        and write the header 
+        """
         with open(self._RES_FILENAME, 'w') as fout : 
             to_write = "idx\tt_current\tT_current\tE_MD\tE_T"
             for T in self._T_RANGE : 
@@ -733,8 +878,9 @@ class SimulatedTempering(object):
 
         Return : 
         --------
-        T_attempt : Temperature object 
+        T_attempt : Temperature object  / None 
             The temperature ST will attempt
+            None if no attempt 
         """
         try:
             direction= SimulatedTempering.toss_coin()
@@ -758,7 +904,7 @@ class SimulatedTempering(object):
         --------
         mc : float 
             Metropolis criterion computed using the formula in Nguyen 2013
-            it corresponds to the probability to choose to move to <T_attempt>
+            it corresponds to the probability of the choice to move to <T_attempt>
         """
 
         try:
@@ -804,8 +950,8 @@ class SimulatedTempering(object):
 
         Arguments: 
         -----------
-        idx : int 
-            run idx 
+        step_idx : int 
+            run idx
         E_MD : float 
             Average Epot of the run 
         """
