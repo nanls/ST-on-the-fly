@@ -43,7 +43,7 @@ Please contact Athenais VAGINAY at vaginay.athenais@gmail.com for all inquiries.
   * [sys](https://docs.python.org/2.7/library/sys.html)
   * [time](https://docs.python.org/2.7/library/time.html)
 
-* To run MD : [GROMAX5.1.2](http://manual.gromacs.org/documentation/5.1.2/)
+* To run MD : [GROMACS 5.1.2](http://manual.gromacs.org/documentation/5.1.2/)
 
 
 TODO : check if the code is functional with Python3
